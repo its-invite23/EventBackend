@@ -67,10 +67,10 @@ exports.signup = catchAsync(async (req, res) => {
         });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 12); 
+    const hashedPassword = await bcrypt.hash(password, 12);
     const record = new User({
         email,
-        password: hashedPassword, 
+        password: hashedPassword,
         username,
         address,
         phone_number,
@@ -100,7 +100,7 @@ exports.login = catchAsync(async (req, res, next) => {
             message: "Email and password are required!",
         });
     }
-  
+
     const user = await User.findOne({ email });
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
@@ -141,7 +141,7 @@ exports.profile = catchAsync(async (req, res, next) => {
     } catch (error) {
         res.status(500).json({
             msg: "Failed to fetch profile",
-            error: error.message, 
+            error: error.message,
         });
     }
 });
@@ -182,3 +182,96 @@ exports.updateUserStatus = catchAsync(async (req, res) => {
     }
 });
 
+
+
+exports.resetpassword = catchAsync(async (req, res) => {
+    try {
+        const { email, newPassword } = req.body;
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(newPassword, salt);
+        user.password = hashedPassword;
+        await user.save();
+        res.json({ message: "Password has been reset successfully!" });
+    } catch (error) {
+        res.status(500).json({ message: "Error resetting password", error });
+    }
+})
+
+
+exports.UserListIdDelete = catchAsync(async (req, res, next) => {
+    try {
+        const { Id } = req.body;
+
+        if (!Id) {
+            return res.status(400).json({
+                status: false,
+                message: "User ID is required.",
+            });
+        }
+
+        const record = await User.findOneAndDelete({ _id: Id });
+
+        if (!record) {
+            return res.status(404).json({
+                status: false,
+                message: "user not found.",
+            });
+        }
+
+        res.status(200).json({
+            status: true,
+            data: record,
+            message: "User deleted successfully.",
+        });
+    } catch (error) {
+        console.error("Error deleting user record:", error);
+        res.status(500).json({
+            status: false,
+            message: "Internal Server Error. Please try again later.",
+        });
+    }
+});
+
+
+
+exports.UserUpdate = catchAsync(async (req, res, next) => {
+    try {
+        const { Id, email, username, address, phone_number, city } = req.body;
+        if (!Id) {
+            return res.status(400).json({
+                status: false,
+                message: "User ID is required.",
+            });
+        }
+        const updatedRecord = await User.findByIdAndUpdate(
+            Id,
+            { email, username, address, phone_number, city },
+            { new: true, runValidators: true }
+        );
+
+        if (!updatedRecord) {
+            return res.status(404).json({
+                status: false,
+                message: "User not found!",
+            });
+        }
+        res.status(200).json({
+            status: true,
+            data: updatedRecord,
+            message: "User updated successfully.",
+        });
+
+    } catch (error) {
+        console.error("Error updating User record:", error);
+
+        res.status(500).json({
+            status: false,
+            message: "An error occurred while updating the User. Please try again later.",
+            error: error.message,
+        });
+    }
+});
