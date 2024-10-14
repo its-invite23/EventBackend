@@ -1,4 +1,5 @@
 const dotenv = require("dotenv");
+const  UserRoute = require("./route/UserRoute")
 require("./dbconfigration");
 dotenv.config();
 
@@ -17,6 +18,8 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json({ limit: '2000mb' }));
 app.use(express.urlencoded({ extended: true }));
+
+app.use("/user", UserRoute)
 
 upload = multer();
 app.use(upload.none()); 
