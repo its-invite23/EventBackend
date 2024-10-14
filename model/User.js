@@ -39,8 +39,13 @@ const userSchema = mongoose.Schema({
     created_date :{
         type :Date,
         default: Date.now
+    },
+    user_status :{
+        type: String,
+        default: "active"
     }
 })
+
 
 const User = mongoose.model("User", userSchema);
 

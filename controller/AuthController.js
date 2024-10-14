@@ -67,7 +67,7 @@ exports.signup = catchAsync(async (req, res) => {
         });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 8); 
+    const hashedPassword = await bcrypt.hash(password, 12); 
     const record = new User({
         email,
         password: hashedPassword, 
@@ -116,6 +116,12 @@ exports.login = catchAsync(async (req, res, next) => {
             message: "Invalid Email or password",
         });
     }
+    if (user.user_status === 'inactive') {
+        return res.status(403).json({
+            status: false,
+            message: "Your account is inactive. Please contact support.",
+        });
+    }
     const token = await signToken(user._id)
     res.json({
         status: true,
@@ -136,6 +142,42 @@ exports.profile = catchAsync(async (req, res, next) => {
         res.status(500).json({
             msg: "Failed to fetch profile",
             error: error.message, 
+        });
+    }
+});
+
+
+exports.updateUserStatus = catchAsync(async (req, res) => {
+    try {
+        const { _id, user_status } = req.body;
+        if (!_id || !user_status) {
+            return res.status(400).json({
+                message: "User ID and status are required.",
+                status: false,
+            });
+        }
+
+        const user = await User.findById(_id);
+        if (!user) {
+            return res.status(404).json({
+                message: "User not found",
+                status: false,
+            });
+        }
+
+        user.user_status = user_status;
+        await user.save();
+
+        res.status(200).json({
+            message: `User status updated to ${user_status}`,
+            status: true,
+            data: user,
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            message: "Internal Server Error",
+            status: false,
         });
     }
 });
