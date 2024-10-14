@@ -1,8 +1,10 @@
-const { signup } = require("../controller/AuthController");
+const { signup, login } = require("../controller/AuthController");
 
 const expreesroute = require("express").Router();
 
 
-expreesroute.get("/api/singup" , signup)
+expreesroute.post("/signup" , signup)
+
+expreesroute.post("/login", login)
 
 module.exports = expreesroute

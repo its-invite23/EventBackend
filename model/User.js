@@ -30,6 +30,11 @@ const userSchema = mongoose.Schema({
     phone_number: {
         type: Number,
         required: true
+    }, 
+    role :{
+        type: String,
+        required: true,
+        default: "user"
     }
 })
 
