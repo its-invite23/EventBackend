@@ -4,7 +4,6 @@ const AppError = require('../utils/AppError');
 const User = require('../model/User');
 const { promisify } = require('util');
 const bcrypt = require('bcrypt');
-const { response } = require('express');
 
 exports.verifyToken = async (req, res, next) => {
     let authHeader = req.headers.Authorization || req.headers.authorization;
