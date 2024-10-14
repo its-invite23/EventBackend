@@ -4,6 +4,7 @@ const AppError = require('../utils/AppError');
 const User = require('../model/User');
 const { promisify } = require('util');
 const bcrypt = require('bcrypt');
+const { response } = require('express');
 
 exports.verifyToken = async (req, res, next) => {
     let authHeader = req.headers.Authorization || req.headers.authorization;
@@ -66,7 +67,7 @@ exports.signup = catchAsync(async (req, res) => {
         });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 12); 
+    const hashedPassword = await bcrypt.hash(password, 8); 
     const record = new User({
         email,
         password: hashedPassword, 
@@ -122,3 +123,20 @@ exports.login = catchAsync(async (req, res, next) => {
         token,
     });
 });
+
+
+exports.profile = catchAsync(async (req, res, next) => {
+    try {
+        const userprofile = await User.find({}).select('-password');
+        res.status(200).json({
+            data: userprofile,
+            msg: "Profile Get",
+        });
+    } catch (error) {
+        res.status(500).json({
+            msg: "Failed to fetch profile",
+            error: error.message, 
+        });
+    }
+});
+
