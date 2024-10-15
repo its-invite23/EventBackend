@@ -6,30 +6,54 @@ const { promisify } = require('util');
 const bcrypt = require('bcrypt');
 
 exports.verifyToken = async (req, res, next) => {
+    // Log the authorization headers for debugging
+    console.log("Authorization Header:", req.headers.Authorization || req.headers.authorization);
+
     let authHeader = req.headers.Authorization || req.headers.authorization;
+    
     if (authHeader && authHeader.startsWith("Bearer")) {
         let token = authHeader.split(" ")[1];
+        console.log("Token:", token); // Log the token to check if it's being passed
+
         if (!token) {
-            res.status(400).json({
+            return res.status(400).json({
                 status: false,
                 message: "User is not authorized or Token is missing",
             });
         } else {
             try {
+                // Verify the token
                 const decode = await promisify(jwt.verify)(token, process.env.JWT_SECRET_KEY);
+                console.log("Decoded Token:", decode); // Log the decoded token data
+
                 if (decode) {
-                    let result = await User.findById(decode.id);
-                    req.user = result;
-                    next();
+                    // Log the ID from the decoded token
+                    console.log("Decoded ID:", decode.id);
+
+                    // Fetch the user by decoded ID
+                    let result = await User.findById({_id : decode.id});
+                    console.log("User Data from DB:", result); // Log the user data fetched from DB
+
+                    // If the user is found, attach it to the request object and call next()
+                    if (result) {
+                        req.User = result;
+                        next(); // Proceed to the next middleware
+                    } else {
+                        return res.status(404).json({
+                            status: false,
+                            message: 'User not found',
+                        });
+                    }
                 } else {
-                    res.status(401).json({
+                    return res.status(401).json({
                         status: false,
-                        message: 'Uauthorized',
-                    })
+                        message: 'Unauthorized',
+                    });
                 }
             } catch (err) {
-                console.log("err", err)
-                res.status(401).json({
+                console.log("Error during token verification:", err); // Log the error details
+
+                return res.status(401).json({
                     status: false,
                     message: 'Invalid or expired token',
                     error: err
@@ -37,12 +61,13 @@ exports.verifyToken = async (req, res, next) => {
             }
         }
     } else {
-        res.status(400).json({
+        return res.status(400).json({
             status: false,
             message: "User is not authorized or Token is missing",
-        })
+        });
     }
 };
+
 
 const signToken = async (id) => {
     const token = jwt.sign(

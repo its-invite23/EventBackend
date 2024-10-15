@@ -1,5 +1,6 @@
 const dotenv = require("dotenv");
 const  UserRoute = require("./route/UserRoute")
+const enauiryroute  =require("./route/Enquiry")
 require("./dbconfigration");
 dotenv.config();
 
@@ -20,6 +21,8 @@ app.use(express.json({ limit: '2000mb' }));
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/user", UserRoute)
+
+app.use("/enquiry" ,enauiryroute)
 
 upload = multer();
 app.use(upload.none()); 
