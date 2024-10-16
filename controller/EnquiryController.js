@@ -1,10 +1,8 @@
 const  EnquireModal =  require("../model/Enquiry");
 const catchAsync = require("../utils/catchAsync");
-const  User = require("../model/User");
 
 exports.EnquiryPost = catchAsync(async (req, res) => {
     const userId = req?.User?._id;
-    console.log("userId",userId)
     if (!userId) {
         return res.status(400).json({
             status: false,

@@ -6,15 +6,13 @@ const { promisify } = require('util');
 const bcrypt = require('bcrypt');
 
 exports.verifyToken = async (req, res, next) => {
-    // Log the authorization headers for debugging
     console.log("Authorization Header:", req.headers.Authorization || req.headers.authorization);
 
     let authHeader = req.headers.Authorization || req.headers.authorization;
     
     if (authHeader && authHeader.startsWith("Bearer")) {
         let token = authHeader.split(" ")[1];
-        console.log("Token:", token); // Log the token to check if it's being passed
-
+        console.log("Token:", token); 
         if (!token) {
             return res.status(400).json({
                 status: false,
@@ -23,14 +21,11 @@ exports.verifyToken = async (req, res, next) => {
         } else {
             try {
                 const decode = await promisify(jwt.verify)(token, process.env.JWT_SECRET_KEY);
-                console.log("Decoded Token:", decode); 
                 if (decode) {
-                    console.log("Decoded ID:", decode.id);
                     let result = await User.findById({_id : decode.id});
-                    console.log("User Data from DB:", result); // Log the user data fetched from DB
                     if (result) {
                         req.User = result;
-                        next(); // Proceed to the next middleware
+                        next();
                     } else {
                         return res.status(404).json({
                             status: false,
