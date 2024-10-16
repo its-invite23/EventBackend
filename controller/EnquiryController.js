@@ -76,3 +76,40 @@ exports.EnquiryGetUser = catchAsync(async (req, res, next) => {
         });
     }
 });
+
+
+
+exports.EnquiryUpdateStatus = catchAsync(async (req, res) => {
+    try {
+        const { _id, enquire_status } = req.body;
+        if (!_id || !enquire_status) {
+            return res.status(400).json({
+                message: "enquire ID and status are required.",
+                status: false,
+            });
+        }
+
+        const Enquire = await EnquireModal.findById(_id);
+        if (!Enquire) {
+            return res.status(404).json({
+                message: "EnquireModal not found",
+                status: false,
+            });
+        }
+
+        Enquire.enquire_status = enquire_status;
+        await Enquire.save();
+
+        res.status(200).json({
+            message: `Enquiry status updated to ${enquire_status}`,
+            status: true,
+            data: Enquire,
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            message: "Internal Server Error",
+            status: false,
+        });
+    }
+});

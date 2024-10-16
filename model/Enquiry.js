@@ -20,6 +20,10 @@ const EnquirySchema = mongoose.Schema({
     userId :{
         type: mongoose.Schema.Types.ObjectId,
         ref: "User"
+    },
+    enquire_status :{
+        type: String,
+        default: "pending"
     }
 })
 
