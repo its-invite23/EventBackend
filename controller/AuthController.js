@@ -69,7 +69,7 @@ const signToken = async (id) => {
 
 
 exports.signup = catchAsync(async (req, res) => {
-    const { email, password, username, address, phone_number, city } = req.body;
+    const { email, password, username, address, phone_number, country,state,city } = req.body;
 
     let isAlready = await User.findOne({ email });
     if (isAlready) {
@@ -82,11 +82,11 @@ exports.signup = catchAsync(async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 12);
     const record = new User({
         email,
+        country,state,city,
         password: hashedPassword,
         username,
         address,
-        phone_number,
-        city
+        phone_number
     });
 
     const result = await record.save();

@@ -6,7 +6,6 @@ const userSchema = mongoose.Schema({
         required: true,
         unique: true
     },
-
     password: {
         type: String,
         required: true
@@ -21,6 +20,14 @@ const userSchema = mongoose.Schema({
         required: true
     },
     city: {
+        type: String,
+        required: true
+    },
+    country: {
+        type: String,
+        required: true
+    },
+    state: {
         type: String,
         required: true
     },

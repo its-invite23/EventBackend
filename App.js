@@ -1,6 +1,8 @@
 const dotenv = require("dotenv");
 const  UserRoute = require("./route/UserRoute")
 const enauiryroute  =require("./route/Enquiry")
+const packageroute  =require("./route/Package")
+
 require("./dbconfigration");
 dotenv.config();
 
@@ -23,6 +25,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/user", UserRoute)
 
 app.use("/enquiry" ,enauiryroute)
+
+app.use("/package", packageroute)
 
 upload = multer();
 app.use(upload.none()); 
