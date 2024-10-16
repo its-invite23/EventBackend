@@ -36,6 +36,7 @@ exports.EnquiryPost = catchAsync(async (req, res) => {
 
 exports.EnquiryGet = catchAsync(async (req, res, next) => {
     try {
+
         const Enquiryget = await EnquireModal.find({});
         res.status(200).json({
             data: Enquiryget,
@@ -44,6 +45,33 @@ exports.EnquiryGet = catchAsync(async (req, res, next) => {
     } catch (error) {
         res.status(500).json({
             msg: "Failed to fetch Enquiryget",
+            error: error.message,
+        });
+    }
+});
+
+
+exports.EnquiryGetUser = catchAsync(async (req, res, next) => {
+    try {
+        const userId = req.User._id;
+        const enquiries = await EnquireModal.find({ userId: userId }).populate({
+            path: 'userId',
+            select : "username email"
+            //  model: 'User'
+        });
+        if (!enquiries || enquiries.length === 0) {
+            return res.status(404).json({
+                msg: "No enquiries found for this user",
+            });
+        }
+
+        res.status(200).json({
+            data: enquiries, 
+            msg: "Enquiries with user data fetched successfully",
+        });
+    } catch (error) {
+        res.status(500).json({
+            msg: "Failed to fetch enquiries",
             error: error.message,
         });
     }

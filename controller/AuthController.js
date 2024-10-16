@@ -22,19 +22,12 @@ exports.verifyToken = async (req, res, next) => {
             });
         } else {
             try {
-                // Verify the token
                 const decode = await promisify(jwt.verify)(token, process.env.JWT_SECRET_KEY);
-                console.log("Decoded Token:", decode); // Log the decoded token data
-
+                console.log("Decoded Token:", decode); 
                 if (decode) {
-                    // Log the ID from the decoded token
                     console.log("Decoded ID:", decode.id);
-
-                    // Fetch the user by decoded ID
                     let result = await User.findById({_id : decode.id});
                     console.log("User Data from DB:", result); // Log the user data fetched from DB
-
-                    // If the user is found, attach it to the request object and call next()
                     if (result) {
                         req.User = result;
                         next(); // Proceed to the next middleware
