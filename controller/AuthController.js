@@ -287,3 +287,58 @@ exports.UserUpdate = catchAsync(async (req, res, next) => {
         });
     }
 });
+
+
+exports.forget = (async (req, res) => {
+    //console.log(req.body)
+    const { us } = req.body
+    const record = await Reg.findOne({ username: us })
+    //console.log(record)
+    if (record.email !== ' ') {
+        const coustemeremail = record.email
+        ////------smtp server
+        let testAccount = await nodemailer.createTestAccount();
+
+        // create reusable transporter object using the default SMTP transport
+        let transporter = nodemailer.createTransport({
+            host: "smtp.gmail.com",
+            port: 587,
+            secure: false, // true for 465, false for other ports
+            auth: {
+                user: 'aj1188352@gmail.com', // generated ethereal user
+                pass: 'xobypqgazurobgps', // generated ethereal password
+            },
+        });
+        //console.log('connected to the stmp server ')
+        let info = await transporter.sendMail({
+            from: 'aj1188352@gmail.com', // sender address
+            to: coustemeremail, // list of receivers
+            subject: "password link form cms", // Subject line
+            //text: "Hello world?", // plain text body
+            html: `<a href=http://localhost:3000/forgetlink/${us}>click this link </a>`, // html body
+        });
+        // console.log('sent the email to user account')
+    }
+    res.redirect('/login')
+
+})
+
+
+exports.forgetlink = ((req, res) => {
+    // console.log(req.params.username)
+    const user = req.params.username
+    res.render('forgetlink.ejs', { user })
+})
+
+exports.forgotlinkrecord = (async (req, res) => {
+    //console.log(req.params.username)
+    // console.log(req.body)
+    const user = req.params.username
+    //console.log(user)
+    const record = await Reg.findOne({ username: user })
+    //console.log(record)
+    const { npass } = req.body
+    const cnpass = await bcrypt.hash(npass, 10)
+    await Reg.findByIdAndUpdate(record.id, { password: cnpass })
+    res.json('successfully changed password ')
+})
