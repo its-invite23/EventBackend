@@ -6,6 +6,9 @@ const { promisify } = require('util');
 const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
 const ForgetPassword = require('../emailTemplates/ForgetPassword');
+const Booking = require('../model/Booking');
+const Enquiry = require('../model/Enquiry');
+const Package = require('../model/packages');
 
 
 exports.verifyToken = async (req, res, next) => {
@@ -250,6 +253,8 @@ exports.UserListIdDelete = catchAsync(async (req, res, next) => {
 
 
 
+
+
 exports.UserUpdate = catchAsync(async (req, res, next) => {
     try {
         const { Id, email, username, address, phone_number, city } = req.body;
@@ -348,3 +353,29 @@ exports.forgotpassword = async (req, res) => {
         res.status(500).json({ status: false, message: 'Failed to change password' });
     }
 };
+
+
+exports.getCount = catchAsync(async (req, res) => {
+    try {
+        const userCount = await User.countDocuments();
+        const bookingCount  = await Booking.countDocuments();
+        const RecentCount = await Enquiry.countDocuments();
+        const packages = await Package.find({}).limit(5).select("package_name package_image package_categories");
+        const EnquiryData = await Enquiry.find({}).limit(5);
+        return res.status(200).json({
+            status: true,
+            message: "User count retrieved successfully",
+            userCount: userCount,
+            bookingCount: bookingCount,
+            EnquiryCount :RecentCount,
+            packages:packages,
+            EnquiryData:EnquiryData
+        });
+    } catch (error) {
+        return res.status(500).json({
+            status: false,
+            message: "An error occurred while fetching the user count.",
+            error: error.message,
+        });
+    }
+});

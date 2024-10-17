@@ -1,25 +1,27 @@
-const { signup, login, profile, verifyToken, updateUserStatus, resetpassword, UserListIdDelete, UserUpdate, forgotlinkrecord, forgotpassword } = require("../controller/AuthController");
+const { signup, login, profile, verifyToken, updateUserStatus, resetpassword, UserListIdDelete, UserUpdate, forgotlinkrecord, forgotpassword, getCount } = require("../controller/AuthController");
 
-const expreesroute = require("express").Router();
-
-
-expreesroute.post("/signup", signup)
-
-expreesroute.post("/login", login)
-
-expreesroute.get("/profile", verifyToken, profile)
-
-expreesroute.post("/updated_status", updateUserStatus)
-
-expreesroute.post("/forgot-password", forgotlinkrecord)
-
-expreesroute.post("/forgot", verifyToken , forgotpassword)
-
-expreesroute.post("/reset-password", verifyToken, resetpassword)
-
-expreesroute.post("/delete", verifyToken, UserListIdDelete)
-
-expreesroute.post("/update",verifyToken, UserUpdate)
+const userRoute = require("express").Router();
 
 
-module.exports = expreesroute
+userRoute.post("/signup", signup)
+
+userRoute.post("/login", login)
+
+userRoute.get("/profile", verifyToken, profile)
+
+userRoute.post("/updated_status", updateUserStatus)
+
+userRoute.post("/forgot-password", forgotlinkrecord)
+
+userRoute.post("/forgot", verifyToken , forgotpassword)
+
+userRoute.post("/reset-password", verifyToken, resetpassword)
+
+userRoute.post("/delete", verifyToken, UserListIdDelete)
+
+userRoute.post("/update",verifyToken, UserUpdate)
+
+userRoute.get("/all" , getCount)
+
+
+module.exports = userRoute
