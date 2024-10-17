@@ -2,6 +2,7 @@ const dotenv = require("dotenv");
 const  UserRoute = require("./route/UserRoute")
 const enauiryroute  =require("./route/Enquiry")
 const packageroute  =require("./route/Package")
+const bookingroute = require("./route/Booking")
 
 require("./dbconfigration");
 dotenv.config();
@@ -27,6 +28,8 @@ app.use("/user", UserRoute)
 app.use("/enquiry" ,enauiryroute)
 
 app.use("/package", packageroute)
+
+app.use("/booking", bookingroute)
 
 upload = multer();
 app.use(upload.none()); 
