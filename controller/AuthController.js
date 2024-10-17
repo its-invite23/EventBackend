@@ -4,15 +4,16 @@ const AppError = require('../utils/AppError');
 const User = require('../model/User');
 const { promisify } = require('util');
 const bcrypt = require('bcrypt');
+const nodemailer = require('nodemailer');
+const ForgetPassword = require('../emailTemplates/ForgetPassword');
+
 
 exports.verifyToken = async (req, res, next) => {
-    console.log("Authorization Header:", req.headers.Authorization || req.headers.authorization);
 
     let authHeader = req.headers.Authorization || req.headers.authorization;
-    
+
     if (authHeader && authHeader.startsWith("Bearer")) {
         let token = authHeader.split(" ")[1];
-        console.log("Token:", token); 
         if (!token) {
             return res.status(400).json({
                 status: false,
@@ -22,7 +23,7 @@ exports.verifyToken = async (req, res, next) => {
             try {
                 const decode = await promisify(jwt.verify)(token, process.env.JWT_SECRET_KEY);
                 if (decode) {
-                    let result = await User.findById({_id : decode.id});
+                    let result = await User.findById({ _id: decode.id });
                     if (result) {
                         req.User = result;
                         next();
@@ -39,7 +40,6 @@ exports.verifyToken = async (req, res, next) => {
                     });
                 }
             } catch (err) {
-                console.log("Error during token verification:", err); // Log the error details
 
                 return res.status(401).json({
                     status: false,
@@ -69,7 +69,7 @@ const signToken = async (id) => {
 
 
 exports.signup = catchAsync(async (req, res) => {
-    const { email, password, username, address, phone_number, country,state,city } = req.body;
+    const { email, password, username, address, phone_number, country, state, city } = req.body;
 
     let isAlready = await User.findOne({ email });
     if (isAlready) {
@@ -82,7 +82,7 @@ exports.signup = catchAsync(async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 12);
     const record = new User({
         email,
-        country,state,city,
+        country, state, city,
         password: hashedPassword,
         username,
         address,
@@ -289,56 +289,62 @@ exports.UserUpdate = catchAsync(async (req, res, next) => {
 });
 
 
-exports.forget = (async (req, res) => {
-    //console.log(req.body)
-    const { us } = req.body
-    const record = await Reg.findOne({ username: us })
-    //console.log(record)
-    if (record.email !== ' ') {
-        const coustemeremail = record.email
-        ////------smtp server
-        let testAccount = await nodemailer.createTestAccount();
 
-        // create reusable transporter object using the default SMTP transport
-        let transporter = nodemailer.createTransport({
-            host: "smtp.gmail.com",
-            port: 587,
-            secure: false, // true for 465, false for other ports
-            auth: {
-                user: 'aj1188352@gmail.com', // generated ethereal user
-                pass: 'xobypqgazurobgps', // generated ethereal password
-            },
+
+exports.forgotlinkrecord = async (req, res) => {
+    try {
+        const { email } = req.body;
+        const record = await User.findOne({ email: email });
+        if (record && record.email !== ' ') {
+            const customerEmail = record.email;
+            const customerUser = record.username;
+            const resetLink = `http://localhost:3000/forgetlink/${record._id}`;
+            let transporter = nodemailer.createTransport({
+                host: "smtp.gmail.com",
+                port: 587,
+                secure: false,
+                auth: {
+                    user: process.env.user, 
+                    pass: process.env.password, 
+                },
+            });
+            const emailHtml = ForgetPassword(resetLink, customerUser);
+            let info = await transporter.sendMail({
+                from: 'ankitkumarjain0748@gmail.com',
+                to: customerEmail,
+                subject: "Reset Your Password",
+                html: emailHtml, 
+            });
+            console.log('Email sent to user account');
+        }
+        res.json({
+            status: true,
+            message: 'Email has been sent to your registered email',
         });
-        //console.log('connected to the stmp server ')
-        let info = await transporter.sendMail({
-            from: 'aj1188352@gmail.com', // sender address
-            to: coustemeremail, // list of receivers
-            subject: "password link form cms", // Subject line
-            //text: "Hello world?", // plain text body
-            html: `<a href=http://localhost:3000/forgetlink/${us}>click this link </a>`, // html body
+    } catch (error) {
+        console.error("Error in forget password process:", error);
+        res.json({
+            status: false,
+            message: 'Failed to send email',
         });
-        // console.log('sent the email to user account')
     }
-    res.redirect('/login')
-
-})
+};
 
 
-exports.forgetlink = ((req, res) => {
-    // console.log(req.params.username)
-    const user = req.params.username
-    res.render('forgetlink.ejs', { user })
-})
 
-exports.forgotlinkrecord = (async (req, res) => {
-    //console.log(req.params.username)
-    // console.log(req.body)
-    const user = req.params.username
-    //console.log(user)
-    const record = await Reg.findOne({ username: user })
-    //console.log(record)
-    const { npass } = req.body
-    const cnpass = await bcrypt.hash(npass, 10)
-    await Reg.findByIdAndUpdate(record.id, { password: cnpass })
-    res.json('successfully changed password ')
-})
+exports.forgotpassword = async (req, res) => {
+    try {
+        const _id = req?.User?._id
+        const { npass } = req.body;
+        const record = await User.findById(_id);
+        if (!record) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        const hashedPassword = await bcrypt.hash(npass, 10);
+        await User.findByIdAndUpdate(_id, { password: hashedPassword });
+        res.json({ status: true, message: 'Password successfully changed' });
+    } catch (error) {
+        console.error("Error updating password:", error);
+        res.status(500).json({ status: false, message: 'Failed to change password' });
+    }
+};
