@@ -1,14 +1,15 @@
 const dotenv = require("dotenv");
-const  UserRoute = require("./route/UserRoute")
-const enauiryroute  =require("./route/Enquiry")
-const packageroute  =require("./route/Package")
+const UserRoute = require("./route/UserRoute")
+const enauiryroute = require("./route/Enquiry")
+const packageroute = require("./route/Package")
 const bookingroute = require("./route/Booking")
+const Contactroute = require("./route/Contact")
 
 require("./dbconfigration");
 dotenv.config();
 
 const express = require("express");
-const multer = require("multer"); 
+const multer = require("multer");
 const app = express();
 const cors = require("cors");
 
@@ -25,14 +26,16 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/user", UserRoute)
 
-app.use("/enquiry" ,enauiryroute)
+app.use("/enquiry", enauiryroute)
 
 app.use("/package", packageroute)
 
 app.use("/booking", bookingroute)
 
+app.use("/contact", Contactroute)
+
 upload = multer();
-app.use(upload.none()); 
+app.use(upload.none());
 
 
 
