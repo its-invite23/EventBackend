@@ -1,6 +1,6 @@
 const  EnquireModal =  require("../model/Enquiry");
 const catchAsync = require("../utils/catchAsync");
-const emailTemplate = require("../emailTemplates/replyContact");
+const emailTemplate = require("../emailTemplates/replyMessage");
 const sendEmail = require("../utils/EmailMailler");
 
 exports.EnquiryPost = catchAsync(async (req, res) => {

@@ -1,4 +1,4 @@
-const emailTemplate = require("../emailTemplates/replyContact");
+const emailTemplate = require("../emailTemplates/replyMessage");
 const contactmodal = require("../model/Contact");
 const catchAsync = require('../utils/catchAsync');
 const nodemailer = require('nodemailer');
