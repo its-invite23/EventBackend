@@ -13,9 +13,9 @@ const EnquirySchema = mongoose.Schema({
         type: String,
         required: true
     },
-    creted_at :{
-        type: Date,
-        default: Date.now
+    reply_message:{
+        type: String,
+        default: null
     },
     userId :{
         type: mongoose.Schema.Types.ObjectId,
@@ -24,6 +24,10 @@ const EnquirySchema = mongoose.Schema({
     enquire_status :{
         type: String,
         default: "pending"
+    },
+    creted_at :{
+        type: Date,
+        default: Date.now
     }
 })
 

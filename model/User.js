@@ -40,14 +40,15 @@ const userSchema = mongoose.Schema({
         required: true,
         default: "user"
     },
-    created_date: {
-        type: Date,
-        default: Date.now
-    },
+
     user_status: {
         type: String,
         default: "active"
     }
+    , created_date: {
+        type: Date,
+        default: Date.now
+    },
 })
 
 const User = mongoose.model("User", userSchema);

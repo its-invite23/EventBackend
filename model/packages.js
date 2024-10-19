@@ -1,8 +1,17 @@
 const mongoose = require("mongoose");
 
 const PackageSchema = new mongoose.Schema({
-  
+
     package_name: {
+        type: String,
+        required: true
+    },
+    services_provider_name: {
+        type: String,
+        required: true
+    },
+
+    services_provider_email: {
         type: String,
         required: true
     },

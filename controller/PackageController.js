@@ -3,8 +3,9 @@ const catchAsync = require("../utils/catchAsync");
 
 
 exports.packageadd = catchAsync(async (req, res) => {
-    const { package_name, package_price_min, package_price_max, package_categories, package_description, package_status,package_image,package_duration, package_discount,package_people,package_availability,  } = req.body;
+    const { package_name, package_price_min, services_provider_name,services_provider_email, package_price_max, package_categories, package_description, package_status,package_image,package_duration, package_discount,package_people,package_availability,  } = req.body;
     const record = new packages({
+        services_provider_name,services_provider_email,
         package_name, package_price_min, package_price_max, package_categories, package_description, package_status,package_image,package_duration, package_discount,package_people,package_availability
     });
     const result = await record.save();
@@ -56,7 +57,7 @@ exports.packageStatusget = catchAsync(async (req, res, next) => {
 
 exports.PackageUpdate = catchAsync(async (req, res, next) => {
     try {
-        const { Id, package_name, package_price_min, package_price_max, package_categories, package_description, package_status,package_image,package_duration, package_discount,package_people,package_availability } = req.body;
+        const { Id, package_name, package_price_min, package_price_max, package_categories, package_description, package_status,package_image,package_duration, package_discount,package_people,package_availability, services_provider_name,services_provider_email, } = req.body;
         if (!Id) {
             return res.status(400).json({
                 status: false,
@@ -65,7 +66,7 @@ exports.PackageUpdate = catchAsync(async (req, res, next) => {
         }
         const updatedRecord = await packages.findByIdAndUpdate(
             Id,
-            {  package_name, package_price_min, package_price_max, package_categories, package_description, package_status,package_image,package_duration, package_discount,package_people,package_availability  },
+            {  package_name, package_price_min, package_price_max, package_categories, package_description, package_status,package_image,package_duration, package_discount,package_people,package_availability, services_provider_name,services_provider_email  },
             { new: true, runValidators: true }
         );
 

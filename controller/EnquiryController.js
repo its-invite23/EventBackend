@@ -1,5 +1,7 @@
 const  EnquireModal =  require("../model/Enquiry");
 const catchAsync = require("../utils/catchAsync");
+const nodemailer = require('nodemailer');
+const emailTemplate = require("../emailTemplates/emailTemplate");
 
 exports.EnquiryPost = catchAsync(async (req, res) => {
     const userId = req?.User?._id;
@@ -111,3 +113,70 @@ exports.EnquiryUpdateStatus = catchAsync(async (req, res) => {
         });
     }
 });
+
+
+exports.EnquiryReply = async (req, res) => {
+    const { email, reply_message, name } = req.body;
+
+    try {
+        const EmailFind = await EnquireModal.findOne({ email });
+        console.log("EmailFind", EmailFind);
+
+        if (!EmailFind) {
+            return res.status(400).json({
+                message: "Email Not Found",
+                status: false,
+            });
+        }
+
+        const result = await EnquireModal.findByIdAndUpdate(
+            EmailFind._id, 
+            { 
+                reply_message, 
+                enquire_status: "completed", 
+                name 
+            },
+            { new: true }
+        );
+
+        if (result) {
+            const customerEmail = result.email;
+            const customerUser = result.name;
+            const customerReply = result.reply_message;
+            let transporter = nodemailer.createTransport({
+                host: "smtp.gmail.com",
+                port: 587,
+                secure: false,
+                auth: {
+                    user: process.env.user, 
+                    pass: process.env.password, 
+                },
+            });
+            const emailHtml = emailTemplate( customerUser ,customerReply );
+            let info = await transporter.sendMail({
+                from: process.env.user,
+                to: customerEmail,
+                subject: 'Thank You for Enquiry Us',
+                html: emailHtml, 
+            });
+            console.log('Email sent to user account');
+        }
+        if (result) {
+            return res.json({
+                status: true,
+                message: "You have successfully replied to your query!",
+            });
+        } else {
+            return res.status(400).json({
+                status: false,
+                message: "No changes made.",
+            });
+        }
+    } catch (error) {
+        return res.status(500).json({
+            status: false,
+            error: error.message,
+            message: "Failed to update the contact.",
+        });
+    }
+};
