@@ -1,14 +1,15 @@
-const emailTemplate = require("../emailTemplates/emailTemplate");
-const  contactmodal = require("../model/Contact");
+const emailTemplate = require("../emailTemplates/replyContact");
+const contactmodal = require("../model/Contact");
 const catchAsync = require('../utils/catchAsync');
 const nodemailer = require('nodemailer');
+const sendEmail = require("../utils/EmailMailler");
 
 
 exports.ContactPost = (async (req, res) => {
-    const {  email , name } = req.body;
+    const { email, name } = req.body;
 
     const record = new contactmodal({
-        email , name
+        email, name
     });
 
     const result = await record.save();
@@ -47,7 +48,6 @@ exports.ContactReply = async (req, res) => {
 
     try {
         const EmailFind = await contactmodal.findOne({ email });
-        console.log("EmailFind", EmailFind);
 
         if (!EmailFind) {
             return res.status(400).json({
@@ -57,38 +57,17 @@ exports.ContactReply = async (req, res) => {
         }
 
         const result = await contactmodal.findByIdAndUpdate(
-            EmailFind._id, 
-            { 
-                reply_message, 
-                contact_status: "read", 
-                name 
+            EmailFind._id,
+            {
+                reply_message,
+                contact_status: "read",
+                name
             },
             { new: true }
         );
-
+        const subject = "Thank You for Contact US"
         if (result) {
-            const customerEmail = result.email;
-            const customerUser = result.name;
-            const customerReply = result.reply_message;
-            let transporter = nodemailer.createTransport({
-                host: "smtp.gmail.com",
-                port: 587,
-                secure: false,
-                auth: {
-                    user: process.env.user, 
-                    pass: process.env.password, 
-                },
-            });
-            const emailHtml = emailTemplate( customerUser ,customerReply );
-            let info = await transporter.sendMail({
-                from: process.env.user,
-                to: customerEmail,
-                subject: 'Thank You for Contacting Us',
-                html: emailHtml, 
-            });
-            console.log('Email sent to user account');
-        }
-        if (result) {
+            await sendEmail(result.email, result.name, result.reply_message, subject, emailTemplate); // Use the middleware to send the email
             return res.json({
                 status: true,
                 message: "You have successfully replied to your query!",
