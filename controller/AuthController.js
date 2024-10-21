@@ -162,15 +162,10 @@ exports.login = catchAsync(async (req, res, next) => {
 
 exports.profile = catchAsync(async (req, res, next) => {
   try {
-    // Get pagination parameters from request query (defaults: page=1, limit=10)
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
-    const skip = (page - 1) * limit; // Calculate how many records to skip
-
-    // Fetch total count of users
+    const skip = (page - 1) * limit; 
     const totalUsers = await User.countDocuments();
-
-    // Fetch users for the current page
     const users = await User.find({})
       .select("-password")
       .skip(skip)
