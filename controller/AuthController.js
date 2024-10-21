@@ -379,3 +379,19 @@ exports.getCount = catchAsync(async (req, res) => {
         });
     }
 });
+
+exports.profilegettoken = catchAsync(async (req, res, next) => {
+    try {
+        const user =req?.User?._id
+        const userprofile = await User.findById({_id:user}).select('-password');
+        res.status(200).json({
+            data: userprofile,
+            msg: "Profile Get",
+        });
+    } catch (error) {
+        res.status(500).json({
+            msg: "Failed to fetch profile",
+            error: error.message,
+        });
+    }
+});
