@@ -162,15 +162,40 @@ exports.login = catchAsync(async (req, res, next) => {
 
 exports.profile = catchAsync(async (req, res, next) => {
   try {
-    const userprofile = await User.find({}).select("-password");
-    res.status(200).json({
-      data: userprofile,
-      msg: "Profile Get",
+    // Get pagination parameters from request query (defaults: page=1, limit=10)
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit; // Calculate how many records to skip
+
+    // Fetch total count of users
+    const totalUsers = await User.countDocuments();
+
+    // Fetch users for the current page
+    const users = await User.find({})
+      .select("-password")
+      .skip(skip)
+      .limit(limit);
+
+    const totalPages = Math.ceil(totalUsers / limit);
+
+    return res.status(200).json({
+      status: true,
+      message: "Users retrieved successfully",
+      data: {
+        users: users,
+        totalUsers: totalUsers,
+        totalPages: totalPages,
+        currentPage: page,
+        perPage: limit,
+        nextPage: page < totalPages ? page + 1 : null,
+        previousPage: page > 1 ? page - 1 : null,
+      },
     });
   } catch (error) {
-    res.status(500).json({
-      msg: "Failed to fetch profile",
-      error: error.message,
+    return res.status(500).json({
+      status: false,
+      message: "An error occurred while fetching users.",
+      error: error._message,
     });
   }
 });
@@ -358,68 +383,42 @@ exports.forgotpassword = async (req, res) => {
 };
 
 exports.getCount = catchAsync(async (req, res) => {
-  try {
-    const userCount = await User.countDocuments();
-    const bookingCount = await Booking.countDocuments();
-    const RecentCount = await Enquiry.countDocuments();
-    const packages = await Package.find({})
-      .limit(5)
-      .select("package_name package_image package_categories");
-    const EnquiryData = await Enquiry.find({}).limit(5);
-    return res.status(200).json({
-      status: true,
-      message: "User count retrieved successfully",
-      userCount: userCount,
-      bookingCount: bookingCount,
-      EnquiryCount: RecentCount,
-      packages: packages,
-      EnquiryData: EnquiryData,
-    });
-  } catch (error) {
-    return res.status(500).json({
-      status: false,
-      message: "An error occurred while fetching the user count.",
-      error: error.message,
-    });
-  }
+    try {
+        const userCount = await User.countDocuments();
+        const bookingCount  = await Booking.countDocuments();
+        const RecentCount = await Enquiry.countDocuments();
+        const packages = await Package.find({}).limit(5).select("package_name package_image package_categories");
+        const EnquiryData = await Enquiry.find({}).limit(5);
+        return res.status(200).json({
+            status: true,
+            message: "User count retrieved successfully",
+            userCount: userCount,
+            bookingCount: bookingCount,
+            EnquiryCount :RecentCount,
+            packages:packages,
+            EnquiryData:EnquiryData
+        });
+    } catch (error) {
+        return res.status(500).json({
+            status: false,
+            message: "An error occurred while fetching the user count.",
+            error: error.message,
+        });
+    }
 });
 
-exports.getUsers = catchAsync(async (req, res) => {
-  try {
-    // Get pagination parameters from request query (defaults: page=1, limit=10)
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 10;
-    const skip = (page - 1) * limit; // Calculate how many records to skip
-
-    // Fetch total count of users
-    const totalUsers = await User.countDocuments();
-
-    // Fetch users for the current page
-    const users = await User.find({})
-      .select("-password")
-      .skip(skip)
-      .limit(limit);
-
-    const totalPages = Math.ceil(totalUsers / limit);
-
-    return res.status(200).json({
-      status: true,
-      message: "Users retrieved successfully",
-      data: {
-        users: users,
-        totalUsers: totalUsers,
-        totalPages: totalPages,
-        currentPage: page,
-        perPage: limit,
-        nextPage: page < totalPages ? page + 1 : null,
-        previousPage: page > 1 ? page - 1 : null,
-      },
-    });
-  } catch (error) {
-    return res.status(500).json({
-      status: false,
-      message: "An error occurred while fetching users.",
-      error: error.message,
-    });
-  }
+exports.profilegettoken = catchAsync(async (req, res, next) => {
+    try {
+        const user =req?.User?._id
+        const userprofile = await User.findById({_id:user}).select('-password');
+        res.status(200).json({
+            data: userprofile,
+            msg: "Profile Get",
+        });
+    } catch (error) {
+        res.status(500).json({
+            msg: "Failed to fetch profile",
+            error: error.message,
+        });
+    }
 });

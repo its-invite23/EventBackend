@@ -9,7 +9,6 @@ require("./dbconfigration");
 dotenv.config();
 
 const express = require("express");
-const multer = require("multer");
 const app = express();
 const cors = require("cors");
 
@@ -34,6 +33,8 @@ app.use("/package", packageroute)
 app.use("/booking", bookingroute)
 
 app.use("/contact", Contactroute)
+
+
 
 
 

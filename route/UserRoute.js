@@ -1,4 +1,4 @@
-const { signup, login, profile, verifyToken, updateUserStatus, resetpassword, UserListIdDelete, UserUpdate, forgotlinkrecord, forgotpassword, getCount, getUsers } = require("../controller/AuthController");
+const { signup, login, profile, verifyToken, updateUserStatus, resetpassword, UserListIdDelete, UserUpdate, forgotlinkrecord, forgotpassword, getCount, profilegettoken } = require("../controller/AuthController");
 
 const userRoute = require("express").Router();
 
@@ -7,7 +7,7 @@ userRoute.post("/signup", signup)
 
 userRoute.post("/login", login)
 
-userRoute.get("/profile", verifyToken, profile)
+userRoute.get("/profile", profile)
 
 userRoute.post("/updated_status", updateUserStatus)
 
@@ -23,6 +23,7 @@ userRoute.post("/update",verifyToken, UserUpdate)
 
 userRoute.get("/all" , getCount)
 
-userRoute.get("/get" , getUsers)
+userRoute.get("/profile-token" , verifyToken, profilegettoken)
+
 
 module.exports = userRoute
