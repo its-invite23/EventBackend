@@ -24,6 +24,7 @@ app.use(cors(corsOptions));
 app.use(express.json({ limit: '2000mb' }));
 app.use(express.urlencoded({ extended: true }));
 
+
 app.use("/user", UserRoute)
 
 app.use("/enquiry", enauiryroute)
@@ -33,9 +34,6 @@ app.use("/package", packageroute)
 app.use("/booking", bookingroute)
 
 app.use("/contact", Contactroute)
-
-upload = multer();
-app.use(upload.none());
 
 
 
