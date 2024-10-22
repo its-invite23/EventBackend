@@ -1,30 +1,17 @@
 {
-  "version": 2,
-  "name": "Event Management Company",
-  "builds": [
-    { 
-      "src": "/App.js", 
-      "use": "@vercel/node",
-      "config": {
-        "maxDuration": 30,
-        "memory": 3009
+    "version": 2,
+    "name": "Event Management Company",
+    "builds": [
+      { 
+        "src": "/App.js", 
+        "use": "@vercel/node",
+        "config": {
+          "maxDuration": 30,
+          "memory": 3009
+        }
       }
-    }
-  ],
-  "routes": [
-    { 
-      "src": "/(.*)", 
-      "dest": "/App.js",
-      "methods": ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-      "headers": {
-        "source": [
-          "https://user-event.vercel.app" 
-        ],
-        "headers": [
-          { "key": "Access-Control-Allow-Origin", "value": "*" },
-          { "key": "Access-Control-Allow-Methods", "value": "GET, POST, PUT, DELETE, PATCH, OPTIONS" }
-        ]
-      }  
-    }
-  ]
-}
+    ],
+    "routes": [
+      { "src": "/(.*)", "dest": "/App.js" }
+    ]
+  }
