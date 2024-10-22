@@ -13,7 +13,7 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const corsOptions = {
-  origin: ['https://user-event.vercel.app', 'https://admin-event-phi.vercel.app', 'http://localhost:3000'], // Allowed origins
+  origin: "*", // Allowed origins
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   allowedHeaders: '*', // Allow all headers
   credentials: true,
