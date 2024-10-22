@@ -3,7 +3,7 @@
     "name": "Event Management Company",
     "builds": [
       { 
-        "src": "/App.js", 
+        "src": "/app.js", 
         "use": "@vercel/node",
         "config": {
           "maxDuration": 30,
@@ -12,6 +12,6 @@
       }
     ],
     "routes": [
-      { "src": "/(.*)", "dest": "/App.js" }
+      { "src": "/(.*)", "dest": "/app.js" }
     ]
   }

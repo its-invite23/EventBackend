@@ -3,28 +3,18 @@ const cors = require('cors');
 const app = express();
 
 const corsOptions = {
-  origin: function (origin, callback) {
-    const allowedOrigins = [
-      'https://user-event.vercel.app',
-      'https://admin-event-phi.vercel.app',
-      'http://localhost:3000'
-    ];
-    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
+  origin: ['https://user-event.vercel.app', 'https://admin-event-phi.vercel.app', 'http://localhost:3000'], // Allowed origins
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  allowedHeaders: '*', // Allow all headers
   credentials: true,
-  optionsSuccessStatus: 200,
-};
+  optionsSuccessStatus: 200, // for legacy browsers
+}
 
-// Use CORS middleware before routes
+// Apply CORS middleware globally
 app.use(cors(corsOptions));
 
-// Handle OPTIONS preflight requests
-app.options('*', cors(corsOptions));
+// Handle preflight requests for POST routes
+app.options("*", cors(corsOptions));
 
 // Other middleware and routes
 app.use(express.json());
