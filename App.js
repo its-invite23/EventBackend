@@ -14,12 +14,19 @@ const cors = require("cors");
 
 
 const corsOptions = {
-  origin: '*',
+  origin: [
+    'https://user-event.vercel.app', // Frontend app
+    'https://admin-event-phi.vercel.app', // Admin app
+    'http://localhost:3000' // Local development
+  ],
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  credentials: true,
+  allowedHeaders: '*', // Allow all headers
+  credentials: true, // If you are using cookies or HTTP authentication
+  optionsSuccessStatus: 200, // For legacy browsers
 };
 
 app.use(cors(corsOptions));
+
 app.use(express.json({ limit: '2000mb' }));
 app.use(express.urlencoded({ extended: true }));
 
