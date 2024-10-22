@@ -14,15 +14,21 @@ const cors = require("cors");
 
 
 const corsOptions = {
-  origin: [
-    'https://user-event.vercel.app', // Frontend app
-    'https://admin-event-phi.vercel.app', // Admin app
-    'http://localhost:3000' // Local development
-  ],
+  origin: function (origin, callback) {
+    const allowedOrigins = [
+      'https://user-event.vercel.app',
+      'https://admin-event-phi.vercel.app',
+      'http://localhost:3000'
+    ];
+    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  allowedHeaders: '*', 
-  credentials: true, 
-  optionsSuccessStatus: 200, // For legacy browsers
+  credentials: true,
+  optionsSuccessStatus: 200,
 };
 
 app.use(cors(corsOptions));
