@@ -14,14 +14,26 @@ const app = express();
 const cors = require("cors");
 
 
-const corsOptions = {
-  origin: ['https://user-event.vercel.app', 'https://admin-event-phi.vercel.app', 'http://localhost:3000'], // Allowed origins
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  allowedHeaders: '*', // Allow all headers
-  credentials: true,
-  optionsSuccessStatus: 200, // for legacy browsers
-}
 
+// Define your allowed origins
+const allowedOrigins = [
+  'https://user-event.vercel.app',
+  'https://admin-event-phi.vercel.app'
+];
+
+// CORS middleware
+app.use(cors({
+  origin: (origin, callback) => {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true); // Allow the origin
+    } else {
+      callback(new Error('Not allowed by CORS')); // Reject the origin
+    }
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS']
+}));
 
 // Apply CORS middleware globally
 app.use(cors(corsOptions));
