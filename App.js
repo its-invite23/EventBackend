@@ -1,9 +1,9 @@
 const dotenv = require("dotenv");
-const UserRoute = require("./route/UserRoute")
-const enauiryroute = require("./route/Enquiry")
-const packageroute = require("./route/Package")
-const bookingroute = require("./route/Booking")
-const Contactroute = require("./route/Contact")
+const UserRoute = require("./route/UserRoute");
+const enquiryroute = require("./route/Enquiry");
+const packageroute = require("./route/Package");
+const bookingroute = require("./route/Booking");
+const Contactroute = require("./route/Contact");
 
 require("./dbconfigration");
 dotenv.config();
@@ -11,7 +11,6 @@ dotenv.config();
 const express = require("express");
 const app = express();
 const cors = require("cors");
-
 
 const corsOptions = {
   origin: function (origin, callback) {
@@ -33,25 +32,22 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
+// Handle pre-flight requests
+app.options('*', cors(corsOptions));
+
+// JSON body and URL-encoded body handling
 app.use(express.json({ limit: '2000mb' }));
 app.use(express.urlencoded({ extended: true }));
 
+// Routes
+app.use("/user", UserRoute);
+app.use("/enquiry", enquiryroute);
+app.use("/package", packageroute);
+app.use("/booking", bookingroute);
+app.use("/contact", Contactroute);
 
-app.use("/user", UserRoute)
-
-app.use("/enquiry", enauiryroute)
-
-app.use("/package", packageroute)
-
-app.use("/booking", bookingroute)
-
-app.use("/contact", Contactroute)
-
-
-
-
-
-const PORT = process.env.REACT_APP_SERVER_DOMIN;
+// Check server port
+const PORT = process.env.SERVER_DOMIN || 5000;
 
 app.get("/", (req, res) => {
   res.json({
