@@ -356,7 +356,6 @@ exports.forgotlinkrecord = async (req, res) => {
     });
   }
 };
-
 exports.forgotpassword = async (req, res) => {
   try {
     const _id = req?.User?._id;
