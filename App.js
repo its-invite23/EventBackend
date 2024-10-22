@@ -15,13 +15,13 @@ const cors = require("cors");
 
 const corsOptions = {
   origin: [
-    'http://user-event.vercel.app', // Frontend app
-    'http://admin-event-phi.vercel.app', // Admin app
+    'https://user-event.vercel.app', // Frontend app
+    'https://admin-event-phi.vercel.app', // Admin app
     'http://localhost:3000' // Local development
   ],
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-  allowedHeaders: '*', // Allow all headers
-  credentials: true, // If you are using cookies or HTTP authentication
+  allowedHeaders: '*', 
+  credentials: true, 
   optionsSuccessStatus: 200, // For legacy browsers
 };
 
