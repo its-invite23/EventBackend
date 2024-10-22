@@ -1,16 +1,6 @@
-const dotenv = require("dotenv");
-const UserRoute = require("./route/UserRoute");
-const enquiryroute = require("./route/Enquiry");
-const packageroute = require("./route/Package");
-const bookingroute = require("./route/Booking");
-const Contactroute = require("./route/Contact");
-
-require("./dbconfigration");
-dotenv.config();
-
-const express = require("express");
+const express = require('express');
+const cors = require('cors');
 const app = express();
-const cors = require("cors");
 
 const corsOptions = {
   origin: function (origin, callback) {
@@ -19,7 +9,7 @@ const corsOptions = {
       'https://admin-event-phi.vercel.app',
       'http://localhost:3000'
     ];
-    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
@@ -30,30 +20,23 @@ const corsOptions = {
   optionsSuccessStatus: 200,
 };
 
+// Use CORS middleware before routes
 app.use(cors(corsOptions));
 
-// Handle pre-flight requests
+// Handle OPTIONS preflight requests
 app.options('*', cors(corsOptions));
 
-// JSON body and URL-encoded body handling
-app.use(express.json({ limit: '2000mb' }));
+// Other middleware and routes
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Routes
-app.use("/user", UserRoute);
-app.use("/enquiry", enquiryroute);
-app.use("/package", packageroute);
-app.use("/booking", bookingroute);
-app.use("/contact", Contactroute);
+// Your routes
+app.use("/user", require('./route/UserRoute'));
+app.use("/enquiry", require('./route/Enquiry'));
+app.use("/package", require('./route/Package'));
+app.use("/booking", require('./route/Booking'));
+app.use("/contact", require('./route/Contact'));
 
-// Check server port
-const PORT = process.env.SERVER_DOMIN || 5000;
-
-app.get("/", (req, res) => {
-  res.json({
-    msg: 'Okay',
-    status: 200,
-  });
-});
-
-app.listen(PORT, () => console.log("Server is running at port : " + PORT));
+// Start the server
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
