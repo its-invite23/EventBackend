@@ -1,6 +1,18 @@
-const express = require('express');
-const cors = require('cors');
+
+const dotenv = require("dotenv");
+const UserRoute = require("./route/UserRoute")
+const enauiryroute = require("./route/Enquiry")
+const packageroute = require("./route/Package")
+const bookingroute = require("./route/Booking")
+const Contactroute = require("./route/Contact")
+
+require("./dbconfigration");
+dotenv.config();
+
+const express = require("express");
 const app = express();
+const cors = require("cors");
+
 
 const corsOptions = {
   origin: ['https://user-event.vercel.app', 'https://admin-event-phi.vercel.app', 'http://localhost:3000'], // Allowed origins
@@ -10,22 +22,31 @@ const corsOptions = {
   optionsSuccessStatus: 200, // for legacy browsers
 }
 
+
 // Apply CORS middleware globally
 app.use(cors(corsOptions));
 
 // Handle preflight requests for POST routes
 app.options("*", cors(corsOptions));
-
-// Other middleware and routes
-app.use(express.json());
+app.use(express.json({ limit: '2000mb' }));
 app.use(express.urlencoded({ extended: true }));
 
-// Your routes
-app.use("/user", require('./route/UserRoute'));
-app.use("/enquiry", require('./route/Enquiry'));
-app.use("/package", require('./route/Package'));
-app.use("/booking", require('./route/Booking'));
-app.use("/contact", require('./route/Contact'));
+
+app.use("/user", UserRoute)
+
+app.use("/enquiry", enauiryroute)
+
+app.use("/package", packageroute)
+
+app.use("/booking", bookingroute)
+
+app.use("/contact", Contactroute)
+
+
+
+
+
+const PORT = process.env.REACT_APP_SERVER_DOMIN;
 
 app.get("/", (req, res) => {
   res.json({
@@ -33,6 +54,5 @@ app.get("/", (req, res) => {
     status: 200,
   });
 });
-// Start the server
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
+
+app.listen(PORT, () => console.log("Server is running at port : " + PORT));

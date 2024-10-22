@@ -160,6 +160,7 @@ exports.login = catchAsync(async (req, res, next) => {
   }
 });
 
+
 exports.profile = catchAsync(async (req, res, next) => {
   try {
     const page = parseInt(req.query.page) || 1;

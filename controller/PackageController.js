@@ -3,10 +3,10 @@ const catchAsync = require("../utils/catchAsync");
 
 
 exports.packageadd = catchAsync(async (req, res) => {
-    const { package_name, package_price_min, services_provider_name,services_provider_email, package_price_max, package_categories, package_description, package_status,package_image,package_duration, package_discount,package_people,package_availability,  } = req.body;
+    const { package_name, package_price_min, services_provider_name, services_provider_email, package_price_max, package_categories, package_description, package_status, package_image, package_duration, package_discount, package_people, package_availability, } = req.body;
     const record = new packages({
-        services_provider_name,services_provider_email,
-        package_name, package_price_min, package_price_max, package_categories, package_description, package_status,package_image,package_duration, package_discount,package_people,package_availability
+        services_provider_name, services_provider_email,
+        package_name, package_price_min, package_price_max, package_categories, package_description, package_status, package_image, package_duration, package_discount, package_people, package_availability
     });
     const result = await record.save();
     if (result) {
@@ -25,9 +25,24 @@ exports.packageadd = catchAsync(async (req, res) => {
 
 exports.packageget = catchAsync(async (req, res, next) => {
     try {
-        const packagegetdata = await packages.find({});
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        const skip = (page - 1) * limit;
+        const totalpackages = await packages.countDocuments();
+        const packagegetdata = await packages.find({}).skip(skip)
+            .limit(limit);
+        const totalPages = Math.ceil(totalpackages / limit);
+
         res.status(200).json({
-            data: packagegetdata,
+            data: {
+                packagegetdata: packagegetdata,
+                totalpackages: totalpackages,
+                totalPages: totalPages,
+                currentPage: page,
+                perPage: limit,
+                nextPage: page < totalPages ? page + 1 : null,
+                previousPage: page > 1 ? page - 1 : null,
+            },
             msg: "Package data retrieved successfully",
         });
     } catch (error) {
@@ -41,7 +56,7 @@ exports.packageget = catchAsync(async (req, res, next) => {
 
 exports.packageStatusget = catchAsync(async (req, res, next) => {
     try {
-        const packagegetdata = await packages.find({package_status : "active"});
+        const packagegetdata = await packages.find({ package_status: "active" });
         res.status(200).json({
             data: packagegetdata,
             msg: "Package data retrieved successfully",
@@ -57,7 +72,7 @@ exports.packageStatusget = catchAsync(async (req, res, next) => {
 
 exports.PackageUpdate = catchAsync(async (req, res, next) => {
     try {
-        const { Id, package_name, package_price_min, package_price_max, package_categories, package_description, package_status,package_image,package_duration, package_discount,package_people,package_availability, services_provider_name,services_provider_email, } = req.body;
+        const { Id, package_name, package_price_min, package_price_max, package_categories, package_description, package_status, package_image, package_duration, package_discount, package_people, package_availability, services_provider_name, services_provider_email, } = req.body;
         if (!Id) {
             return res.status(400).json({
                 status: false,
@@ -66,7 +81,7 @@ exports.PackageUpdate = catchAsync(async (req, res, next) => {
         }
         const updatedRecord = await packages.findByIdAndUpdate(
             Id,
-            {  package_name, package_price_min, package_price_max, package_categories, package_description, package_status,package_image,package_duration, package_discount,package_people,package_availability, services_provider_name,services_provider_email  },
+            { package_name, package_price_min, package_price_max, package_categories, package_description, package_status, package_image, package_duration, package_discount, package_people, package_availability, services_provider_name, services_provider_email },
             { new: true, runValidators: true }
         );
 
