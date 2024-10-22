@@ -15,8 +15,8 @@ const cors = require("cors");
 
 const corsOptions = {
   origin: [
-    'https://user-event.vercel.app', // Frontend app
-    'https://admin-event-phi.vercel.app', // Admin app
+    'http://user-event.vercel.app', // Frontend app
+    'http://admin-event-phi.vercel.app', // Admin app
     'http://localhost:3000' // Local development
   ],
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
