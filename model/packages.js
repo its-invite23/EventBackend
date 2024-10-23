@@ -15,6 +15,11 @@ const PackageSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    
+    services_provider_phone: {
+        type: String,
+        required: true
+    },
     package_price_min: {
         type: Number,
         required: true,
@@ -30,7 +35,6 @@ const PackageSchema = new mongoose.Schema({
     },
     package_description: {
         type: String,
-        required: true
     },
     package_status: {
         type: String,
@@ -39,11 +43,10 @@ const PackageSchema = new mongoose.Schema({
     },
     package_image: {
         type: String,
-        required: true
+        
     },
     package_duration: {
         type: Number,
-        required: true,
         min: 1
     },
     package_discount: {

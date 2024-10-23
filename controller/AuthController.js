@@ -167,7 +167,7 @@ exports.profile = catchAsync(async (req, res, next) => {
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit; 
     const totalUsers = await User.countDocuments();
-    const users = await User.find({})
+    const users = await User.find({role :"user"})
       .select("-password")
       .skip(skip)
       .limit(limit);
@@ -205,7 +205,6 @@ exports.updateUserStatus = catchAsync(async (req, res) => {
         status: false,
       });
     }
-
     const user = await User.findById(_id);
     if (!user) {
       return res.status(404).json({
@@ -213,8 +212,8 @@ exports.updateUserStatus = catchAsync(async (req, res) => {
         status: false,
       });
     }
-
-    user.user_status = user_status;
+    const newStatus = user.user_status === "active" ? "inactive" : "active";
+    user.user_status = newStatus;
     await user.save();
 
     res.status(200).json({
