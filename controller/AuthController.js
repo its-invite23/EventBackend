@@ -165,9 +165,9 @@ exports.profile = catchAsync(async (req, res, next) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
-    const skip = (page - 1) * limit; 
+    const skip = (page - 1) * limit;
     const totalUsers = await User.countDocuments();
-    const users = await User.find({role :"user"})
+    const users = await User.find({ role: "user" })
       .select("-password")
       .skip(skip)
       .limit(limit);
@@ -217,7 +217,7 @@ exports.updateUserStatus = catchAsync(async (req, res) => {
     await user.save();
 
     res.status(200).json({
-      message: `User status updated to ${user_status}`,
+      message: `User status updated to ${user?.user_status}`,
       status: true,
       data: user,
     });
@@ -376,42 +376,77 @@ exports.forgotpassword = async (req, res) => {
 };
 
 exports.getCount = catchAsync(async (req, res) => {
-    try {
-        const userCount = await User.countDocuments();
-        const bookingCount  = await Booking.countDocuments();
-        const RecentCount = await Enquiry.countDocuments();
-        const packages = await Package.find({}).limit(5).select("package_name package_image package_categories");
-        const EnquiryData = await Enquiry.find({}).limit(5);
-        return res.status(200).json({
-            status: true,
-            message: "User count retrieved successfully",
-            userCount: userCount,
-            bookingCount: bookingCount,
-            EnquiryCount :RecentCount,
-            packages:packages,
-            EnquiryData:EnquiryData
-        });
-    } catch (error) {
-        return res.status(500).json({
-            status: false,
-            message: "An error occurred while fetching the user count.",
-            error: error.message,
-        });
-    }
+  try {
+    const userCount = await User.countDocuments();
+    const bookingCount = await Booking.countDocuments();
+    const RecentCount = await Enquiry.countDocuments();
+    const packages = await Package.find({}).limit(5).select("package_name package_image package_categories");
+    const EnquiryData = await Enquiry.find({}).limit(5);
+    return res.status(200).json({
+      status: true,
+      message: "User count retrieved successfully",
+      userCount: userCount,
+      bookingCount: bookingCount,
+      EnquiryCount: RecentCount,
+      packages: packages,
+      EnquiryData: EnquiryData
+    });
+  } catch (error) {
+    return res.status(500).json({
+      status: false,
+      message: "An error occurred while fetching the user count.",
+      error: error.message,
+    });
+  }
 });
 
 exports.profilegettoken = catchAsync(async (req, res, next) => {
-    try {
-        const user =req?.User?._id
-        const userprofile = await User.findById({_id:user}).select('-password');
-        res.status(200).json({
-            data: userprofile,
-            msg: "Profile Get",
-        });
-    } catch (error) {
-        res.status(500).json({
-            msg: "Failed to fetch profile",
-            error: error.message,
-        });
+  try {
+    const user = req?.User?._id
+    const userprofile = await User.findById({ _id: user }).select('-password');
+    res.status(200).json({
+      data: userprofile,
+      msg: "Profile Get",
+    });
+  } catch (error) {
+    res.status(500).json({
+      msg: "Failed to fetch profile",
+      error: error.message,
+    });
+  }
+});
+
+
+
+
+exports.userfilter = catchAsync(async (req, res, next) => {
+  try {
+    const { user_status, username } = req.body;
+    console.log("req.body", req.body);
+
+    let filter = {};
+
+    if (user_status) {
+      filter.user_status = user_status;
     }
+
+    if (username) {
+      filter.username = { $regex: username, $options: 'i' };
+    }
+
+    const users = await User.find(filter).select("-password");
+
+    return res.status(200).json({
+      status: true,
+      message: "Users retrieved successfully",
+      users: users,
+    });
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    return res.status(500).json({
+      status: false,
+      message: "An error occurred while fetching users.",
+      error: error.message,
+    });
+  }
 });
