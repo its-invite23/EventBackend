@@ -166,7 +166,7 @@ exports.profile = catchAsync(async (req, res, next) => {
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
     const totalUsers = await User.countDocuments();
-    const users = await User.find({ role: "user" })
+    const users = await User.find({ role: "user" ,isDeleted: false })
       .select("-password")
       .skip(skip)
       .limit(limit);
@@ -249,7 +249,7 @@ exports.resetpassword = catchAsync(async (req, res) => {
 exports.UserListIdDelete = catchAsync(async (req, res, next) => {
   try {
     const { Id } = req.body;
-
+console.log("Id",Id)
     if (!Id) {
       return res.status(400).json({
         status: false,
@@ -257,12 +257,17 @@ exports.UserListIdDelete = catchAsync(async (req, res, next) => {
       });
     }
 
-    const record = await User.findOneAndDelete({ _id: Id });
-
+    // Find the user and mark as deleted
+    const record = await User.findOneAndUpdate(
+      { _id: Id, isDeleted: false }, 
+      { isDeleted: true }, 
+      { new: true } 
+    );
+console.log("record",record)
     if (!record) {
       return res.status(404).json({
         status: false,
-        message: "user not found.",
+        message: "User not found or already deleted.",
       });
     }
 
