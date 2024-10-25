@@ -17,6 +17,9 @@ const EnquirySchema = mongoose.Schema({
         type: String,
         default: null
     },
+    eventname:String,
+    event_type:String,
+    attendees:Number,
     userId :{
         type: mongoose.Schema.Types.ObjectId,
         ref: "User"

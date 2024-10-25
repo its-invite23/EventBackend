@@ -394,12 +394,10 @@ exports.profilegettoken = catchAsync(async (req, res, next) => {
 
 
 
-
 exports.userfilter = catchAsync(async (req, res, next) => {
   try {
-    const { user_status, username } = req.body;
-    console.log("req.body", req.body);
-
+    const { username, user_status } = req.body;  // Changed to req.query for query params
+    console.log("req.query", req.body); // Updated to log query parameters
     let filter = {};
 
     if (user_status) {
@@ -407,11 +405,14 @@ exports.userfilter = catchAsync(async (req, res, next) => {
     }
 
     if (username) {
-      filter.username = { $regex: username, $options: 'i' };
+      // Perform an exact match with case insensitivity if required
+      filter.username = { $regex: `^${username}$`, $options: 'i' };
     }
 
+    console.log("filter", filter);
     const users = await User.find(filter).select("-password");
 
+    console.log("users", users);
     return res.status(200).json({
       status: true,
       message: "Users retrieved successfully",
@@ -428,6 +429,8 @@ exports.userfilter = catchAsync(async (req, res, next) => {
 });
 
 
+
+
 // ashboardApi
 
 exports.getCount = catchAsync(async (req, res) => {
@@ -436,7 +439,7 @@ exports.getCount = catchAsync(async (req, res) => {
     const bookingCount = await Booking.countDocuments();
     const RecentCount = await Enquiry.countDocuments();
     const packages = await Package.find({}).limit(3).select("package_name package_image package_categories");
-    const EnquiryData = await Enquiry.find({}).limit(5);
+    const EnquiryData = await Enquiry.find({}).limit(3);
     return res.status(200).json({
       status: true,
       message: "User count retrieved successfully",
@@ -454,3 +457,30 @@ exports.getCount = catchAsync(async (req, res) => {
     });
   }
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// if (username) {
+//   // Perform an exact match instead of regex if required
+//   filter.username = username;  // Use exact match
+//   // Or if you want partial match, uncomment below and comment out above line
+//   // filter.username = { $regex: `^${username}$`, $options: 'i' }; 
+// }

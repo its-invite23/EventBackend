@@ -25,7 +25,7 @@ userRoute.get("/all", getCount)
 
 userRoute.get("/profile-token", verifyToken, profilegettoken)
 
-userRoute.get("/user-filter", userfilter)
+userRoute.post("/user-filter", userfilter);
 
 
 

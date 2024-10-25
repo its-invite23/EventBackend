@@ -4,18 +4,18 @@ const emailTemplate = require("../emailTemplates/replyMessage");
 const sendEmail = require("../utils/EmailMailler");
 
 exports.EnquiryPost = catchAsync(async (req, res) => {
-    const userId = req?.User?._id;
-    if (!userId) {
-        return res.status(400).json({
-            status: false,
-            message: "User information not found in the request or userId is undefined.",
-        });
-    }
+    // const userId = req?.User?._id;
+    // if (!userId) {
+    //     return res.status(400).json({
+    //         status: false,
+    //         message: "User information not found in the request or userId is undefined.",
+    //     });
+    // }
 
-    const { email, name, message } = req.body;
+    const { email, name, message,  eventname,  event_type, attendees } = req.body;
 
     const record = new EnquireModal({
-        email, name, message ,userId
+        email, name, message ,eventname,  event_type, attendees 
     });
 
     const result = await record.save();
