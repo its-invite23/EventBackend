@@ -10,12 +10,14 @@ const contactSchema = mongoose.Schema({
         type: String,
         required: true,
     },
+    message: {
+        type: String,
+        required: true
+    },
     reply_message: {
         type: String,
-        
-    }
-    ,
-    contact_status : {
+    },
+    contact_status: {
         type: String,
         default: "unread"
     },
@@ -25,5 +27,5 @@ const contactSchema = mongoose.Schema({
     }
 })
 
-const Contact = mongoose.model("Contact", contactSchema)
+const Contact = mongoose.model("Contact", contactSchema);
 module.exports = Contact;

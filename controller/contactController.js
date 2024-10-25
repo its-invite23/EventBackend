@@ -1,15 +1,14 @@
 const emailTemplate = require("../emailTemplates/replyMessage");
 const contactmodal = require("../model/Contact");
 const catchAsync = require('../utils/catchAsync');
-const nodemailer = require('nodemailer');
 const sendEmail = require("../utils/EmailMailler");
 
 
 exports.ContactPost = (async (req, res) => {
-    const { email, name } = req.body;
+    const { email, name, message } = req.body;
 
     const record = new contactmodal({
-        email, name
+        email, name, message
     });
 
     const result = await record.save();
@@ -44,11 +43,12 @@ exports.ContactGet = catchAsync(async (req, res, next) => {
 });
 
 exports.ContactReply = async (req, res) => {
-    const { email, reply_message, name } = req.body;
+    console.log("v",req.body)
+    const { _id, reply_message } = req.body;
 
     try {
-        const EmailFind = await contactmodal.findOne({ email });
-
+        const EmailFind = await contactmodal.findById(_id);
+console.log("EmailFind",EmailFind)
         if (!EmailFind) {
             return res.status(400).json({
                 message: "Email Not Found",
@@ -61,7 +61,6 @@ exports.ContactReply = async (req, res) => {
             {
                 reply_message,
                 contact_status: "read",
-                name
             },
             { new: true }
         );
