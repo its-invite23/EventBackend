@@ -19,7 +19,7 @@ const contactSchema = mongoose.Schema({
         type: String,
         default: "unread"
     },
-    createdAt: {
+    created_at: {
         type: Date,
         default: Date.now
     }

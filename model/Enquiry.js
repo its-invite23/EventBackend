@@ -25,7 +25,7 @@ const EnquirySchema = mongoose.Schema({
         type: String,
         default: "pending"
     },
-    creted_at :{
+    created_at :{
         type: Date,
         default: Date.now
     }

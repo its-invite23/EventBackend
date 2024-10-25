@@ -125,7 +125,7 @@
                     message: "Package ID is required.",
                 });
             }
-
+            
             // Fetch the current package record by ID
             const packageRecord = await packages.findById(Id);
 
@@ -138,11 +138,16 @@
 
             // Toggle the package status based on its current state
             const newStatus = packageRecord.package_status === "active" ? "inactive" : "active";
+            const newavailability = packageRecord.package_availability === "available" ? "outOfStock" : "available";
+
 
             // Update the package status in the database
             const updatedRecord = await packages.findByIdAndUpdate(
                 Id,
-                { package_status: newStatus },
+                { package_status: newStatus ,
+                    package_availability : newavailability
+
+                },
                 { new: true, runValidators: true }
             );
 

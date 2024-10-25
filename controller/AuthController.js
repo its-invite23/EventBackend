@@ -1,6 +1,5 @@
 const jwt = require("jsonwebtoken");
 const catchAsync = require("../utils/catchAsync");
-const AppError = require("../utils/AppError");
 const User = require("../model/User");
 const { promisify } = require("util");
 const bcrypt = require("bcrypt");
@@ -375,30 +374,7 @@ exports.forgotpassword = async (req, res) => {
   }
 };
 
-exports.getCount = catchAsync(async (req, res) => {
-  try {
-    const userCount = await User.countDocuments();
-    const bookingCount = await Booking.countDocuments();
-    const RecentCount = await Enquiry.countDocuments();
-    const packages = await Package.find({}).limit(5).select("package_name package_image package_categories");
-    const EnquiryData = await Enquiry.find({}).limit(5);
-    return res.status(200).json({
-      status: true,
-      message: "User count retrieved successfully",
-      userCount: userCount,
-      bookingCount: bookingCount,
-      EnquiryCount: RecentCount,
-      packages: packages,
-      EnquiryData: EnquiryData
-    });
-  } catch (error) {
-    return res.status(500).json({
-      status: false,
-      message: "An error occurred while fetching the user count.",
-      error: error.message,
-    });
-  }
-});
+
 
 exports.profilegettoken = catchAsync(async (req, res, next) => {
   try {
@@ -446,6 +422,34 @@ exports.userfilter = catchAsync(async (req, res, next) => {
     return res.status(500).json({
       status: false,
       message: "An error occurred while fetching users.",
+      error: error.message,
+    });
+  }
+});
+
+
+// ashboardApi
+
+exports.getCount = catchAsync(async (req, res) => {
+  try {
+    const userCount = await User.countDocuments();
+    const bookingCount = await Booking.countDocuments();
+    const RecentCount = await Enquiry.countDocuments();
+    const packages = await Package.find({}).limit(3).select("package_name package_image package_categories");
+    const EnquiryData = await Enquiry.find({}).limit(5);
+    return res.status(200).json({
+      status: true,
+      message: "User count retrieved successfully",
+      userCount: userCount,
+      bookingCount: bookingCount,
+      EnquiryCount: RecentCount,
+      packages: packages,
+      EnquiryData: EnquiryData
+    });
+  } catch (error) {
+    return res.status(500).json({
+      status: false,
+      message: "An error occurred while fetching the user count.",
       error: error.message,
     });
   }
