@@ -162,10 +162,12 @@ exports.login = catchAsync(async (req, res, next) => {
 
 exports.profile = catchAsync(async (req, res, next) => {
   try {
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 10;
+    // Input validation
+    const page = Math.max(parseInt(req.query.page) || 1, 1); // Ensure page is at least 1
+    const limit = Math.max(parseInt(req.query.limit) || 10, 1); // Ensure limit is at least 1
     const skip = (page - 1) * limit;
-    const totalUsers = await User.countDocuments();
+
+    const totalUsers = await User.countDocuments({ role: "user", isDeleted: false });
     const users = await User.find({ role: "user", isDeleted: false })
       .select("-password")
       .skip(skip)
@@ -187,13 +189,15 @@ exports.profile = catchAsync(async (req, res, next) => {
       },
     });
   } catch (error) {
+    console.error("Error fetching users:", error); // Log full error for debugging
     return res.status(500).json({
       status: false,
       message: "An error occurred while fetching users.",
-      error: error._message,
+      error: error.message || "Internal Server Error", // Provide a fallback error message
     });
   }
 });
+
 
 exports.updateUserStatus = catchAsync(async (req, res) => {
   try {
