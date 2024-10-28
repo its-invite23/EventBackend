@@ -14,7 +14,6 @@ const { validationErrorResponse, errorResponse, successResponse } = require("../
 
 exports.verifyToken = async (req, res, next) => {
   let authHeader = req.headers.Authorization || req.headers.authorization;
-
   if (authHeader && authHeader.startsWith("Bearer")) {
     let token = authHeader.split(" ")[1];
     if (!token) {
@@ -68,14 +67,6 @@ const signToken = async (id) => {
   return token;
 };
 
-
-// const signEmail = async (id) => {
-//   const token = jwt.sign({ id }, process.env.JWT_SECRET_KEY, {
-//     expiresIn: "5m", 
-//   });
-//   return token;
-// }
-
 const signEmail = async (id) => {
   const token = jwt.sign({ id }, process.env.JWT_SECRET_KEY, {
     expiresIn: "3m",
@@ -107,9 +98,16 @@ exports.signup = catchAsync(async (req, res) => {
       });
     }
 
-    let isAlready = await User.findOne({ email });
-    if (isAlready) {
-      return errorResponse(res, "User already exists!", 200);
+    const existingUser = await User.findOne({ $or: [{ email }, { phone_number }] });
+    if (existingUser) {
+      const errors = {};
+      if (existingUser.email === email) {
+        errors.email = 'Email is already in use!';
+      }
+      if (existingUser.phone_number === phone_number) {
+        errors.phone_number = 'Phone number is already in use!';
+      }
+      return validationErrorResponse(res, errors);
     }
 
     const hashedPassword = await bcrypt.hash(password, 12);
@@ -462,7 +460,7 @@ exports.userfilter = catchAsync(async (req, res, next) => {
 
 
 
-// ashboardApi
+// dashboardApi
 
 exports.getCount = catchAsync(async (req, res) => {
   try {
@@ -473,7 +471,7 @@ exports.getCount = catchAsync(async (req, res) => {
     const EnquiryData = await Enquiry.find({}).limit(3);
     return res.status(200).json({
       status: true,
-      message: "User count retrieved successfully",
+      message: " Data retrieved successfully",
       userCount: userCount,
       bookingCount: bookingCount,
       EnquiryCount: RecentCount,
