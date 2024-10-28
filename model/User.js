@@ -25,14 +25,18 @@ const userSchema = mongoose.Schema({
     },
     country: {
         type: String,
-        required: true
+    },
+    country_code: {
+        type: String,
+    },
+    phone_code: {
+        type: String,
     },
     state: {
         type: String,
     },
     phone_number: {
         type: Number,
-        required: true
     },
     role: {
         type: String,
