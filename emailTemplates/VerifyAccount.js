@@ -22,7 +22,7 @@ module.exports = (VerfiyLink, userName ) => {
             <p>Hi <strong>${userName}</strong>,</p>
             <p>Thank you for signing up with us. Please click the below button to verify your account and book your event with us.</p>
             <a href="${VerfiyLink}" class="button  ">Verify Account</a>
-            <p>If you did not request a password reset, please ignore this email.</p>
+            <p>Please verify your account to enable all the features on our website</p>
         </div>
     </body>
     </html>

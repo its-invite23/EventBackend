@@ -9,6 +9,7 @@ const Booking = require("../model/Booking");
 const Enquiry = require("../model/Enquiry");
 const Package = require("../model/packages");
 const { validationErrorResponse, errorResponse, successResponse } = require("../utils/ErrorHandling");
+const VerifyAccount = require("../emailTemplates/VerifyAccount");
 
 
 
@@ -125,8 +126,34 @@ exports.signup = catchAsync(async (req, res) => {
     });
 
     const result = await record.save();
+     
     if (result) {
+      const id=record._id;
+      const token = jwt.sign({ id }, process.env.JWT_SECRET_KEY, {
+        expiresIn: "24h",
+      });
+    const resetLink = `http://localhost:3000/verify/${token}`;
+    const customerUser = record.username;
+    let transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false,
+      auth: {
+        user: process.env.user,
+        pass: process.env.password,
+      },
+    });
+    const emailHtml = VerifyAccount(resetLink, customerUser);
+    await transporter.sendMail({
+      from: "ankitkumarjain0748@gmail.com",
+      to: result.email,
+      subject: "Reset Your Password",
+      html: emailHtml,
+    });
+
+    console.log("Email sent to user account");
       return successResponse(res, "You have been registered successfully !!", 201);
+      
     } else {
       return errorResponse(res, "Failed to create user.", 500, result);
     }
@@ -465,6 +492,26 @@ exports.userfilter = catchAsync(async (req, res, next) => {
   }
 });
 
+
+exports.VerifyUser = async (req, res) => {
+  try {
+    const { token } = req.body;
+    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+    const user = await User.findById(decoded.id);
+    if (!user) {
+      return errorResponse(res, "User not found", 404);
+    }
+    user.verified = true;
+    await user.save();
+    return successResponse(res, "Password has been successfully reset");
+  } catch (error) {
+    if (error.name === 'TokenExpiredError') {
+      return errorResponse(res, "Token has expired. Please contact support.", 401);
+    }
+    console.error("Error in verifying account:", error);
+    return errorResponse(res, "Failed to verify account");
+  }
+};
 
 
 
