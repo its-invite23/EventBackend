@@ -159,6 +159,12 @@ exports.login = catchAsync(async (req, res, next) => {
         message: "Your account is inactive. Please contact support.",
       });
     }
+    if (!user.verified) {
+      return res.status(403).json({
+        status: false,
+        message: "Your account is not verified. Please verify it.",
+      });
+    }
     const token = await signToken(user._id);
     res.json({
       status: true,
