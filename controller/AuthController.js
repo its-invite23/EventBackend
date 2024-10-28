@@ -358,8 +358,8 @@ exports.forgotlinkrecord = async (req, res) => {
     const resetLink = `http://localhost:3000/forgotpassword/${token}`;
     const customerUser = record.username;
     let transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 587,
+      host: process.env.MAIL_HOST,
+      port: process.env.MAIL_PORT,
       secure: false,
       auth: {
         user: process.env.user,
