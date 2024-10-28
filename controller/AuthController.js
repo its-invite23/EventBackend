@@ -8,6 +8,7 @@ const ForgetPassword = require("../emailTemplates/ForgetPassword");
 const Booking = require("../model/Booking");
 const Enquiry = require("../model/Enquiry");
 const Package = require("../model/packages");
+const { validationErrorResponse } = require("../utils/ErrorHandling");
 
 exports.verifyToken = async (req, res, next) => {
   let authHeader = req.headers.Authorization || req.headers.authorization;
@@ -77,6 +78,17 @@ exports.signup = catchAsync(async (req, res) => {
       state,
       city,
     } = req.body;
+    if (!password || !phone_number || !username || !email || !address || !country || !city) {
+      return validationErrorResponse(res, {
+        password: 'password is required',
+        phone_number: 'Phone is required',
+        username: 'Username is required',
+        email: 'email is required',
+        address: 'address is required',
+        country: 'country is required',
+        city: 'city is required',
+      });
+    }
     let isAlready = await User.findOne({ email });
     if (isAlready) {
       return res.status(200).json({
@@ -84,6 +96,7 @@ exports.signup = catchAsync(async (req, res) => {
         message: "User already exists!",
       });
     }
+
     const hashedPassword = await bcrypt.hash(password, 12);
     const record = new User({
       email,
