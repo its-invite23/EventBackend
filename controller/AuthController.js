@@ -355,7 +355,7 @@ exports.forgotlinkrecord = async (req, res) => {
       return errorResponse(res, "No user found with this email", 404);
     }
     const token = await signEmail(record._id);
-    const resetLink = `http://localhost:3000/forgotpassword/${token}`;
+    const resetLink = `https://user-event.vercel.app/forgotpassword/${token}`;
     const customerUser = record.username;
     let transporter = nodemailer.createTransport({
       host: process.env.MAIL_HOST,
