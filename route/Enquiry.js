@@ -7,5 +7,4 @@ enquire.get("/enquire-user-get", verifyToken, EnquiryGetUser);
 enquire.post("/enquire-update-status", EnquiryUpdateStatus)
 enquire.post("/enquiry-reply", EnquiryReply)
 
-
 module.exports = enquire

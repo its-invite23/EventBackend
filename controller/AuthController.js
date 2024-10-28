@@ -368,9 +368,9 @@ exports.forgotlinkrecord = async (req, res) => {
     });
     const emailHtml = ForgetPassword(resetLink, customerUser);
     await transporter.sendMail({
-      from: "ankitkumarjain0748@gmail.com",
+      from: process.env.user,
       to: record.email,
-      subject: "Reset Your Password",
+      subject: "Forgot Your Password",
       html: emailHtml,
     });
 
