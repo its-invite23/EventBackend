@@ -8,7 +8,9 @@ const ForgetPassword = require("../emailTemplates/ForgetPassword");
 const Booking = require("../model/Booking");
 const Enquiry = require("../model/Enquiry");
 const Package = require("../model/packages");
-const { validationErrorResponse } = require("../utils/ErrorHandling");
+const { validationErrorResponse, errorResponse, successResponse } = require("../utils/ErrorHandling");
+
+
 
 exports.verifyToken = async (req, res, next) => {
   let authHeader = req.headers.Authorization || req.headers.authorization;
@@ -66,6 +68,20 @@ const signToken = async (id) => {
   return token;
 };
 
+
+// const signEmail = async (id) => {
+//   const token = jwt.sign({ id }, process.env.JWT_SECRET_KEY, {
+//     expiresIn: "5m", 
+//   });
+//   return token;
+// }
+
+const signEmail = async (id) => {
+  const token = jwt.sign({ id }, process.env.JWT_SECRET_KEY, {
+    expiresIn: "3m",
+  });
+  return token;
+};
 exports.signup = catchAsync(async (req, res) => {
   try {
     const {
@@ -78,23 +94,22 @@ exports.signup = catchAsync(async (req, res) => {
       state,
       city,
     } = req.body;
+
     if (!password || !phone_number || !username || !email || !address || !country || !city) {
       return validationErrorResponse(res, {
-        password: 'password is required',
+        password: 'Password is required',
         phone_number: 'Phone is required',
         username: 'Username is required',
-        email: 'email is required',
-        address: 'address is required',
-        country: 'country is required',
-        city: 'city is required',
+        email: 'Email is required',
+        address: 'Address is required',
+        country: 'Country is required',
+        city: 'City is required',
       });
     }
+
     let isAlready = await User.findOne({ email });
     if (isAlready) {
-      return res.status(200).json({
-        status: false,
-        message: "User already exists!",
-      });
+      return errorResponse(res, "User already exists!", 200);
     }
 
     const hashedPassword = await bcrypt.hash(password, 12);
@@ -108,25 +123,18 @@ exports.signup = catchAsync(async (req, res) => {
       address,
       phone_number: phone_number,
     });
+
     const result = await record.save();
     if (result) {
-      res.status(201).json({
-        status: true,
-        message: "You have been registered successfully !!.",
-      });
+      return successResponse(res, "You have been registered successfully !!", 201);
     } else {
-      res.status(500).json({
-        status: false,
-        error: result,
-        message: "Failed to create user.",
-      });
+      return errorResponse(res, "Failed to create user.", 500, result);
     }
   } catch (error) {
-    return res.status(500).json({
-      error,
-    });
+    return errorResponse(res, error.message || "Internal Server Error", 500);
   }
 });
+
 
 exports.login = catchAsync(async (req, res, next) => {
   try {
@@ -339,60 +347,64 @@ exports.UserUpdate = catchAsync(async (req, res, next) => {
 exports.forgotlinkrecord = async (req, res) => {
   try {
     const { email } = req.body;
+    if (!email) {
+      return validationErrorResponse(res, { email: 'Email is required' });
+    }
     const record = await User.findOne({ email: email });
-    if (record && record.email !== " ") {
-      const customerEmail = record.email;
-      const customerUser = record.username;
-      const resetLink = `http://localhost:3000/forgetlink/${record._id}`;
-      let transporter = nodemailer.createTransport({
-        host: "smtp.gmail.com",
-        port: 587,
-        secure: false,
-        auth: {
-          user: process.env.user,
-          pass: process.env.password,
-        },
-      });
-      const emailHtml = ForgetPassword(resetLink, customerUser);
-      let info = await transporter.sendMail({
-        from: "ankitkumarjain0748@gmail.com",
-        to: customerEmail,
-        subject: "Reset Your Password",
-        html: emailHtml,
-      });
-      console.log("Email sent to user account");
-    }
-    res.json({
-      status: true,
-      message: "Email has been sent to your registered email",
-    });
-  } catch (error) {
-    console.error("Error in forget password process:", error);
-    res.json({
-      status: false,
-      message: "Failed to send email",
-    });
-  }
-};
-exports.forgotpassword = async (req, res) => {
-  try {
-    const _id = req?.User?._id;
-    const { npass } = req.body;
-    const record = await User.findById(_id);
     if (!record) {
-      return res.status(404).json({ message: "User not found" });
+      return errorResponse(res, "No user found with this email", 404);
     }
-    const hashedPassword = await bcrypt.hash(npass, 10);
-    await User.findByIdAndUpdate(_id, { password: hashedPassword });
-    res.json({ status: true, message: "Password successfully changed" });
+    const token = await signEmail(record._id);
+    const resetLink = `http://localhost:3000/forgotpassword/${token}`;
+    const customerUser = record.username;
+    let transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false,
+      auth: {
+        user: process.env.user,
+        pass: process.env.password,
+      },
+    });
+    const emailHtml = ForgetPassword(resetLink, customerUser);
+    await transporter.sendMail({
+      from: "ankitkumarjain0748@gmail.com",
+      to: record.email,
+      subject: "Reset Your Password",
+      html: emailHtml,
+    });
+
+    console.log("Email sent to user account");
+
+    return successResponse(res, "Email has been sent to your registered email");
+
   } catch (error) {
-    console.error("Error updating password:", error);
-    res
-      .status(500)
-      .json({ status: false, message: "Failed to change password" });
+    console.error("Error in forgot password process:", error);
+    return errorResponse(res, "Failed to send email");
   }
 };
 
+exports.forgotpassword = async (req, res) => {
+  try {
+    console.log(req.body)
+    const { token, newPassword } = req.body;
+    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+    console.log(decoded)
+    const user = await User.findById(decoded.id);
+    if (!user) {
+      return errorResponse(res, "User not found", 404);
+    }
+    user.password = await bcrypt.hash(newPassword, 12);
+    await user.save();
+    return successResponse(res, "Password has been successfully reset");
+  } catch (error) {
+    if (error.name === 'TokenExpiredError') {
+      return errorResponse(res, "Token has expired. Please generate a new token.", 401);
+    }
+    console.error("Error in password reset process:", error);
+    return errorResponse(res, "Failed to reset password");
+  }
+};
 
 
 exports.profilegettoken = catchAsync(async (req, res, next) => {

@@ -13,7 +13,7 @@ userRoute.post("/updated_status", updateUserStatus)
 
 userRoute.post("/forgot-password", forgotlinkrecord)
 
-userRoute.post("/forgot", verifyToken, forgotpassword)
+userRoute.post("/forgot", forgotpassword)
 
 userRoute.post("/reset-password", verifyToken, resetpassword)
 
