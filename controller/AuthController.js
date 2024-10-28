@@ -147,7 +147,7 @@ exports.signup = catchAsync(async (req, res) => {
     await transporter.sendMail({
       from: "ankitkumarjain0748@gmail.com",
       to: result.email,
-      subject: "Reset Your Password",
+      subject: "Verify your Account",
       html: emailHtml,
     });
 
