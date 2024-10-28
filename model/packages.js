@@ -15,7 +15,7 @@ const PackageSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    
+
     services_provider_phone: {
         type: String,
         required: true
@@ -43,7 +43,7 @@ const PackageSchema = new mongoose.Schema({
     },
     package_image: {
         type: String,
-        
+
     },
     package_duration: {
         type: Number,

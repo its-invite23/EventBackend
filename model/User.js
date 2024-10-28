@@ -47,19 +47,20 @@ const userSchema = mongoose.Schema({
     user_status: {
         type: String,
         default: "active"
-    }
-    , created_at: {
-        type: Date,
-        default: Date.now
     },
     verified: {
         type: Boolean,
         default: false,
-      },
+    },
     isDeleted: {
         type: Boolean,
         default: false,
-      },
+    },
+    created_at: {
+        type: Date,
+        default: Date.now
+    }
+
 })
 
 const User = mongoose.model("User", userSchema);

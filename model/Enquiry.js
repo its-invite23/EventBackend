@@ -1,7 +1,7 @@
 const mongoose = require("mongoose")
 
 const EnquirySchema = mongoose.Schema({
-    name :{
+    name: {
         type: String,
         required: true
     },
@@ -13,23 +13,23 @@ const EnquirySchema = mongoose.Schema({
         type: String,
         required: true
     },
-    reply_message:{
+    reply_message: {
         type: String,
         default: null
     },
-    eventname:String,
-    event_type:String,
-    attendees:Number,
-    userId :{
+    eventname: String,
+    event_type: String,
+    attendees: Number,
+    userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User"
     },
-    enquire_status :{
+    enquire_status: {
         type: String,
         default: "pending",
         enum: ["active", "inactive"]
     },
-    created_at :{
+    created_at: {
         type: Date,
         default: Date.now
     }
