@@ -143,7 +143,7 @@ exports.signup = catchAsync(async (req, res) => {
     });
     const emailHtml = VerifyAccount(resetLink, customerUser);
     await transporter.sendMail({
-      from: "ankitkumarjain0748@gmail.com",
+      from: process.env.user,
       to: result.email,
       subject: "Verify your Account",
       html: emailHtml,
