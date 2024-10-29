@@ -27,7 +27,7 @@ const EnquirySchema = mongoose.Schema({
     enquire_status: {
         type: String,
         default: "pending",
-        enum: ["active", "inactive"]
+        enum: ["active", "inactive", "pending"]
     },
     created_at: {
         type: Date,

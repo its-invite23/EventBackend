@@ -16,7 +16,7 @@ exports.EnquiryPost = catchAsync(async (req, res) => {
     const { email, name, message, eventname, event_type, attendees } = req.body;
 
     const record = new EnquireModal({
-        email, name, message, eventname, event_type, attendees
+        email, name, message, eventname, event_type, attendees,  enquire_status :"pending"
     });
 
     const result = await record.save();
