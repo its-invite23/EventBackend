@@ -30,7 +30,7 @@
             const limit = parseInt(req.query.limit) || 10;
             const skip = (page - 1) * limit;
             const totalpackages = await packages.countDocuments();
-            const packagegetdata = await packages.find({}).skip(skip)
+            const packagegetdata = await packages.find({created_at :"-1"}).skip(skip)
                 .limit(limit);
             const totalPages = Math.ceil(totalpackages / limit);
 
@@ -81,13 +81,13 @@
                 });
             }
 
-            let categoriesArray;
-            if (package_categories) {
-                categoriesArray = package_categories.split(',').map(category => category.trim());
-            }
+            // let categoriesArray;
+            // if (package_categories) {
+            //     categoriesArray = package_categories?.split(',').map(category => category.trim());
+            // }
             const updatedRecord = await packages.findByIdAndUpdate(
                 Id,
-                { package_name, package_price_min, services_provider_phone, package_price_max, package_categories: categoriesArray || package_categories, package_description, package_status, package_image, package_duration, package_discount, package_people, package_availability, services_provider_name, services_provider_email },
+                { package_name, package_price_min, services_provider_phone, package_price_max, package_categories: package_categories, package_description, package_status, package_image, package_duration, package_discount, package_people, package_availability, services_provider_name, services_provider_email },
                 { new: true, runValidators: true }
             );
 

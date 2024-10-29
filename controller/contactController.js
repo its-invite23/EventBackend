@@ -43,12 +43,12 @@ exports.ContactGet = catchAsync(async (req, res, next) => {
 });
 
 exports.ContactReply = async (req, res) => {
-    console.log("v",req.body)
+    console.log("v", req.body)
     const { _id, reply_message } = req.body;
 
     try {
         const EmailFind = await contactmodal.findById(_id);
-console.log("EmailFind",EmailFind)
+        console.log("EmailFind", EmailFind)
         if (!EmailFind) {
             return res.status(400).json({
                 message: "Email Not Found",

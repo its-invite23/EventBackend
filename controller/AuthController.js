@@ -86,19 +86,11 @@ exports.signup = catchAsync(async (req, res) => {
       state,
       city,
     } = req.body;
-
     if (!password || !phone_number || !username || !email || !address || !country || !city) {
       return validationErrorResponse(res, {
-        password: 'Password is required',
-        phone_number: 'Phone is required',
-        username: 'Username is required',
-        email: 'Email is required',
-        address: 'Address is required',
-        country: 'Country is required',
-        city: 'City is required',
+        message: 'All fields are required'
       });
     }
-
     const existingUser = await User.findOne({ $or: [{ email }, { phone_number }] });
     if (existingUser) {
       const errors = {};
@@ -124,34 +116,31 @@ exports.signup = catchAsync(async (req, res) => {
     });
 
     const result = await record.save();
-     
+
     if (result) {
-      const id=record._id;
+      const id = record._id;
       const token = jwt.sign({ id }, process.env.JWT_SECRET_KEY, {
         expiresIn: "24h",
       });
-    const resetLink = `https://user-event.vercel.app/verify/${token}`;
-    const customerUser = record.username;
-    let transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 587,
-      secure: false,
-      auth: {
-        user: process.env.user,
-        pass: process.env.password,
-      },
-    });
-    const emailHtml = VerifyAccount(resetLink, customerUser);
-    await transporter.sendMail({
-      from: process.env.user,
-      to: result.email,
-      subject: "Verify your Account",
-      html: emailHtml,
-    });
-
-    console.log("Email sent to user account");
+      const resetLink = `https://user-event.vercel.app/verify/${token}`;
+      const customerUser = record.username;
+      let transporter = nodemailer.createTransport({
+        host: "smtp.gmail.com",
+        port: 587,
+        secure: false,
+        auth: {
+          user: process.env.user,
+          pass: process.env.password,
+        },
+      });
+      const emailHtml = VerifyAccount(resetLink, customerUser);
+      await transporter.sendMail({
+        from: process.env.user,
+        to: result.email,
+        subject: "Verify your Account",
+        html: emailHtml,
+      });
       return successResponse(res, "You have been registered successfully !!", 201);
-      
     } else {
       return errorResponse(res, "Failed to create user.", 500, result);
     }
