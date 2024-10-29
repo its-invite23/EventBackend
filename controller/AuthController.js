@@ -87,8 +87,9 @@ exports.signup = catchAsync(async (req, res) => {
       city,
     } = req.body;
     if (!password || !phone_number || !username || !email || !address || !country || !city) {
-      return validationErrorResponse(res, {
-        message: 'All fields are required'
+      return res.status(401).json({
+        status: false,
+        message:  'All fields are required',
       });
     }
     const existingUser = await User.findOne({ $or: [{ email }, { phone_number }] });
