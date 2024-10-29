@@ -162,20 +162,22 @@ exports.login = catchAsync(async (req, res, next) => {
     }
 
     const user = await User.findOne({ email });
-
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid) {
-      return res.status(400).json({
-        status: false,
-        message: "Incorrect password. Please try again.",
-      });
-    }
+    console.log("user",user)
     if (!user) {
       return res.status(401).json({
         status: false,
         message: "Invalid Email or password",
       });
     }
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    console.log("isPasswordValid",isPasswordValid)
+    if (!isPasswordValid) {
+      return res.status(400).json({
+        status: false,
+        message: "Incorrect password. Please try again.",
+      });
+    }
+  
     if (user.user_status === "inactive") {
       return res.status(403).json({
         status: false,
@@ -197,6 +199,7 @@ exports.login = catchAsync(async (req, res, next) => {
   } catch (error) {
     return res.status(500).json({
       error,
+      message :"An unknown error occured. Please try later"
     });
   }
 });
