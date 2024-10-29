@@ -4,10 +4,10 @@ const catchAsync = require("../utils/catchAsync");
 
 exports.packageadd = catchAsync(async (req, res) => {
     const { package_name, package_price_min, services_provider_phone, services_provider_name, services_provider_email, package_price_max, package_categories, package_description, package_status, package_image, package_duration, package_discount, package_people, package_availability, } = req.body;
-    const categoriesArray = package_categories.split(',').map(category => category.trim());
+    // const categoriesArray = package_categories.split(',').map(category => category.trim());
     const record = new packages({
         services_provider_name, services_provider_email, services_provider_phone,
-        package_name, package_price_min, package_price_max, package_categories: categoriesArray, package_description, package_status, package_image, package_duration, package_discount, package_people, package_availability
+        package_name, package_price_min, package_price_max, package_categories: package_categories, package_description, package_status, package_image, package_duration, package_discount, package_people, package_availability
     });
     const result = await record.save();
     if (result) {
@@ -34,6 +34,7 @@ exports.packageget = catchAsync(async (req, res, next) => {
 
         // Fetch package data, sorted by created_at in descending order
         const packagegetdata = await packages.find()
+        .sort({ created_at: -1 }) 
             .skip(skip)
             .limit(limit);
 
