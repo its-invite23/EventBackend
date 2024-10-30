@@ -32,7 +32,6 @@ exports.packageget = catchAsync(async (req, res, next) => {
 
         const totalpackages = await packages.countDocuments();
 
-        // Fetch package data, sorted by created_at in descending order
         const packagegetdata = await packages.find()
         .sort({ created_at: -1 }) 
             .skip(skip)
