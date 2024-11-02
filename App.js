@@ -9,9 +9,10 @@ const Contactroute = require("./route/Contact")
 require("./dbconfigration");
 dotenv.config();
 
-const express = require("express");
+const express = require("express"); 
 const app = express();
 const cors = require("cors");
+const StripeRoute = require("./route/StripeRoute");
 const corsOptions = {
   origin: "*", // Allowed origins
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
@@ -26,6 +27,9 @@ app.use(express.urlencoded({ extended: true }));
 
 
 app.use("/user", UserRoute)
+
+app.use("/stripe", StripeRoute)
+
 
 app.use("/enquiry", enauiryroute)
 

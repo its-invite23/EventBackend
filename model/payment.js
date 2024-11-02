@@ -1,8 +1,10 @@
 const mongoose = require("mongoose")
 
 const paymentmongoose = mongoose.Schema({
-
-
+  srNo: {
+    type: Number,
+    required: true,
+  },
   Payment_status: {
     type: String,
     default: "pending"
@@ -13,11 +15,11 @@ const paymentmongoose = mongoose.Schema({
   },
   order_id: {
     type: String,
-    required: true,
+    // required: true,
   },
   payment_id: {
     type: String,
-    required: true,
+    // required: true,
   },
   amount: {
     type: Number,
