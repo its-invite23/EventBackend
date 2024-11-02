@@ -82,16 +82,24 @@ exports.signup = catchAsync(async (req, res) => {
       username,
       address,
       phone_number,
+      country_code,
+      phone_code,
       country,
       state,
       city,
     } = req.body;
+
+    console.log("req.body", req.body);
+
+    // Check if required fields are provided
     if (!password || !phone_number || !username || !email || !address || !country || !city) {
       return res.status(401).json({
         status: false,
-        message:  'All fields are required',
+        message: 'All fields are required',
       });
     }
+
+    // Check if user already exists
     const existingUser = await User.findOne({ $or: [{ email }, { phone_number }] });
     if (existingUser) {
       const errors = {};
@@ -101,19 +109,29 @@ exports.signup = catchAsync(async (req, res) => {
       if (existingUser.phone_number === phone_number) {
         errors.phone_number = 'Phone number is already in use!';
       }
-      return validationErrorResponse(res, errors);
+
+      return res.status(400).json({
+        status: false,
+        message: 'User already exists',
+        errors,
+      });
     }
 
+    // Hash the password
     const hashedPassword = await bcrypt.hash(password, 12);
+
+    // Create new user record
     const record = new User({
       email,
       country,
       state,
+      phone_code,
+      country_code,
       city,
       password: hashedPassword,
       username,
       address,
-      phone_number: phone_number,
+      phone_number,
     });
 
     const result = await record.save();
@@ -125,6 +143,7 @@ exports.signup = catchAsync(async (req, res) => {
       });
       const resetLink = `https://user-event.vercel.app/verify/${token}`;
       const customerUser = record.username;
+
       let transporter = nodemailer.createTransport({
         host: "smtp.gmail.com",
         port: 587,
@@ -134,6 +153,7 @@ exports.signup = catchAsync(async (req, res) => {
           pass: process.env.password,
         },
       });
+
       const emailHtml = VerifyAccount(resetLink, customerUser);
       await transporter.sendMail({
         from: process.env.user,
@@ -141,14 +161,16 @@ exports.signup = catchAsync(async (req, res) => {
         subject: "Verify your Account",
         html: emailHtml,
       });
+
       return successResponse(res, "You have been registered successfully !!", 201);
     } else {
-      return errorResponse(res, "Failed to create user.", 500, result);
+      return errorResponse(res, "Failed to create user.", 500);
     }
   } catch (error) {
     return errorResponse(res, error.message || "Internal Server Error", 500);
   }
 });
+
 
 
 exports.login = catchAsync(async (req, res, next) => {
@@ -162,7 +184,7 @@ exports.login = catchAsync(async (req, res, next) => {
     }
 
     const user = await User.findOne({ email });
-    console.log("user",user)
+    console.log("user", user)
     if (!user) {
       return res.status(401).json({
         status: false,
@@ -170,14 +192,14 @@ exports.login = catchAsync(async (req, res, next) => {
       });
     }
     const isPasswordValid = await bcrypt.compare(password, user.password);
-    console.log("isPasswordValid",isPasswordValid)
+    console.log("isPasswordValid", isPasswordValid)
     if (!isPasswordValid) {
       return res.status(400).json({
         status: false,
         message: "Incorrect password. Please try again.",
       });
     }
-  
+
     if (user.user_status === "inactive") {
       return res.status(403).json({
         status: false,
@@ -199,7 +221,7 @@ exports.login = catchAsync(async (req, res, next) => {
   } catch (error) {
     return res.status(500).json({
       error,
-      message :"An unknown error occured. Please try later"
+      message: "An unknown error occured. Please try later"
     });
   }
 });
