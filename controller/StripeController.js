@@ -11,9 +11,9 @@ exports.createCheckout = catchAsync(async (req, res) => {
     const srNo = lastpayment ? lastpayment.srNo + 1 : 1;
     const newPayment = new Payment({
       srNo,
-      currency:"inr",
-      payment_type:"card",
-      amount:req?.body?.amount
+      currency: "inr",
+      payment_type: "card",
+      amount: req?.body?.amount
     });
     await newPayment.save();
     const session = await stripe.checkout.sessions.create({
