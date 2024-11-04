@@ -43,7 +43,7 @@ const emailTemplate = (name, reply_message) => `
 <tr>
     <td style="padding: 0 0 45px 20px;">
         <p style="margin: 1px; font-size: 12px; font-weight: normal; color:#CCCCCC">
-            ${reply_message}
+          Message:  ${reply_message}
         </p>
     </td>
 </tr>

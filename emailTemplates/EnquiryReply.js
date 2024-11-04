@@ -1,4 +1,4 @@
-const EnquiryReply = (user_name, reply_message, enquire_status, number_of_attendees, event_type_name, event_name) => `
+const EnquiryReply = (reply_message) => `
 <table style="max-width: 600px; font-family: Arial, sans-serif; text-align: left;" align="center" width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#000">
     <tr bgcolor="#141414">
         <td style="padding: 20px; text-align: center;">
@@ -40,10 +40,10 @@ const EnquiryReply = (user_name, reply_message, enquire_status, number_of_attend
     <tr>
         <td style="padding: 0 20px;">
             <p style="margin: 1px; font-size: 14px; font-weight: normal; color: #CCCCCC;">
-                <strong>Status:</strong> ${enquire_status}<br>
-                <strong>Number of Attendees:</strong> ${number_of_attendees}<br>
-                <strong>Event Type:</strong> ${event_type_name}<br>
-                <strong>Event Name:</strong> ${event_name}
+                <strong>Status:</strong> ${additionalData?.enquire_status}<br>
+                <strong>Number of Attendees:</strong> ${additionalData?.number_of_attendees}<br>
+                <strong>Event Type:</strong> ${additionalData?.event_type_name}<br>
+                <strong>Event Name:</strong> ${additionalData?.event_name}
             </p>
         </td>
     </tr>
