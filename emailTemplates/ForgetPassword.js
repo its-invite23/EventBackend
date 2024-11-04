@@ -14,7 +14,7 @@ module.exports = (resetLink, userName) => {
 <tr bgcolor="#141414">
     <td style="padding: 40px 2px 10px 2px; text-align: center;">
         <p style="margin: 1px;">
-            <img src="https://ibb.co/1vDyhMn" alt="">
+            <img src="https://i.ibb.co/LkLjbrP/forgetpass.png" alt="">
         </p>
     </td>
 </tr>
