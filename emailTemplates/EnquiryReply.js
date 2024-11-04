@@ -1,4 +1,4 @@
-const emailTemplate = (user_name, reply_message, enquire_status, number_of_attendees, event_type_name, event_name) => `
+const EnquiryReply = (user_name, reply_message, enquire_status, number_of_attendees, event_type_name, event_name) => `
 <table style="max-width: 600px; font-family: Arial, sans-serif; text-align: left;" align="center" width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#000">
     <tr bgcolor="#141414">
         <td style="padding: 20px; text-align: center;">
