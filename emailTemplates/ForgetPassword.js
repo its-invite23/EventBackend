@@ -12,7 +12,7 @@ module.exports = (resetLink, userName) => {
 </tr>
 
 <tr bgcolor="#141414">
-    <td style="padding: 40px 2px 10px 2px; text-align: center;">
+    <td style="padding: 40px 10px 10px 10px; text-align: center;">
         <p style="margin: 1px;">
             <img src="https://i.ibb.co/LkLjbrP/forgetpass.png" alt="Forgot Password">
         </p>
@@ -20,7 +20,7 @@ module.exports = (resetLink, userName) => {
 </tr>
 
 <tr>
-    <td style="padding: 40px 0 30px 0; text-align: left;">
+    <td style="padding: 40px 10px 30px 10px; text-align: left;">
         <p style="margin: 1px; font-size: 12px; font-weight: normal; color: #CCCCCC;" ali->
             Hi ${userName},
         </p>
@@ -28,7 +28,7 @@ module.exports = (resetLink, userName) => {
 </tr>
 
 <tr>
-    <td style="padding: 0 0 30px 0; text-align: left;">
+    <td style="padding: 0 10px 30px 10px; text-align: left;">
         <p style="margin: 1px; font-size: 12px; font-weight: normal; color: #CCCCCC;">
             We received a request to reset the password for your account. If you didn't make this request, please ignore this email.
         </p>
