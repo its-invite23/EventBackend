@@ -4,7 +4,7 @@ const emailTemplate = (name, reply_message) => `
     <td style="padding: 20px 2px 0 2px; text-align: center;">
         <p style="margin: 1px;">
             <a href="#">
-                <img src="logo.png" alt="">
+                <img src="https://i.ibb.co/yg37Knk/logo.png" alt="">
             </a>
         </p>
     </td>
@@ -13,7 +13,7 @@ const emailTemplate = (name, reply_message) => `
 <tr bgcolor="#141414">
     <td style="padding: 40px 2px 10px 2px; text-align: center;">
         <p style="margin: 1px;">
-            <img src="forgetpass.png" alt="">
+            <img src="https://i.ibb.co/CV8frHp/emailbanner.png" alt="">
         </p>
     </td>
 </tr>

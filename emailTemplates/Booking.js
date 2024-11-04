@@ -4,7 +4,7 @@ module.exports = () => {
 <tr>
     <td style="padding: 20px 2px 0 2px; text-align: center;">
         <p style="margin: 1px;">
-            <img src="https://ibb.co/bNfDYgv" alt="">
+            <img src="https://i.ibb.co/yg37Knk/logo.png" alt="">
         </p>
     </td>
 </tr>
@@ -12,7 +12,7 @@ module.exports = () => {
 <tr>
     <td style="padding: 40px 2px 0 2px; text-align: center;">
         <p style="margin: 1px;">
-            <img src="https://ibb.co/P1jdS6s" alt="">
+            <img src="https://i.ibb.co/CV8frHp/emailbanner.png" alt="">
         </p>
     </td>
 </tr>

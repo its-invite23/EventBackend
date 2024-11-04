@@ -1,4 +1,4 @@
-module.exports = (VerfiyLink, userName ) => {
+module.exports = (VerfiyLink, userName) => {
     return `
   <table style="max-width: 400px; font-family: arial;" width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#000">
 <tr bgcolor="#141414">
