@@ -33,7 +33,7 @@ exports.packageget = catchAsync(async (req, res, next) => {
         const totalpackages = await packages.countDocuments();
 
         const packagegetdata = await packages.find()
-        .sort({ created_at: -1 }) 
+            .sort({ created_at: -1 })
             .skip(skip)
             .limit(limit);
 
@@ -62,10 +62,28 @@ exports.packageget = catchAsync(async (req, res, next) => {
 
 
 exports.packageStatusget = catchAsync(async (req, res, next) => {
+
     try {
-        const packagegetdata = await packages.find({ package_status: "active" });
+
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        const skip = (page - 1) * limit;
+        const totalpackages = await packages.countDocuments();
+        const packagegetdata = await packages.find({ package_status: "active" }).sort({ created_at: -1 })
+            .skip(skip)
+            .limit(limit);
+        const totalPages = Math.ceil(totalpackages / limit);
+
         res.status(200).json({
-            data: packagegetdata,
+            data: {
+                packagegetdata: packagegetdata,
+                totalpackages: totalpackages,
+                totalPages: totalPages,
+                currentPage: page,
+                perPage: limit,
+                nextPage: page < totalPages ? page + 1 : null,
+                previousPage: page > 1 ? page - 1 : null,
+            },
             msg: "Package data retrieved successfully",
         });
     } catch (error) {
@@ -132,7 +150,6 @@ exports.PackageUpdateStatus = catchAsync(async (req, res, next) => {
             });
         }
 
-        // Fetch the current package record by ID
         const packageRecord = await packages.findById(Id);
 
         if (!packageRecord) {
@@ -142,7 +159,6 @@ exports.PackageUpdateStatus = catchAsync(async (req, res, next) => {
             });
         }
 
-        // Toggle the package status based on its current state
         const newStatus = packageRecord.package_status === "active" ? "inactive" : "active";
         const newavailability = packageRecord.package_availability === "available" ? "outOfStock" : "available";
 

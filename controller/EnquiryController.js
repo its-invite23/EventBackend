@@ -26,7 +26,6 @@ exports.EnquiryPost = catchAsync(async (req, res) => {
     }
 });
 
-
 exports.EnquiryGet = catchAsync(async (req, res, next) => {
     try {
 
