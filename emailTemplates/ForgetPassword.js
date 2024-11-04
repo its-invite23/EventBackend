@@ -1,6 +1,6 @@
 module.exports = (resetLink, userName) => {
     return `
-  <table style="max-width: 400px; font-family: arial; margin: 0 auto;" align="center" width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#000">
+  <table style="max-width: 600px; font-family: arial; text-align: left; margin: 0 auto;" align="center" width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#000">
 <tr bgcolor="#141414">
     <td style="padding: 20px 2px 0 2px; text-align: center;">
         <p style="margin: 1px;">
@@ -20,15 +20,15 @@ module.exports = (resetLink, userName) => {
 </tr>
 
 <tr>
-    <td style="padding: 40px 0 30px 0; text-align: center;">
-        <p style="margin: 1px; font-size: 12px; font-weight: normal; color: #CCCCCC;">
+    <td style="padding: 40px 0 30px 0; text-align: left;">
+        <p style="margin: 1px; font-size: 12px; font-weight: normal; color: #CCCCCC;" ali->
             Hi ${userName},
         </p>
     </td>
 </tr>
 
 <tr>
-    <td style="padding: 0 0 30px 0; text-align: center;">
+    <td style="padding: 0 0 30px 0; text-align: left;">
         <p style="margin: 1px; font-size: 12px; font-weight: normal; color: #CCCCCC;">
             We received a request to reset the password for your account. If you didn't make this request, please ignore this email.
         </p>
