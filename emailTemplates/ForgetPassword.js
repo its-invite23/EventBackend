@@ -4,8 +4,8 @@ module.exports = (resetLink, userName) => {
 <tr bgcolor="#141414">
     <td style="padding: 20px 2px 0 2px; text-align: center;">
         <p style="margin: 1px;">
-            <a href="#">
-                <img src="https://ibb.co/bNfDYgv" alt="">
+            <a href="https://user-event.vercel.app/">
+                <img src="https://eventbackend-fyb5.onrender.com/public/logo.png" alt="">
             </a>
         </p>
     </td>
