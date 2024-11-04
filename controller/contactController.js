@@ -31,7 +31,7 @@ exports.ContactPost = (async (req, res) => {
 
 exports.ContactGet = catchAsync(async (req, res, next) => {
     try {
-        const Contactget = await contactmodal.find({});
+        const Contactget = await contactmodal.find({}).sort({ created_at: -1 }) ;
         res.status(200).json({
             data: Contactget,
             msg: "Contact Get",

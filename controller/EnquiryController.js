@@ -30,7 +30,7 @@ exports.EnquiryPost = catchAsync(async (req, res) => {
 exports.EnquiryGet = catchAsync(async (req, res, next) => {
     try {
 
-        const Enquiryget = await EnquireModal.find({});
+        const Enquiryget = await EnquireModal.find({}).sort({ created_at: -1 }) ;
         res.status(200).json({
             data: Enquiryget,
             msg: "Enquiryget Get",

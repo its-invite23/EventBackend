@@ -236,7 +236,7 @@ exports.profile = catchAsync(async (req, res, next) => {
 
     const totalUsers = await User.countDocuments({ role: "user", isDeleted: false });
     const users = await User.find({ role: "user", isDeleted: false })
-      .select("-password")
+      .select("-password").sort({ created_at: -1 }) 
       .skip(skip)
       .limit(limit);
 
