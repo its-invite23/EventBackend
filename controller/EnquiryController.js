@@ -5,14 +5,6 @@ const sendEmail = require("../utils/EmailMailler");
 const { validationErrorResponse, errorResponse, successResponse } = require("../utils/ErrorHandling");
 
 exports.EnquiryPost = catchAsync(async (req, res) => {
-    // const userId = req?.User?._id;
-    // if (!userId) {
-    //     return res.status(400).json({
-    //         status: false,
-    //         message: "User information not found in the request or userId is undefined.",
-    //     });
-    // }
-
     const { email, name, message, eventname, event_type, attendees } = req.body;
 
     const record = new EnquireModal({
@@ -122,7 +114,6 @@ exports.EnquiryReply = async (req, res) => {
     if (!_id || !reply_message || !enquire_status) {
         return validationErrorResponse(res, "All fields (Id, reply_message, enquire_status) are required.");
     }
-
     try {
         const enquiry = await EnquireModal.findById(_id);
         console.log("Enquiry found:", enquiry);
@@ -139,10 +130,17 @@ exports.EnquiryReply = async (req, res) => {
         );
 
         const subject = "Thank You for Your Enquiry";
+        // email: 'ankit.jain@futureprofilez.com',
+        // message: 'hello  sir ',
+        // reply_message: 'Hello',
+        // eventname: 'Birthday party',
+        // event_type: 'cack food dj',
+        // attendees: 100,
+        // // enquire_status: 'active',
         if (updatedEnquiry) {
             try {
                 await sendEmail(updatedEnquiry.email, updatedEnquiry.name, reply_message, subject, emailTemplate
-                    
+
                 );
             } catch (emailError) {
                 console.error("Email sending failed:", emailError);
