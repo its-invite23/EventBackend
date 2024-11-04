@@ -1,4 +1,6 @@
 const emailTemplate = require("../emailTemplates/replyMessage");
+const EmailBooking = require("../emailTemplates/Booking");
+
 const contactmodal = require("../model/Contact");
 const catchAsync = require('../utils/catchAsync');
 const sendEmail = require("../utils/EmailMailler");
@@ -86,3 +88,28 @@ exports.ContactReply = async (req, res) => {
     }
 };
 
+
+
+
+exports.Emailcheck = async (req, res) => {
+    try {
+        const result = {
+            email: "ankit.jain@futureprofilez.com",
+            name: "ankitjain",
+            reply_message: "Thank you for reaching out. We appreciate your feedback."
+        };
+        const subject = "Thank You for Contacting Us";
+        await sendEmail(subject, result.email, result.name, EmailBooking);
+
+        return res.json({
+            status: true,
+            message: "You have successfully replied to your query!",
+        });
+    } catch (error) {
+        return res.status(500).json({
+            status: false,
+            error: error.message,
+            message: "Failed to send the email.",
+        });
+    }
+};
