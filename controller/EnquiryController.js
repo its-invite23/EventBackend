@@ -140,16 +140,7 @@ exports.EnquiryReply = async (req, res) => {
         const subject = "Thank You for Your Enquiry";
         if (updatedEnquiry) {
             try {
-                const emailBody = emailTemplate(
-                    updatedEnquiry.user_name,
-                    reply_message,
-                    updatedEnquiry.enquire_status,
-                    updatedEnquiry.number_of_attendees,
-                    updatedEnquiry.event_type_name,
-                    updatedEnquiry.event_name
-                );
-
-                await sendEmail(updatedEnquiry.email, updatedEnquiry.user_name, reply_message, subject, emailBody);
+                await sendEmail(updatedEnquiry.email, updatedEnquiry.user_name, reply_message, subject, emailTemplate);
             } catch (emailError) {
                 console.error("Email sending failed:", emailError);
                 return errorResponse(res, 500, "Failed to send email notification.");
