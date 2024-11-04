@@ -1,6 +1,6 @@
 const EnquireModal = require("../model/Enquiry");
 const catchAsync = require("../utils/catchAsync");
-const emailTemplate = require("../emailTemplates/replyMessage");
+const emailTemplate = require("../emailTemplates/EnquiryReply");
 const sendEmail = require("../utils/EmailMailler");
 const { validationErrorResponse, errorResponse, successResponse } = require("../utils/ErrorHandling");
 
@@ -115,11 +115,6 @@ exports.EnquiryUpdateStatus = catchAsync(async (req, res) => {
     }
 });
 
-
-
-
-
-
 exports.EnquiryReply = async (req, res) => {
     const { _id, reply_message, enquire_status } = req.body;
     if (!_id || !reply_message || !enquire_status) {
@@ -132,6 +127,7 @@ exports.EnquiryReply = async (req, res) => {
         if (!enquiry) {
             return errorResponse(res, 404, "Enquiry not found.");
         }
+
         const updatedEnquiry = await EnquireModal.findByIdAndUpdate(
             _id,
             {
@@ -144,7 +140,16 @@ exports.EnquiryReply = async (req, res) => {
         const subject = "Thank You for Your Enquiry";
         if (updatedEnquiry) {
             try {
-                await sendEmail(updatedEnquiry.email, updatedEnquiry.name, reply_message, subject, emailTemplate);
+                const emailBody = emailTemplate(
+                    updatedEnquiry.user_name,
+                    reply_message,
+                    updatedEnquiry.enquire_status,
+                    updatedEnquiry.number_of_attendees,
+                    updatedEnquiry.event_type_name,
+                    updatedEnquiry.event_name
+                );
+
+                await sendEmail(updatedEnquiry.email, updatedEnquiry.user_name, reply_message, subject, emailBody);
             } catch (emailError) {
                 console.error("Email sending failed:", emailError);
                 return errorResponse(res, 500, "Failed to send email notification.");
@@ -159,4 +164,3 @@ exports.EnquiryReply = async (req, res) => {
         return errorResponse(res, 500, "Failed to update the enquiry.");
     }
 };
-
