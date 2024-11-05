@@ -28,10 +28,24 @@ exports.EnquiryPost = catchAsync(async (req, res) => {
 
 exports.EnquiryGet = catchAsync(async (req, res, next) => {
     try {
-
-        const Enquiryget = await EnquireModal.find({}).sort({ created_at: -1 }) ;
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        const skip = (page - 1) * limit;
+        const totalEnquireModal = await EnquireModal.countDocuments();
+        const Enquiryget = await EnquireModal.find({}).sort({ created_at: -1 })
+            .skip(skip)
+            .limit(limit);
+        const totalPages = Math.ceil(totalEnquireModal / limit);
         res.status(200).json({
-            data: Enquiryget,
+            data: {
+                Enquiryget: Enquiryget,
+                totalEnquireModal: totalEnquireModal,
+                totalPages: totalPages,
+                currentPage: page,
+                perPage: limit,
+                nextPage: page < totalPages ? page + 1 : null,
+                previousPage: page > 1 ? page - 1 : null,
+            },
             msg: "Enquiryget Get",
         });
     } catch (error) {
@@ -105,6 +119,7 @@ exports.EnquiryUpdateStatus = catchAsync(async (req, res) => {
         });
     }
 });
+
 
 
 

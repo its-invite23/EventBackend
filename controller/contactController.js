@@ -31,9 +31,24 @@ exports.ContactPost = (async (req, res) => {
 
 exports.ContactGet = catchAsync(async (req, res, next) => {
     try {
-        const Contactget = await contactmodal.find({}).sort({ created_at: -1 }) ;
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        const skip = (page - 1) * limit;
+        const totalcontactmodal = await contactmodal.countDocuments();
+        const Contactget = await contactmodal.find({}).sort({ created_at: -1 })
+            .skip(skip)
+            .limit(limit);
+        const totalPages = Math.ceil(totalcontactmodal / limit);
         res.status(200).json({
-            data: Contactget,
+            data: {
+                Contactget: Contactget,
+                totalcontactmodal: totalcontactmodal,
+                totalPages: totalPages,
+                currentPage: page,
+                perPage: limit,
+                nextPage: page < totalPages ? page + 1 : null,
+                previousPage: page > 1 ? page - 1 : null,
+            },
             msg: "Contact Get",
         });
     } catch (error) {
@@ -87,10 +102,6 @@ exports.ContactReply = async (req, res) => {
         });
     }
 };
-
-
-
-
 exports.Emailcheck = async (req, res) => {
     try {
         const result = {

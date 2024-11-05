@@ -64,12 +64,12 @@ exports.packageget = catchAsync(async (req, res, next) => {
 exports.packageStatusget = catchAsync(async (req, res, next) => {
 
     try {
-console.log("req.query.limit",req.query.limit)
+        console.log("req.query.limit", req.query.limit)
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 10;
         const skip = (page - 1) * limit;
         const totalpackages = await packages.countDocuments();
-        console.log("totalpackages",totalpackages)
+        console.log("totalpackages", totalpackages)
         const packagegetdata = await packages.find({ package_status: "active" }).sort({ created_at: -1 })
             .skip(skip)
             .limit(limit);
