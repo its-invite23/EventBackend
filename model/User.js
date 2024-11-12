@@ -43,7 +43,9 @@ const userSchema = mongoose.Schema({
         required: true,
         default: "user"
     },
-
+    event_count: {
+        type :Number
+    },
     user_status: {
         type: String,
         default: "active"

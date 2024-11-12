@@ -5,10 +5,10 @@ const sendEmail = require("../utils/EmailMailler");
 const { validationErrorResponse, errorResponse, successResponse } = require("../utils/ErrorHandling");
 
 exports.EnquiryPost = catchAsync(async (req, res) => {
-    const { email, name, message, eventname, event_type, attendees } = req.body;
+    const { email, name, message, eventname, event_type, attendees,phone_code, phone_number } = req.body;
 
     const record = new EnquireModal({
-        email, name, message, eventname, event_type, attendees, enquire_status: "pending"
+        email, name, message,phone_code , phone_number, eventname, event_type, attendees, enquire_status: "pending"
     });
 
     const result = await record.save();

@@ -18,6 +18,8 @@ const EnquirySchema = mongoose.Schema({
         default: null
     },
     eventname: String,
+    phone_number: Number,
+    phone_code: Number,
     event_type: String,
     attendees: Number,
     userId: {
@@ -34,7 +36,6 @@ const EnquirySchema = mongoose.Schema({
         default: Date.now
     }
 })
-
 
 const Enquiry = mongoose.model("Enquiry", EnquirySchema);
 

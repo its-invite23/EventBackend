@@ -1,6 +1,5 @@
 const mongoose = require("mongoose")
 
-
 const contactSchema = mongoose.Schema({
     email: {
         type: String,
@@ -17,6 +16,10 @@ const contactSchema = mongoose.Schema({
     reply_message: {
         type: String,
     },
+    phone_number: {
+        type: Number,
+    },
+    phone_code: Number,
     contact_status: {
         type: String,
         default: "unread"

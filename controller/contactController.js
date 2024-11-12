@@ -7,10 +7,10 @@ const sendEmail = require("../utils/EmailMailler");
 
 
 exports.ContactPost = (async (req, res) => {
-    const { email, name, message } = req.body;
+    const { email, name, message , phone_code , phone_number} = req.body;
 
     const record = new contactmodal({
-        email, name, message
+        email, name, message ,phone_code , phone_number
     });
 
     const result = await record.save();

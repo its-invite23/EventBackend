@@ -64,6 +64,10 @@ const PackageSchema = new mongoose.Schema({
         default: "available",
         enum: ["available", "outOfStock"]
     },
+    event_type:String,
+    event_food :String,
+    event_activity: String,
+    services: String,
     created_at: {
         type: Date,
         default: Date.now

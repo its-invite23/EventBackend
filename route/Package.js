@@ -3,18 +3,18 @@ const { packageadd, packageget, PackageUpdate, PackageIdDelete, packageStatusget
 
 const package = require("express").Router();
 
-package.post("/package-add" , packageadd)
+package.post("/package-add", packageadd)
 
-package.get("/package-get" ,  packageget);
+package.get("/package-get", packageget);
 
-package.post("/package-update" , verifyToken , PackageUpdate);
+package.post("/package-update", verifyToken, PackageUpdate);
 
-package.post("/package-delete" , verifyToken , PackageIdDelete);
-package.post("/package-get-id" , verifyToken , PackagegetId);
+package.post("/package-delete", verifyToken, PackageIdDelete);
+package.post("/package-get-id", PackagegetId);
 
 
-package.get("/package-Status"  ,packageStatusget);
+package.get("/package-Status", packageStatusget);
 
-package.post("/package-update-status" , verifyToken ,PackageUpdateStatus);
+package.post("/package-update-status", verifyToken, PackageUpdateStatus);
 
 module.exports = package;
