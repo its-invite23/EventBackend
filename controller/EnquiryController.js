@@ -130,7 +130,6 @@ exports.EnquiryReply = async (req, res) => {
     }
     try {
         const enquiry = await EnquireModal.findById(_id);
-        console.log("Enquiry found:", enquiry);
         if (!enquiry) {
             return errorResponse(res, 404, "Enquiry not found.");
         }

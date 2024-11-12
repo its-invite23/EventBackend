@@ -89,7 +89,6 @@ exports.signup = catchAsync(async (req, res) => {
       city,
     } = req.body;
 
-    console.log("req.body", req.body);
 
     // Check if required fields are provided
     if (!password || !phone_number || !username || !email || !address || !country || !city) {
@@ -184,7 +183,6 @@ exports.login = catchAsync(async (req, res, next) => {
     }
 
     const user = await User.findOne({ email });
-    console.log("user", user)
     if (!user) {
       return res.status(401).json({
         status: false,
@@ -192,7 +190,6 @@ exports.login = catchAsync(async (req, res, next) => {
       });
     }
     const isPasswordValid = await bcrypt.compare(password, user.password);
-    console.log("isPasswordValid", isPasswordValid)
     if (!isPasswordValid) {
       return res.status(400).json({
         status: false,
@@ -420,7 +417,6 @@ exports.forgotlinkrecord = async (req, res) => {
       html: emailHtml,
     });
 
-    console.log("Email sent to user account");
 
     return successResponse(res, "Email has been sent to your registered email");
 
@@ -432,10 +428,8 @@ exports.forgotlinkrecord = async (req, res) => {
 
 exports.forgotpassword = async (req, res) => {
   try {
-    console.log(req.body)
     const { token, newPassword } = req.body;
     const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
-    console.log(decoded)
     const user = await User.findById(decoded.id);
     if (!user) {
       return errorResponse(res, "User not found", 404);
@@ -474,7 +468,6 @@ exports.profilegettoken = catchAsync(async (req, res, next) => {
 exports.userfilter = catchAsync(async (req, res, next) => {
   try {
     const { username, user_status } = req.body;  // Changed to req.query for query params
-    console.log("req.query", req.body); // Updated to log query parameters
     let filter = {};
 
     if (user_status) {
@@ -486,10 +479,8 @@ exports.userfilter = catchAsync(async (req, res, next) => {
       filter.username = { $regex: `^${username}$`, $options: 'i' };
     }
 
-    console.log("filter", filter);
     const users = await User.find(filter).select("-password");
 
-    console.log("users", users);
     return res.status(200).json({
       status: true,
       message: "Users retrieved successfully",
