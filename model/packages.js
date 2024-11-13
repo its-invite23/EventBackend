@@ -1,23 +1,12 @@
 const mongoose = require("mongoose");
 
 const PackageSchema = new mongoose.Schema({
-
     package_name: {
         type: String,
         required: true
     },
-    services_provider_name: {
-        type: String,
-        required: true
-    },
-
-    services_provider_email: {
-        type: String,
-        required: true
-    },
-
-    services_provider_phone: {
-        type: String,
+    package_services: {
+        type: Array,
         required: true
     },
     package_price_min: {
@@ -29,13 +18,8 @@ const PackageSchema = new mongoose.Schema({
         type: Number,
         required: true,
     },
-    package_categories: {
-        type: Array,
-        required: true
-    },
-    package_description: {
-        type: String,
-    },
+
+
     package_status: {
         type: String,
         default: "active",
@@ -64,8 +48,8 @@ const PackageSchema = new mongoose.Schema({
         default: "available",
         enum: ["available", "outOfStock"]
     },
-    event_type:String,
-    event_food :String,
+    event_type: String,
+    event_food: String,
     event_activity: String,
     services: String,
     created_at: {

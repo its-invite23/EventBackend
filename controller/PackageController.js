@@ -3,11 +3,9 @@ const catchAsync = require("../utils/catchAsync");
 
 
 exports.packageadd = catchAsync(async (req, res) => {
-    const { package_name, package_price_min, services_provider_phone, services_provider_name, services_provider_email, package_price_max, package_categories, package_description, package_status, package_image, package_duration, package_discount, package_people, package_availability, } = req.body;
-    // const categoriesArray = package_categories.split(',').map(category => category.trim());
+    const { package_name, package_price_min, package_services, services_provider_phone, services_provider_name, services_provider_email, package_price_max, package_categories, package_description, package_status, package_image, package_duration, package_discount, package_people, package_availability, } = req.body;
     const record = new packages({
-        services_provider_name, services_provider_email, services_provider_phone,
-        package_name, package_price_min, package_price_max, package_categories: package_categories, package_description, package_status, package_image, package_duration, package_discount, package_people, package_availability
+        package_name, package_price_min, package_services, services_provider_phone, services_provider_name, services_provider_email, package_price_max, package_categories, package_description, package_status, package_image, package_duration, package_discount, package_people, package_availability,
     });
     const result = await record.save();
     if (result) {
@@ -96,7 +94,7 @@ exports.packageStatusget = catchAsync(async (req, res, next) => {
 
 exports.PackageUpdate = catchAsync(async (req, res, next) => {
     try {
-        const { Id, package_name, package_price_min, services_provider_phone, package_price_max, package_categories, package_description, package_status, package_image, package_duration, package_discount, package_people, package_availability, services_provider_name, services_provider_email, } = req.body;
+        const { Id,   package_name, package_price_min, package_services, services_provider_phone, services_provider_name, services_provider_email, package_price_max, package_categories, package_description, package_status, package_image, package_duration, package_discount, package_people, package_availability, } = req.body;
         if (!Id) {
             return res.status(400).json({
                 status: false,
@@ -110,7 +108,7 @@ exports.PackageUpdate = catchAsync(async (req, res, next) => {
         // }
         const updatedRecord = await packages.findByIdAndUpdate(
             Id,
-            { package_name, package_price_min, services_provider_phone, package_price_max, package_categories: package_categories, package_description, package_status, package_image, package_duration, package_discount, package_people, package_availability, services_provider_name, services_provider_email },
+            {  package_name, package_price_min, package_services, services_provider_phone, services_provider_name, services_provider_email, package_price_max, package_categories, package_description, package_status, package_image, package_duration, package_discount, package_people, package_availability, },
             { new: true, runValidators: true }
         );
 
@@ -160,9 +158,6 @@ exports.PackageUpdateStatus = catchAsync(async (req, res, next) => {
 
         const newStatus = packageRecord.package_status === "active" ? "inactive" : "active";
         const newavailability = packageRecord.package_availability === "available" ? "outOfStock" : "available";
-
-
-        // Update the package status in the database
         const updatedRecord = await packages.findByIdAndUpdate(
             Id,
             {
