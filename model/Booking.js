@@ -6,10 +6,8 @@ const bookingSchema =  mongoose.Schema({
         ref: 'User',
         required: true,
     },
-    PackageId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Package',
-        required: true,
+    Package: {
+      type:Array,
     },
     bookingDate: {
         type: Date,
@@ -30,7 +28,6 @@ const bookingSchema =  mongoose.Schema({
     },
     attendees :Number,
     totalPrice :Number,
-    Address :String,
 });
 const Booking = mongoose.model('Booking', bookingSchema);
 module.exports = Booking;

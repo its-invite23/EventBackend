@@ -1,4 +1,4 @@
-const  Booking = require("../model/Booking");
+const Booking = require("../model/Booking");
 
 
 const catchAsync = require("../utils/catchAsync");
@@ -14,16 +14,17 @@ exports.bookingpost = catchAsync(async (req, res) => {
         });
     }
 
-    const { PackageId, bookingDate, location, status, attendees,  totalPrice,Address} = req.body;
+    const { Package, bookingDate, location, status, attendees, totalPrice } = req.body;
 
     try {
         const record = new Booking({
-            PackageId,
+            Package,
             bookingDate,
             location,
             status,
             userId,
-            attendees,  totalPrice,Address
+            attendees,
+            totalPrice
         });
 
         await record.save();
