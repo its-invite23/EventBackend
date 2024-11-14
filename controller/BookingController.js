@@ -14,7 +14,7 @@ exports.bookingpost = catchAsync(async (req, res) => {
         });
     }
 
-    const { PackageId, bookingDate, location, status } = req.body;
+    const { PackageId, bookingDate, location, status, attendees,  totalPrice,Address} = req.body;
 
     try {
         const record = new Booking({
@@ -22,7 +22,8 @@ exports.bookingpost = catchAsync(async (req, res) => {
             bookingDate,
             location,
             status,
-            userId
+            userId,
+            attendees,  totalPrice,Address
         });
 
         await record.save();
