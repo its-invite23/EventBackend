@@ -226,24 +226,38 @@ exports.login = catchAsync(async (req, res, next) => {
 
 exports.profile = catchAsync(async (req, res, next) => {
   try {
-    // Input validation
     const page = Math.max(parseInt(req.query.page) || 1, 1); // Ensure page is at least 1
     const limit = Math.max(parseInt(req.query.limit) || 10, 1); // Ensure limit is at least 1
     const skip = (page - 1) * limit;
 
-    const totalUsers = await User.countDocuments({ role: "user", isDeleted: false });
+    // Fetch users
     const users = await User.find({ role: "user", isDeleted: false })
-      .select("-password").sort({ created_at: -1 }) 
+      .select("-password")
+      .sort({ created_at: -1 })
       .skip(skip)
       .limit(limit);
 
+    // Calculate enquiry counts
+    for (const user of users) {
+      const enquiryCount = await Enquiry.countDocuments({ email: user.email });
+      await User.updateOne({ _id: user._id }, { $set: { enquiry_count: enquiryCount } });
+    }
+
+    // Fetch updated users with enquiry counts
+    const updatedUsers = await User.find({ role: "user", isDeleted: false })
+      .select("-password")
+      .sort({ created_at: -1 })
+      .skip(skip)
+      .limit(limit);
+
+    const totalUsers = await User.countDocuments({ role: "user", isDeleted: false });
     const totalPages = Math.ceil(totalUsers / limit);
 
     return res.status(200).json({
       status: true,
-      message: "Users retrieved successfully",
+      message: "Users retrieved successfully with enquiry counts updated",
       data: {
-        users: users,
+        users: updatedUsers,
         totalUsers: totalUsers,
         totalPages: totalPages,
         currentPage: page,
@@ -253,14 +267,15 @@ exports.profile = catchAsync(async (req, res, next) => {
       },
     });
   } catch (error) {
-    console.error("Error fetching users:", error); // Log full error for debugging
+    console.error("Error fetching users and updating enquiry counts:", error); // Log full error for debugging
     return res.status(500).json({
       status: false,
-      message: "An error occurred while fetching users.",
+      message: "An error occurred while fetching users and updating enquiry counts.",
       error: error.message || "Internal Server Error", // Provide a fallback error message
     });
   }
 });
+
 
 
 exports.updateUserStatus = catchAsync(async (req, res) => {
