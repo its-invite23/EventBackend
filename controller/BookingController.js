@@ -6,7 +6,6 @@ const catchAsync = require("../utils/catchAsync");
 
 exports.bookingpost = catchAsync(async (req, res) => {
     const userId = req?.User?._id;
-
     if (!userId) {
         return res.status(400).json({
             status: false,
@@ -14,11 +13,12 @@ exports.bookingpost = catchAsync(async (req, res) => {
         });
     }
 
-    const { Package, bookingDate, location, status, attendees, totalPrice } = req.body;
+    const { Package,package_name, bookingDate, location, status, attendees, totalPrice } = req.body;
 
     try {
         const record = new Booking({
-            Package,
+            package:Package,
+            package_name,
             bookingDate,
             location,
             status,
@@ -45,18 +45,36 @@ exports.bookingpost = catchAsync(async (req, res) => {
 
 
 
+
 exports.BookingGet = catchAsync(async (req, res, next) => {
     try {
-        const Bookingget = await Booking.find({});
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        const skip = (page - 1) * limit;
+        const totalBooking = await Booking.countDocuments();
+        const BookingData = await Booking.find({}).sort({ created_at: -1 })
+            .skip(skip)
+            .limit(limit).populate({
+                path: 'userId',
+                select: "username email"
+                //  model: 'User'
+            });;
+        const totalPages = Math.ceil(totalBooking / limit);
         res.status(200).json({
-            status: true,
-            data: Bookingget,
-            msg: "Bookings retrieved successfully.",
+            data: {
+                bookingdata: BookingData,
+                totalBooking: totalBooking,
+                totalPages: totalPages,
+                currentPage: page,
+                perPage: limit,
+                nextPage: page < totalPages ? page + 1 : null,
+                previousPage: page > 1 ? page - 1 : null,
+            },
+            msg: "Contact Get",
         });
     } catch (error) {
         res.status(500).json({
-            status: false,
-            msg: "Failed to fetch bookings.",
+            msg: "Failed to fetch Contact get",
             error: error.message,
         });
     }

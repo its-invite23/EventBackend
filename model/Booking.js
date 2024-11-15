@@ -6,9 +6,10 @@ const bookingSchema =  mongoose.Schema({
         ref: 'User',
         required: true,
     },
-    Package: {
+    package: {
       type:Array,
     },
+    package_name :String,
     bookingDate: {
         type: Date,
         required: true
