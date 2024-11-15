@@ -30,7 +30,7 @@ module.exports = (VerfiyLink, userName) => {
 <tr>
     <td style="padding: 0 0 30px 20px;">
         <p style="margin: 1px; font-size: 12px; font-weight: normal; color:#CCCCCC; text-align: center;">
-            We received a request to reset the password for your account. If you didn't make this request, please ignore this email.
+            Thank you for signing up with us. Please proceed with verifying your account.
         </p>
     </td>
 </tr>
@@ -38,7 +38,7 @@ module.exports = (VerfiyLink, userName) => {
 <tr>
     <td style="padding: 0 0 30px 20px;">
         <p style="margin: 1px; font-size: 12px; font-weight: normal; color:#CCCCCC; text-align: center;">
-            To reset your password, click the link below:
+            To verify your account, please click the link below:
         </p>
     </td>
 </tr>

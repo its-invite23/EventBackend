@@ -402,6 +402,7 @@ exports.UserUpdate = catchAsync(async (req, res, next) => {
     });
   }
 });
+
 exports.forgotlinkrecord = async (req, res) => {
   try {
     const { email } = req.body;

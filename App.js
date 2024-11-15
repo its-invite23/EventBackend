@@ -30,7 +30,6 @@ app.use("/user", UserRoute)
 
 app.use("/stripe", StripeRoute)
 
-
 app.use("/enquiry", enauiryroute)
 
 app.use("/package", packageroute)
