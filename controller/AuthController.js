@@ -20,7 +20,7 @@ exports.verifyToken = async (req, res, next) => {
     if (!token) {
       return res.status(400).json({
         status: false,
-        message: "User is not authorized or Token is missing",
+        message: "User is not authorized",
       });
     } else {
       try {

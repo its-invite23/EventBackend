@@ -18,8 +18,10 @@ const PackageSchema = new mongoose.Schema({
         type: Number,
         required: true,
     },
-
-
+    package_id: {
+        type: Number,
+        required: true,
+    },
     package_status: {
         type: String,
         default: "active",
