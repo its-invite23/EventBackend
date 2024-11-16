@@ -2,25 +2,63 @@ const packages = require("../model/packages");
 const catchAsync = require("../utils/catchAsync");
 
 
+const { v4: uuidv4 } = require('uuid'); 
+
 exports.packageadd = catchAsync(async (req, res) => {
-    const { package_name, package_price_min, package_services, services_provider_phone, services_provider_name, services_provider_email, package_price_max, package_categories, package_description, package_status, package_image, package_duration, package_discount, package_people, package_availability, } = req.body;
+    const {
+        package_name,
+        package_price_min,
+        package_services,
+        services_provider_phone,
+        services_provider_name,
+        services_provider_email,
+        package_price_max,
+        package_categories,
+        package_description,
+        package_status,
+        package_image,
+        package_duration,
+        package_discount,
+        package_people,
+        package_availability,
+    } = req.body;
+
+    const package_id = uuidv4(); // Generate a unique package ID
+
     const record = new packages({
-        package_name, package_price_min, package_services, services_provider_phone, services_provider_name, services_provider_email, package_price_max, package_categories, package_description, package_status, package_image, package_duration, package_discount, package_people, package_availability,
+        package_id, // Include the generated package ID
+        package_name,
+        package_price_min,
+        package_services,
+        services_provider_phone,
+        services_provider_name,
+        services_provider_email,
+        package_price_max,
+        package_categories,
+        package_description,
+        package_status,
+        package_image,
+        package_duration,
+        package_discount,
+        package_people,
+        package_availability,
     });
+
     const result = await record.save();
     if (result) {
         res.json({
             status: true,
-            message: "You have been Product successfully !!.",
+            message: "Package has been successfully added!",
         });
     } else {
         res.json({
             status: false,
             error: result,
-            message: "Failed to create Product.",
+            message: "Failed to create package.",
         });
     }
 });
+
 
 exports.packageget = catchAsync(async (req, res, next) => {
     try {
@@ -102,10 +140,6 @@ exports.PackageUpdate = catchAsync(async (req, res, next) => {
             });
         }
 
-        // let categoriesArray;
-        // if (package_categories) {
-        //     categoriesArray = package_categories?.split(',').map(category => category.trim());
-        // }
         const updatedRecord = await packages.findByIdAndUpdate(
             Id,
             {  package_name, package_price_min, package_services, services_provider_phone, services_provider_name, services_provider_email, package_price_max, package_categories, package_description, package_status, package_image, package_duration, package_discount, package_people, package_availability, },

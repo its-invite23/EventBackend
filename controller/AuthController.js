@@ -239,7 +239,7 @@ exports.profile = catchAsync(async (req, res, next) => {
 
     // Calculate enquiry counts
     for (const user of users) {
-      const enquiryCount = await Enquiry.countDocuments({ email: user.email });
+      const enquiryCount = await Booking.countDocuments({ email: user.email });
       await User.updateOne({ _id: user._id }, { $set: { enquiry_count: enquiryCount } });
     }
 
