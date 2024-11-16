@@ -227,39 +227,40 @@ exports.login = catchAsync(async (req, res, next) => {
 exports.profile = catchAsync(async (req, res, next) => {
   try {
     const page = Math.max(parseInt(req.query.page) || 1, 1); // Ensure page is at least 1
-    const limit = Math.max(parseInt(req.query.limit) || 10, 1); // Ensure limit is at least 1
+    const limit = Math.max(parseInt(req.query.limit) || 50, 1); // Ensure limit is at least 1
     const skip = (page - 1) * limit;
 
-    // Fetch users
     const users = await User.find({ role: "user", isDeleted: false })
       .select("-password")
       .sort({ created_at: -1 })
       .skip(skip)
       .limit(limit);
 
-    // Calculate enquiry counts
-    for (const user of users) {
-      const enquiryCount = await Booking.countDocuments({ email: user.email });
-      await User.updateOne({ _id: user._id }, { $set: { enquiry_count: enquiryCount } });
-    }
+    const updates = users.map(async (user) => {
+      const enquiryCount = await Booking.countDocuments({ userId: user._id }); // Count bookings for the user
+      return User.updateOne({ _id: user._id }, { $set: { enquiry_count: enquiryCount } }); // Update user
+    });
 
-    // Fetch updated users with enquiry counts
+    await Promise.all(updates);
+
     const updatedUsers = await User.find({ role: "user", isDeleted: false })
       .select("-password")
       .sort({ created_at: -1 })
       .skip(skip)
       .limit(limit);
 
+    // Total users and pagination details
     const totalUsers = await User.countDocuments({ role: "user", isDeleted: false });
     const totalPages = Math.ceil(totalUsers / limit);
 
+    // Return response
     return res.status(200).json({
       status: true,
       message: "Users retrieved successfully with enquiry counts updated",
       data: {
         users: updatedUsers,
-        totalUsers: totalUsers,
-        totalPages: totalPages,
+        totalUsers,
+        totalPages,
         currentPage: page,
         perPage: limit,
         nextPage: page < totalPages ? page + 1 : null,
@@ -275,6 +276,7 @@ exports.profile = catchAsync(async (req, res, next) => {
     });
   }
 });
+
 
 
 
@@ -561,26 +563,6 @@ exports.getCount = catchAsync(async (req, res) => {
     });
   }
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // if (username) {
 //   // Perform an exact match instead of regex if required
