@@ -1,7 +1,5 @@
 const packages = require("../model/packages");
 const catchAsync = require("../utils/catchAsync");
-
-
 const { v4: uuidv4 } = require('uuid'); 
 
 exports.packageadd = catchAsync(async (req, res) => {
@@ -23,13 +21,19 @@ exports.packageadd = catchAsync(async (req, res) => {
         package_availability,
     } = req.body;
 
-    const place_id = uuidv4(); // Generate a unique package ID
+    console.log("Original package_services:", package_services);
+
+    const updatedPackageServices = package_services.map(service => ({
+        ...service,
+        place_id: uuidv4() 
+    }));
+
+    console.log("Updated package_services with UUIDs:", updatedPackageServices);
 
     const record = new packages({
-        place_id, // Include the generated package ID
         package_name,
         package_price_min,
-        package_services,
+        package_services: updatedPackageServices, 
         services_provider_phone,
         services_provider_name,
         services_provider_email,
@@ -58,6 +62,7 @@ exports.packageadd = catchAsync(async (req, res) => {
         });
     }
 });
+
 
 
 exports.packageget = catchAsync(async (req, res, next) => {

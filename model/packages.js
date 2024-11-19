@@ -18,7 +18,6 @@ const PackageSchema = new mongoose.Schema({
         type: Number,
         required: true,
     },
-    place_id: { type: String, required: true, unique: true },
     package_status: {
         type: String,
         default: "active",
