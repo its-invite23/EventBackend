@@ -23,10 +23,10 @@ exports.packageadd = catchAsync(async (req, res) => {
         package_availability,
     } = req.body;
 
-    const package_id = uuidv4(); // Generate a unique package ID
+    const place_id = uuidv4(); // Generate a unique package ID
 
     const record = new packages({
-        package_id, // Include the generated package ID
+        place_id, // Include the generated package ID
         package_name,
         package_price_min,
         package_services,
