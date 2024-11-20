@@ -11,10 +11,7 @@ package.post("/package-update", verifyToken, PackageUpdate);
 
 package.post("/package-delete", verifyToken, PackageIdDelete);
 package.post("/package-get-id", PackagegetId);
-
-
 package.get("/package-Status", packageStatusget);
-
 package.post("/package-update-status", verifyToken, PackageUpdateStatus);
 
 module.exports = package;

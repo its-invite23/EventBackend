@@ -10,9 +10,7 @@ const sendEmail = async (email, name, replyMessage, subject, emailTemplate) => {
             pass: process.env.password,
         },
     });
-
     const emailHtml = emailTemplate(name, replyMessage); // Assuming emailTemplate is defined elsewhere
-
     const mailOptions = {
         from: process.env.user,
         to: email,
