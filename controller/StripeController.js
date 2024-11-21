@@ -7,6 +7,13 @@ const stripe = new Stripe(
 
 exports.createCheckout = catchAsync(async (req, res) => {
   try {
+    const {amount, email, userId, booking_id, currency} = req?.body;
+    console.log({amount, email, userId, booking_id, currency});
+    console.log("req?.body", req?.body);
+    return res.status(200).json({
+      msg: "Failed to fetch Payment get",
+      error: error.message,
+    });
     const lastpayment = await Payment.findOne().sort({ srNo: -1 });
     const srNo = lastpayment ? lastpayment.srNo + 1 : 1;
     const newPayment = new Payment({
@@ -19,10 +26,10 @@ exports.createCheckout = catchAsync(async (req, res) => {
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       mode: "payment",
-      success_url: `http://localhost:3000/success/123`, // Update this to a dynamic route if needed
+      success_url: `http://localhost:3000/success/123`, 
       cancel_url: `http://localhost:3000/cancel/123`,
       submit_type: "pay",
-      customer_email: "naveen@internetbusinesssolutionsindia.com", // Consider using a dynamic value if possible
+      customer_email: "naveen@internetbusinesssolutionsindia.com", 
       billing_address_collection: "auto",
       line_items: [
         {
@@ -76,3 +83,5 @@ exports.PaymentGet = catchAsync(async (req, res, next) => {
     });
   }
 });
+
+

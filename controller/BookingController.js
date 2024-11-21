@@ -214,3 +214,37 @@ exports.BookingPrice = catchAsync(async (req, res) => {
     });
   }
 });
+
+exports.BookingGetByID = catchAsync(async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      return res.status(400).json({
+        message: "Booking ID is required.",
+        status: false,
+      });
+    }
+    const booking = await Booking.findById({_id:id}).populate({
+      path: "userId",
+      select: "username email",
+      //  model: 'User'
+    });
+    if (!booking) {
+      return res.status(404).json({
+        message: "Booking not found",
+        status: false,
+      });
+    }
+    res.status(200).json({
+      message: `Data retrieved successfully`,
+      status: true,
+      data: booking,
+    });
+  } catch (error) {
+    console.error("Error updating booking status:", error);
+    res.status(500).json({
+      message: "Internal Server Error",
+      status: false,
+    });
+  }
+});

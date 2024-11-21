@@ -17,9 +17,9 @@ const paymentmongoose = mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User"
   },
-  order_id: {
-    type: String,
-    // required: true,
+  booking_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Booking"
   },
   payment_id: {
     type: String,
@@ -31,7 +31,7 @@ const paymentmongoose = mongoose.Schema({
   },
   currency: {
     type: String,
-    default: "USD"
+    default: "INR"
   },
   created_at: {
     type: Date,
