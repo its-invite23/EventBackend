@@ -138,7 +138,7 @@ exports.BookingStatus = catchAsync(async (req, res) => {
 
 exports.BookingPayment = catchAsync(async (req, res) => {
   try {
-    const { _id } = req.body;
+    const { _id  , payment_genrator_link} = req.body;
     if (!_id) {
       return res.status(400).json({
         message: "Booking ID  are required.",
@@ -146,6 +146,13 @@ exports.BookingPayment = catchAsync(async (req, res) => {
       });
     }
 
+    const updatedRecord = await Booking.findByIdAndUpdate(
+      _id,
+      { payment_genrator_link},
+      { new: true, runValidators: true }
+    );
+
+    console.log("updatedRecord",updatedRecord)
     const bookingstatus = await Booking.findById(_id).populate({
       path: "userId",
       select: "username email",

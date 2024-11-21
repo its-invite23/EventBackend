@@ -544,7 +544,7 @@ exports.getCount = catchAsync(async (req, res) => {
     const userCount = await User.countDocuments();
     const bookingCount = await Booking.countDocuments();
     const RecentCount = await Enquiry.countDocuments();
-    const packages = await Package.find({}).limit(3).select("package_name package_image package_categories");
+    const packages = await Package.find({}).limit(3);
     const EnquiryData = await Enquiry.find({}).limit(3);
     return res.status(200).json({
       status: true,
