@@ -18,6 +18,10 @@ const bookingSchema =  mongoose.Schema({
         type: String,
         required: true,
     },
+    payment_genrator_link: {
+        type: Boolean,
+        deafult: false,
+    },
     status: {
         type: String,
         enum: ['pending', 'approve', 'reject'],
