@@ -1,19 +1,29 @@
 const Booking = require("../model/Booking");
 const catchAsync = require("../utils/catchAsync");
 const sendEmail = require("../utils/EmailMailler");
-const emailTemplate = require("../emailTemplates/Booking");
+const emailTemplate = require("../emailTemplates/PaymentLink");
 const { errorResponse, successResponse } = require("../utils/ErrorHandling");
+const nodemailer = require("nodemailer");
 
 exports.bookingpost = catchAsync(async (req, res) => {
   const userId = req?.User?._id;
   if (!userId) {
     return res.status(400).json({
       status: false,
-      message: "User information not found in the request or userId is undefined.",
+      message:
+        "User information not found in the request or userId is undefined.",
     });
   }
 
-  const { Package, package_name, bookingDate, location, status, attendees, totalPrice } = req.body;
+  const {
+    Package,
+    package_name,
+    bookingDate,
+    location,
+    status,
+    attendees,
+    totalPrice,
+  } = req.body;
 
   try {
     const record = new Booking({
@@ -24,7 +34,7 @@ exports.bookingpost = catchAsync(async (req, res) => {
       status,
       userId,
       attendees,
-      totalPrice
+      totalPrice,
     });
 
     await record.save();
@@ -49,13 +59,15 @@ exports.BookingGet = catchAsync(async (req, res, next) => {
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
     const totalBooking = await Booking.countDocuments();
-    const BookingData = await Booking.find({}).sort({ created_at: -1 })
+    const BookingData = await Booking.find({})
+      .sort({ created_at: -1 })
       .skip(skip)
-      .limit(limit).populate({
-        path: 'userId',
-        select: "username email"
+      .limit(limit)
+      .populate({
+        path: "userId",
+        select: "username email",
         //  model: 'User'
-      });;
+      });
     const totalPages = Math.ceil(totalBooking / limit);
     res.status(200).json({
       data: {
@@ -135,28 +147,67 @@ exports.BookingPayment = catchAsync(async (req, res) => {
     }
 
     const bookingstatus = await Booking.findById(_id).populate({
-      path: 'userId',
-      select: "username email"
+      path: "userId",
+      select: "username email",
       //  model: 'User'
     });
-    console.log("bookingstatus", bookingstatus)
-    const subject = "Payment Link"
-    if (bookingstatus) {
-      try {
-        await sendEmail(bookingstatus?.userId.email, bookingstatus?.userId.name, bookingstatus?.package, subject, emailTemplate  );
-      } catch (emailError) {
-        console.error("Email sending failed:", emailError);
-        return errorResponse(res, 500, "Failed to send email notification.");
-      }
+    console.log("bookingstatus", bookingstatus);
+    const paymentLink = `https://user-event.vercel.app/payment/${bookingstatus?._id}`;
+    const emailHtml = emailTemplate(paymentLink, bookingstatus?.userId?.username, bookingstatus?.totalPrice);
+    let transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+        port: 587,
+        secure: false,
+      auth: {
+        user: process.env.user,
+        pass: process.env.password,
+    },
+    });
+    await transporter.sendMail({
+      from: process.env.user,
+      to: bookingstatus.userId?.email,
+      subject: "Payment Link for your Booking",
+      html: emailHtml,
+    });
 
-      return successResponse(res, "You have successfully replied to the enquiry!");
-    } else {
-      return errorResponse(res, 400, "No changes were made to the enquiry.");
-    }
+
+    return successResponse(res, "Payment link sent successfully!");
   } catch (error) {
     console.error("Error updating booking status:", error);
 
     // Respond with an error message
+    res.status(500).json({
+      message: "Internal Server Error",
+      status: false,
+    });
+  }
+});
+
+exports.BookingPrice = catchAsync(async (req, res) => {
+  try {
+    const { _id, price } = req.body;
+    if (!_id || !price) {
+      return res.status(400).json({
+        message: "Booking ID and price both are required.",
+        status: false,
+      });
+    }
+    const bookingstatus = await Booking.findById(_id);
+    if (!bookingstatus) {
+      return res.status(404).json({
+        message: "Booking not found",
+        status: false,
+      });
+    }
+    bookingstatus.totalPrice = price;
+    await bookingstatus.save();
+    res.status(200).json({
+      message: `Booking Price Updated`,
+      status: true,
+      data: bookingstatus,
+    });
+  } catch (error) {
+    console.error("Error updating booking status:", error);
     res.status(500).json({
       message: "Internal Server Error",
       status: false,

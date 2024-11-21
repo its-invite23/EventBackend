@@ -419,9 +419,9 @@ exports.forgotlinkrecord = async (req, res) => {
     const resetLink = `https://user-event.vercel.app/forgotpassword/${token}`;
     const customerUser = record.username;
     let transporter = nodemailer.createTransport({
-      host: process.env.MAIL_HOST,
-      port: process.env.MAIL_PORT,
-      secure: false,
+      host: "smtp.gmail.com",
+        port: 587,
+        secure: false,
       auth: {
         user: process.env.user,
         pass: process.env.password,
