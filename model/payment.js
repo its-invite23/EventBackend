@@ -5,13 +5,17 @@ const paymentmongoose = mongoose.Schema({
     type: Number,
     required: true,
   },
-  Payment_status: {
+  payment_status: {
     type: String,
     default: "pending"
   },
   payment_type: {
     type: String,
     required: true
+  },
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User"
   },
   order_id: {
     type: String,

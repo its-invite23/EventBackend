@@ -59,7 +59,7 @@ exports.PaymentGet = catchAsync(async (req, res, next) => {
     const totalPages = Math.ceil(totalpaymenttmodal / limit);
     res.status(200).json({
       data: {
-        Payment: paymentget,
+        payment: paymentget,
         totalpaymenttmodal: totalpaymenttmodal,
         totalPages: totalPages,
         currentPage: page,
