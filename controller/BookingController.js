@@ -138,7 +138,7 @@ exports.BookingStatus = catchAsync(async (req, res) => {
 
 exports.BookingPayment = catchAsync(async (req, res) => {
   try {
-    const { _id  , payment_genrator_link} = req.body;
+    const { _id, payment_genrator_link } = req.body;
     if (!_id) {
       return res.status(400).json({
         message: "Booking ID  are required.",
@@ -148,11 +148,11 @@ exports.BookingPayment = catchAsync(async (req, res) => {
 
     const updatedRecord = await Booking.findByIdAndUpdate(
       _id,
-      { payment_genrator_link},
+      { payment_genrator_link },
       { new: true, runValidators: true }
     );
 
-    console.log("updatedRecord",updatedRecord)
+    console.log("updatedRecord", updatedRecord)
     const bookingstatus = await Booking.findById(_id).populate({
       path: "userId",
       select: "username email",
@@ -163,12 +163,12 @@ exports.BookingPayment = catchAsync(async (req, res) => {
     const emailHtml = emailTemplate(paymentLink, bookingstatus?.userId?.username, bookingstatus?.totalPrice);
     let transporter = nodemailer.createTransport({
       host: "smtp.gmail.com",
-        port: 587,
-        secure: false,
+      port: 587,
+      secure: false,
       auth: {
         user: process.env.user,
         pass: process.env.password,
-    },
+      },
     });
     await transporter.sendMail({
       from: process.env.user,
@@ -231,7 +231,7 @@ exports.BookingGetByID = catchAsync(async (req, res) => {
         status: false,
       });
     }
-    const booking = await Booking.findById({_id:id}).populate({
+    const booking = await Booking.findById({ _id: id }).populate({
       path: "userId",
       select: "username email",
       //  model: 'User'
