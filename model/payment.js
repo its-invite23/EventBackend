@@ -11,7 +11,7 @@ const paymentmongoose = mongoose.Schema({
   },
   payment_type: {
     type: String,
-    required: true
+    // required: true
   },
   userId: {
     type: mongoose.Schema.Types.ObjectId,

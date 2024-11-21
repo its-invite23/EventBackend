@@ -10,35 +10,34 @@ exports.createCheckout = catchAsync(async (req, res) => {
     const {amount, email, userId, booking_id, currency} = req?.body;
     console.log({amount, email, userId, booking_id, currency});
     console.log("req?.body", req?.body);
-    return res.status(200).json({
-      msg: "Failed to fetch Payment get",
-      error: error.message,
-    });
     const lastpayment = await Payment.findOne().sort({ srNo: -1 });
     const srNo = lastpayment ? lastpayment.srNo + 1 : 1;
     const newPayment = new Payment({
       srNo,
-      currency: "inr",
-      payment_type: "card",
-      amount: req?.body?.amount
+      payment_type:null,
+      payment_id:null,
+      currency,
+      userId,
+      booking_id,
+      amount
     });
     await newPayment.save();
     const session = await stripe.checkout.sessions.create({
-      payment_method_types: ["card"],
+      // payment_method_types: ["card"],
       mode: "payment",
-      success_url: `http://localhost:3000/success/123`, 
-      cancel_url: `http://localhost:3000/cancel/123`,
+      success_url: `http://localhost:3000/success/${srNo}`, 
+      cancel_url: `http://localhost:3000/cancel/${srNo}`,
       submit_type: "pay",
-      customer_email: "naveen@internetbusinesssolutionsindia.com", 
+      customer_email: email, 
       billing_address_collection: "auto",
       line_items: [
         {
           price_data: {
             currency: "inr",
             product_data: {
-              name: "Total Payment",
+              name: "Booking Payment",
             },
-            unit_amount: req.body.amount * 100, // Stripe expects amounts in the smallest currency unit (e.g., paise for INR)
+            unit_amount: req.body.amount * 100, 
           },
           quantity: 1,
         },
@@ -84,4 +83,66 @@ exports.PaymentGet = catchAsync(async (req, res, next) => {
   }
 });
 
+exports.PaymentSuccess = catchAsync(async (req, res) => {
+  try {
+    const { srNo } = req.params;
+    if (!srNo) {
+      return res.status(400).json({
+        message: "srNo is required.",
+        status: false,
+      });
+    }
+    const data = await Payment.findOne({srNo:srNo});
+    if (!data) {
+      return res.status(404).json({
+        message: "Data not found",
+        status: false,
+      });
+    }
+    data.payment_status = "success";
+    await data.save();
+    res.status(200).json({
+      message: `Payment status updated`,
+      status: true,
+      data: data,
+    });
+  } catch (error) {
+    console.error("Error updating booking status:", error);
+    res.status(500).json({
+      message: "Internal Server Error",
+      status: false,
+    });
+  }
+});
 
+exports.PaymentCancel = catchAsync(async (req, res) => {
+  try {
+    const { srNo } = req.params;
+    if (!srNo) {
+      return res.status(400).json({
+        message: "srNo is required.",
+        status: false,
+      });
+    }
+    const data = await Payment.findOne({srNo:srNo});
+    if (!data) {
+      return res.status(404).json({
+        message: "Data not found",
+        status: false,
+      });
+    }
+    data.payment_status = "failed";
+    await data.save();
+    res.status(200).json({
+      message: `Payment status updated`,
+      status: true,
+      data: data,
+    });
+  } catch (error) {
+    console.error("Error updating booking status:", error);
+    res.status(500).json({
+      message: "Internal Server Error",
+      status: false,
+    });
+  }
+});
