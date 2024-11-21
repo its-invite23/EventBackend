@@ -81,7 +81,10 @@ exports.PaymentGet = catchAsync(async (req, res, next) => {
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
     const totalpaymenttmodal = await Payment.countDocuments();
-    const paymentget = await Payment.find({}).sort({ created_at: -1 })
+    const paymentget = await Payment.find({}).populate({
+      path: "userId",
+      select: "username",
+    }).sort({ created_at: -1 })
       .skip(skip)
       .limit(limit);
     const totalPages = Math.ceil(totalpaymenttmodal / limit);
