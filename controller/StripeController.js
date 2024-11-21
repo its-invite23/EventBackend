@@ -7,23 +7,32 @@ const stripe = new Stripe(
 
 exports.createCheckout = catchAsync(async (req, res) => {
   try {
-    const {amount, email, userId, booking_id, currency} = req?.body;
-    console.log({amount, email, userId, booking_id, currency});
+    const { amount, email, userId, booking_id, currency } = req?.body;
+    console.log({ amount, email, userId, booking_id, currency });
     console.log("req?.body", req?.body);
+
     const lastpayment = await Payment.findOne().sort({ srNo: -1 });
     const srNo = lastpayment ? lastpayment.srNo + 1 : 1;
     const newPayment = new Payment({
       srNo,
-      payment_type:null,
-      payment_id:null,
+      payment_type: null,
+      payment_id: null,
       currency,
       userId,
       booking_id,
       amount
     });
     await newPayment.save();
+
+    // Create a PaymentIntent
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: req.body.amount * 100,
+      currency: 'inr',
+      payment_method_types: ['card'],
+      receipt_email: email,
+    });
+
     const session = await stripe.checkout.sessions.create({
-      // payment_method_types: ["card"],
       mode: "payment",
       success_url: `http://localhost:3000/success/${srNo}`, 
       cancel_url: `http://localhost:3000/cancel/${srNo}`,
@@ -42,16 +51,29 @@ exports.createCheckout = catchAsync(async (req, res) => {
           quantity: 1,
         },
       ],
+      payment_intent_data: {
+        metadata: {
+          payment_intent_id: paymentIntent.id
+        }
+      }
     });
+
+    // Store the payment ID and payment type in the database
+    newPayment.payment_id = paymentIntent.id;
+    newPayment.payment_type = paymentIntent.payment_method_types[0];
+    await newPayment.save();
 
     res.status(200).json({
       url: session.url,
       status: "true",
+      payment_id: paymentIntent.id,
+      payment_type: paymentIntent.payment_method_types[0]
     });
   } catch (err) {
     res.status(err.statusCode || 500).json({ error: err.message });
   }
 });
+
 
 exports.PaymentGet = catchAsync(async (req, res, next) => {
   try {
