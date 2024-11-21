@@ -1,13 +1,15 @@
- const enquire = require("express").Router();
+const bookingroute = require("express").Router();
 
 const { verifyToken } = require("../controller/AuthController");
 
-const { bookingpost, BookingGet } = require("../controller/BookingController");
+const { bookingpost, BookingGet, BookingStatus, BookingPayment } = require("../controller/BookingController");
 
-enquire.post("/booking-add", verifyToken, bookingpost)
+bookingroute.post("/booking-add", verifyToken, bookingpost)
 
-enquire.get("/booking-get", BookingGet)
+bookingroute.get("/booking-get", BookingGet)
 
+bookingroute.post("/booking-status", BookingStatus)
 
+bookingroute.post("/booking-payment", BookingPayment)
 
-module.exports = enquire
+module.exports = bookingroute
