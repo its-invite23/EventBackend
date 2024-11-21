@@ -46,3 +46,33 @@ exports.createCheckout = catchAsync(async (req, res) => {
     res.status(err.statusCode || 500).json({ error: err.message });
   }
 });
+
+exports.PaymentGet = catchAsync(async (req, res, next) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+    const totalpaymenttmodal = await Payment.countDocuments();
+    const paymentget = await Payment.find({}).sort({ created_at: -1 })
+      .skip(skip)
+      .limit(limit);
+    const totalPages = Math.ceil(totalpaymenttmodal / limit);
+    res.status(200).json({
+      data: {
+        Payment: paymentget,
+        totalpaymenttmodal: totalpaymenttmodal,
+        totalPages: totalPages,
+        currentPage: page,
+        perPage: limit,
+        nextPage: page < totalPages ? page + 1 : null,
+        previousPage: page > 1 ? page - 1 : null,
+      },
+      msg: "Payment Get",
+    });
+  } catch (error) {
+    res.status(500).json({
+      msg: "Failed to fetch Payment get",
+      error: error.message,
+    });
+  }
+});
