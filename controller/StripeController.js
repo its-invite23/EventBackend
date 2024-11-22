@@ -2,7 +2,7 @@ const Stripe = require("stripe");
 const catchAsync = require("../utils/catchAsync");
 const Payment = require("../model/payment.js");
 const stripe = new Stripe(
-  "sk_test_51QCE0sCstph9qeprpctSkisKqoAQJIFaYlzvOlGK4MtmSvGQ65sygCrmnOS9RtECApL92p7UEN4HWihz22zwTUte00ppjS5cXy"
+  process.env.STRIPE_TEST_KEY
 );
 
 exports.createCheckout = catchAsync(async (req, res) => {
@@ -34,10 +34,10 @@ exports.createCheckout = catchAsync(async (req, res) => {
 
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
-      success_url: `http://localhost:3000/success/${srNo}`, 
-      cancel_url: `http://localhost:3000/cancel/${srNo}`,
+      success_url: `${process.env.success_url}/${srNo}`,
+      cancel_url: `${process.env.cancel_url}/${srNo}`,
       submit_type: "pay",
-      customer_email: email, 
+      customer_email: email,
       billing_address_collection: "auto",
       line_items: [
         {
@@ -46,7 +46,7 @@ exports.createCheckout = catchAsync(async (req, res) => {
             product_data: {
               name: "Booking Payment",
             },
-            unit_amount: req.body.amount * 100, 
+            unit_amount: req.body.amount * 100,
           },
           quantity: 1,
         },
@@ -117,7 +117,7 @@ exports.PaymentSuccess = catchAsync(async (req, res) => {
         status: false,
       });
     }
-    const data = await Payment.findOne({srNo:srNo});
+    const data = await Payment.findOne({ srNo: srNo });
     if (!data) {
       return res.status(404).json({
         message: "Data not found",
@@ -149,7 +149,7 @@ exports.PaymentCancel = catchAsync(async (req, res) => {
         status: false,
       });
     }
-    const data = await Payment.findOne({srNo:srNo});
+    const data = await Payment.findOne({ srNo: srNo });
     if (!data) {
       return res.status(404).json({
         message: "Data not found",
