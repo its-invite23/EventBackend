@@ -10,6 +10,4 @@ ContactRoute.post("/contact-reply", ContactReply)
 
 ContactRoute.get("/email", Emailcheck)
 
-
-
 module.exports = ContactRoute;
