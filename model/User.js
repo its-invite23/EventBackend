@@ -44,7 +44,7 @@ const userSchema = mongoose.Schema({
         default: "user"
     },
     enquiry_count: {
-        type :Number
+        type: Number
     },
     user_status: {
         type: String,
