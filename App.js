@@ -5,7 +5,7 @@ const enauiryroute = require("./route/Enquiry")
 const packageroute = require("./route/Package")
 const bookingroute = require("./route/Booking")
 const Contactroute = require("./route/Contact")
-
+const placeRoutes =require("./route/placeRoute")
 require("./dbconfigration");
 dotenv.config();
 
@@ -20,7 +20,6 @@ const corsOptions = {
   credentials: true,
   optionsSuccessStatus: 200, // for legacy browsers
 }
-
 app.use(cors(corsOptions));
 app.use(express.json({ limit: '2000mb' }));
 app.use(express.urlencoded({ extended: true }));
@@ -37,6 +36,7 @@ app.use("/package", packageroute)
 app.use("/booking", bookingroute)
 
 app.use("/contact", Contactroute)
+app.use('/place', placeRoutes);
 
 
 
