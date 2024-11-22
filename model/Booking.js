@@ -20,7 +20,7 @@ const bookingSchema =  mongoose.Schema({
     },
     payment_genrator_link: {
         type: Boolean,
-        deafult: false,
+        default: false,
     },
     status: {
         type: String,

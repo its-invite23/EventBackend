@@ -8,9 +8,6 @@ const stripe = new Stripe(
 exports.createCheckout = catchAsync(async (req, res) => {
   try {
     const { amount, email, userId, booking_id, currency } = req?.body;
-    console.log({ amount, email, userId, booking_id, currency });
-    console.log("req?.body", req?.body);
-
     const lastpayment = await Payment.findOne().sort({ srNo: -1 });
     const srNo = lastpayment ? lastpayment.srNo + 1 : 1;
     const newPayment = new Payment({
@@ -20,24 +17,16 @@ exports.createCheckout = catchAsync(async (req, res) => {
       currency,
       userId,
       booking_id,
-      amount
+      amount,
     });
     await newPayment.save();
-
-    // Create a PaymentIntent
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount: req.body.amount * 100,
-      currency: 'inr',
-      payment_method_types: ['card'],
-      receipt_email: email,
-    });
-
     const session = await stripe.checkout.sessions.create({
+      // payment_method_types: ["card"],
       mode: "payment",
-      success_url: `http://localhost:3000/success/${srNo}`, 
+      success_url: `http://localhost:3000/success/${srNo}`,
       cancel_url: `http://localhost:3000/cancel/${srNo}`,
       submit_type: "pay",
-      customer_email: email, 
+      customer_email: email,
       billing_address_collection: "auto",
       line_items: [
         {
@@ -46,34 +35,17 @@ exports.createCheckout = catchAsync(async (req, res) => {
             product_data: {
               name: "Booking Payment",
             },
-            unit_amount: req.body.amount * 100, 
+            unit_amount: req.body.amount * 100,
           },
           quantity: 1,
         },
       ],
-      payment_intent_data: {
-        metadata: {
-          payment_intent_id: paymentIntent.id
-        }
-      }
     });
-
-    // Store the payment ID and payment type in the database
-    newPayment.payment_id = paymentIntent.id;
-    newPayment.payment_type = paymentIntent.payment_method_types[0];
-    await newPayment.save();
-
-    res.status(200).json({
-      url: session.url,
-      status: "true",
-      payment_id: paymentIntent.id,
-      payment_type: paymentIntent.payment_method_types[0]
-    });
+    res.status(200).json({ url: session.url, status: "true" });
   } catch (err) {
     res.status(err.statusCode || 500).json({ error: err.message });
   }
 });
-
 
 exports.PaymentGet = catchAsync(async (req, res, next) => {
   try {
@@ -81,10 +53,12 @@ exports.PaymentGet = catchAsync(async (req, res, next) => {
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
     const totalpaymenttmodal = await Payment.countDocuments();
-    const paymentget = await Payment.find({}).populate({
-      path: "userId",
-      select: "username",
-    }).sort({ created_at: -1 })
+    const paymentget = await Payment.find({})
+      .populate({
+        path: "userId",
+        select: "username",
+      })
+      .sort({ created_at: -1 })
       .skip(skip)
       .limit(limit);
     const totalPages = Math.ceil(totalpaymenttmodal / limit);
@@ -117,7 +91,7 @@ exports.PaymentSuccess = catchAsync(async (req, res) => {
         status: false,
       });
     }
-    const data = await Payment.findOne({srNo:srNo});
+    const data = await Payment.findOne({ srNo: srNo });
     if (!data) {
       return res.status(404).json({
         message: "Data not found",
@@ -149,7 +123,7 @@ exports.PaymentCancel = catchAsync(async (req, res) => {
         status: false,
       });
     }
-    const data = await Payment.findOne({srNo:srNo});
+    const data = await Payment.findOne({ srNo: srNo });
     if (!data) {
       return res.status(404).json({
         message: "Data not found",
