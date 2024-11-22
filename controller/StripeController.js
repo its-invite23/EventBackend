@@ -1,9 +1,8 @@
 const Stripe = require("stripe");
 const catchAsync = require("../utils/catchAsync");
 const Payment = require("../model/payment.js");
-const stripe = new Stripe(
-  process.env.STRIPE_TEST_KEY
-);
+const StripeKey = process.env.STRIPE_TEST_KEY
+const stripe = new Stripe(StripeKey);
 
 exports.createCheckout = catchAsync(async (req, res) => {
   try {
