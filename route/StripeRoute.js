@@ -1,5 +1,4 @@
 const StripeRoute = require("express").Router();
-const { verifyToken } = require("../controller/AuthController");
 const { createCheckout, PaymentGet, PaymentSuccess, PaymentCancel } = require("../controller/StripeController");
 
 

@@ -2,7 +2,6 @@ const { signup, login, profile, verifyToken, updateUserStatus, resetpassword, Us
 
 const userRoute = require("express").Router();
 
-
 userRoute.post("/signup", signup)
 
 userRoute.post("/login", login)

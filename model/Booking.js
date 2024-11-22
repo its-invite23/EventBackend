@@ -1,15 +1,15 @@
 const mongoose = require('mongoose');
 
-const bookingSchema =  mongoose.Schema({
+const bookingSchema = mongoose.Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true,
     },
     package: {
-      type:Array,
+        type: Array,
     },
-    package_name :String,
+    package_name: String,
     bookingDate: {
         type: Date,
         required: true
@@ -31,8 +31,8 @@ const bookingSchema =  mongoose.Schema({
         type: Date,
         default: Date.now,
     },
-    attendees :Number,
-    totalPrice :Number,
+    attendees: Number,
+    totalPrice: Number,
 });
 const Booking = mongoose.model('Booking', bookingSchema);
 module.exports = Booking;
