@@ -7,9 +7,6 @@ const stripe = new Stripe("sk_test_51QCE0sCstph9qeprpctSkisKqoAQJIFaYlzvOlGK4Mtm
 exports.createCheckout = catchAsync(async (req, res) => {
   try {
     const { amount, email, userId, booking_id, currency } = req?.body;
-    console.log({ amount, email, userId, booking_id, currency });
-    console.log("req?.body", req?.body);
-
     const lastpayment = await Payment.findOne().sort({ srNo: -1 });
     const srNo = lastpayment ? lastpayment.srNo + 1 : 1;
     const newPayment = new Payment({
@@ -19,19 +16,11 @@ exports.createCheckout = catchAsync(async (req, res) => {
       currency,
       userId,
       booking_id,
-      amount
+      amount,
     });
     await newPayment.save();
-
-    // Create a PaymentIntent
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount: req.body.amount * 100,
-      currency: 'inr',
-      payment_method_types: ['card'],
-      receipt_email: email,
-    });
-
     const session = await stripe.checkout.sessions.create({
+      // payment_method_types: ["card"],
       mode: "payment",
       success_url: `${process.env.success_url}/${srNo}`,
       cancel_url: `${process.env.cancel_url}/${srNo}`,
@@ -50,29 +39,12 @@ exports.createCheckout = catchAsync(async (req, res) => {
           quantity: 1,
         },
       ],
-      payment_intent_data: {
-        metadata: {
-          payment_intent_id: paymentIntent.id
-        }
-      }
     });
-
-    // Store the payment ID and payment type in the database
-    newPayment.payment_id = paymentIntent.id;
-    newPayment.payment_type = paymentIntent.payment_method_types[0];
-    await newPayment.save();
-
-    res.status(200).json({
-      url: session.url,
-      status: "true",
-      payment_id: paymentIntent.id,
-      payment_type: paymentIntent.payment_method_types[0]
-    });
+    res.status(200).json({ url: session.url, status: "true" });
   } catch (err) {
     res.status(err.statusCode || 500).json({ error: err.message });
   }
 });
-
 
 exports.PaymentGet = catchAsync(async (req, res, next) => {
   try {
@@ -80,10 +52,12 @@ exports.PaymentGet = catchAsync(async (req, res, next) => {
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
     const totalpaymenttmodal = await Payment.countDocuments();
-    const paymentget = await Payment.find({}).populate({
-      path: "userId",
-      select: "username",
-    }).sort({ created_at: -1 })
+    const paymentget = await Payment.find({})
+      .populate({
+        path: "userId",
+        select: "username",
+      })
+      .sort({ created_at: -1 })
       .skip(skip)
       .limit(limit);
     const totalPages = Math.ceil(totalpaymenttmodal / limit);
