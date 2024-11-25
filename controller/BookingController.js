@@ -4,6 +4,7 @@ const sendEmail = require("../utils/EmailMailler");
 const emailTemplate = require("../emailTemplates/PaymentLink");
 const { errorResponse, successResponse } = require("../utils/ErrorHandling");
 const nodemailer = require("nodemailer");
+const { default: axios } = require("axios");
 
 exports.bookingpost = catchAsync(async (req, res) => {
   const userId = req?.User?._id;
@@ -91,7 +92,6 @@ exports.BookingGet = catchAsync(async (req, res, next) => {
 
 exports.BookingStatus = catchAsync(async (req, res) => {
   try {
-    console.log("req.body", req.body);
 
     const { _id, status } = req.body;
 
@@ -152,13 +152,11 @@ exports.BookingPayment = catchAsync(async (req, res) => {
       { new: true, runValidators: true }
     );
 
-    console.log("updatedRecord", updatedRecord)
     const bookingstatus = await Booking.findById(_id).populate({
       path: "userId",
       select: "username email",
       //  model: 'User'
     });
-    console.log("bookingstatus", bookingstatus);
     const paymentLink = `https://user-event.vercel.app/payment/${bookingstatus?._id}`;
     const emailHtml = emailTemplate(paymentLink, bookingstatus?.userId?.username, bookingstatus?.totalPrice);
     let transporter = nodemailer.createTransport({
@@ -222,6 +220,71 @@ exports.BookingPrice = catchAsync(async (req, res) => {
   }
 });
 
+// exports.BookingGetByID = catchAsync(async (req, res) => {
+//   try {
+//     const { id } = req.params;
+//     if (!id) {
+//       return res.status(400).json({
+//         message: "Booking ID is required.",
+//         status: false,
+//       });
+//     }
+//     const booking = await Booking.findById({ _id: id }).populate({
+//       path: "userId",
+//       select: "username email",
+//       //  model: 'User'
+//     });
+//     try {
+//       // Fetch Google Place details from Google API
+//       const API_KEY = process.env.GOOGLE_MAPS_API_KEY; // Replace with your actual Google API key
+//       const placeUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&key=${API_KEY}`;
+//       const placeResponse = await axios.get(placeUrl);
+
+//       if (placeResponse.data.status !== 'OK') {
+//           throw new Error(placeResponse.data.error_message || 'Failed to fetch place details');
+//       }
+
+//       // Extract place details from the Google API response
+//       const placeDetails = placeResponse.data.result;
+
+//       // Extract image URLs from photo references
+//       const photoUrls = placeDetails.photos ? placeDetails.photos.map(photo => {
+//           return `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${photo.photo_reference}&key=${API_KEY}`;
+//       }) : [];
+
+//       // Add photo URLs to the place details
+//       placeDetails.photoUrls = photoUrls;
+
+//       const response = {
+//           success: true,
+//           data: placeDetails,
+//       };
+
+//       return res.status(200).json(response);
+//   } catch (error) {
+//       console.error("Error:", error); // Log the error for debugging
+//       return res.status(500).json({ success: false, error: error.message });
+//   }
+//     if (!booking) {
+//       return res.status(404).json({
+//         message: "Booking not found",
+//         status: false,
+//       });
+//     }
+//     res.status(200).json({
+//       message: `Data retrieved successfully`,
+//       status: true,
+//       data: booking,
+//     });
+//   } catch (error) {
+//     console.error("Error updating booking status:", error);
+//     res.status(500).json({
+//       message: "Internal Server Error",
+//       status: false,
+//     });
+//   }
+// });
+
 exports.BookingGetByID = catchAsync(async (req, res) => {
   try {
     const { id } = req.params;
@@ -231,19 +294,59 @@ exports.BookingGetByID = catchAsync(async (req, res) => {
         status: false,
       });
     }
-    const booking = await Booking.findById({ _id: id }).populate({
+
+    const booking = await Booking.findById(id).populate({
       path: "userId",
       select: "username email",
-      //  model: 'User'
     });
+
     if (!booking) {
       return res.status(404).json({
         message: "Booking not found",
         status: false,
       });
     }
+
+    // Define a function to fetch place details using Google Maps API
+    const fetchPlaceDetails = async (placeId) => {
+      try {
+        const API_KEY = process.env.GOOGLE_MAPS_API_KEY; // Google API key
+        const placeUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&key=${API_KEY}`;
+        const placeResponse = await axios.get(placeUrl);
+
+        if (placeResponse.data.status !== 'OK') {
+          throw new Error(placeResponse.data.error_message || 'Failed to fetch place details');
+        }
+
+        const placeDetails = placeResponse.data.result;
+
+        // Extract photo URLs from photo references
+        const photoUrls = placeDetails.photos ? placeDetails.photos.map(photo => {
+          return `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${photo.photo_reference}&key=${API_KEY}`;
+        }) : [];
+
+        placeDetails.photoUrls = photoUrls; // Add photo URLs to place details
+        return placeDetails;
+      } catch (error) {
+        console.error("Error fetching place details:", error);
+        return null;
+      }
+    };
+    const updatedPackage = await Promise.all(booking.package.map(async (pkg) => {
+      if (pkg.place_id) {
+        const placeDetails = await fetchPlaceDetails(pkg.place_id);
+        if (placeDetails) {
+          return { ...pkg, placeDetails }; // Merge place details into the package
+        }
+      }
+      return pkg; // If place_id is missing or place details could not be fetched, return the original package
+    }));
+
+    // Update the booking with the new package details
+    booking.package = updatedPackage;
+
     res.status(200).json({
-      message: `Data retrieved successfully`,
+      message: "Data retrieved successfully",
       status: true,
       data: booking,
     });
@@ -255,3 +358,4 @@ exports.BookingGetByID = catchAsync(async (req, res) => {
     });
   }
 });
+

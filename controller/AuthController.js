@@ -90,7 +90,6 @@ exports.signup = catchAsync(async (req, res) => {
       city,
     } = req.body;
 
-console.log("req.body",req.body)
     // Check if required fields are provided
     if (!password || !phone_number || !username || !email || !address || !country || !city) {
       return res.status(401).json({
@@ -101,7 +100,6 @@ console.log("req.body",req.body)
 
     // Check if user already exists
     const existingUser = await User.findOne({ $or: [{ email }, { phone_number }] });
-    console.log("existingUser",existingUser)
     if (existingUser) {
       const errors = {};
       if (existingUser.email === email) {

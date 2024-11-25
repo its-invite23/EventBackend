@@ -21,14 +21,12 @@ exports.packageadd = catchAsync(async (req, res) => {
         package_availability,
     } = req.body;
 
-    console.log("Original package_services:", package_services);
 
     const updatedPackageServices = package_services.map(service => ({
         ...service,
         place_id: uuidv4() 
     }));
 
-    console.log("Updated package_services with UUIDs:", updatedPackageServices);
 
     const record = new packages({
         package_name,

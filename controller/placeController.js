@@ -2,9 +2,8 @@ const axios = require('axios');
 
 // Controller to handle the POST request
 exports.getPlaceDetails = async (req, res) => {
-    console.log("Request Body:", req.body); // Log the incoming body to check placeId
-    const { placeId } = req.body; // Extract placeId from request body
-
+    const { placeId } = req.params;
+console.log("placeId",placeId)
     if (!placeId) {
         return res.status(400).json({ error: 'Place ID is required' });
     }
@@ -21,7 +20,6 @@ exports.getPlaceDetails = async (req, res) => {
 
         // Extract place details from the Google API response
         const placeDetails = placeResponse.data.result;
-        console.log("placeDetails", placeDetails);
 
         // Extract image URLs from photo references
         const photoUrls = placeDetails.photos ? placeDetails.photos.map(photo => {
@@ -36,7 +34,6 @@ exports.getPlaceDetails = async (req, res) => {
             data: placeDetails,
         };
 
-        console.log("Response Data:", response); // Log the outgoing response for debugging
         return res.status(200).json(response);
     } catch (error) {
         console.error("Error:", error); // Log the error for debugging
