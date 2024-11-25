@@ -32,6 +32,12 @@ const userSchema = mongoose.Schema({
     phone_code: {
         type: String,
     },
+    phone_code: {
+        type: String,
+    },
+    DOB: {
+        type: String,
+    },
     state: {
         type: String,
     },

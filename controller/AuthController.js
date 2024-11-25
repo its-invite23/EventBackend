@@ -86,6 +86,7 @@ exports.signup = catchAsync(async (req, res) => {
       phone_code,
       country,
       state,
+      DOB,
       city,
     } = req.body;
 
@@ -129,6 +130,7 @@ console.log("req.body",req.body)
       city,
       password: hashedPassword,
       username,
+      DOB,
       address,
       phone_number,
     });
