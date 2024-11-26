@@ -5,10 +5,7 @@ const paymentmongoose = mongoose.Schema({
     type: Number,
     required: true,
   },
-  payment_status: {
-    type: String,
-    default: "pending"
-  },
+  payment_status: { type: String, enum: ['pending', 'success', 'canceled'], default: 'pending' },
   payment_type: {
     type: String,
     // required: true
