@@ -141,6 +141,7 @@ exports.signup = catchAsync(async (req, res) => {
         expiresIn: "24h",
       });
       const resetLink = `https://user-event.vercel.app/verify/${token}`;
+      console.log("resetLink",resetLink);
       const customerUser = record.username;
 
       let transporter = nodemailer.createTransport({

@@ -45,7 +45,7 @@ module.exports = (VerfiyLink, userName) => {
 
 <tr>
     <td style="padding: 15px 0 50px 20px; text-align: center;">
-        <a href=${VerfiyLink} target="_blank" style="padding:15px 20px; background: #EB3465; font-size: 12px; text-align: center; color: #ffffff; text-decoration: none; border-radius: 60px; -webkit-border-radius: 60px;">Reset My Password</a>
+        <a href=${VerfiyLink} target="_blank" style="padding:15px 20px; background: #EB3465; font-size: 12px; text-align: center; color: #ffffff; text-decoration: none; border-radius: 60px; -webkit-border-radius: 60px;">Verify Your Account</a>
     </td>
 </tr>
 
