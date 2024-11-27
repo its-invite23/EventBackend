@@ -1,4 +1,4 @@
-const packages = require("../model/packages");
+const packages = require("../model/Package");
 const catchAsync = require("../utils/catchAsync");
 const { v4: uuidv4 } = require('uuid'); 
 

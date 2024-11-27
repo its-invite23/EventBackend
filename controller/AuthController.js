@@ -7,7 +7,7 @@ const nodemailer = require("nodemailer");
 const ForgetPassword = require("../emailTemplates/ForgetPassword");
 const Booking = require("../model/Booking");
 const Enquiry = require("../model/Enquiry");
-const Package = require("../model/packages");
+const Package = require("../model/Package");
 const { validationErrorResponse, errorResponse, successResponse } = require("../utils/ErrorHandling");
 const VerifyAccount = require("../emailTemplates/VerifyAccount");
 
@@ -540,30 +540,7 @@ exports.VerifyUser = async (req, res) => {
 
 // dashboardApi
 
-exports.getCount = catchAsync(async (req, res) => {
-  try {
-    const userCount = await User.countDocuments();
-    const bookingCount = await Booking.countDocuments();
-    const RecentCount = await Enquiry.countDocuments();
-    const packages = await Package.find({}).limit(3);
-    const EnquiryData = await Enquiry.find({}).limit(3);
-    return res.status(200).json({
-      status: true,
-      message: " Data retrieved successfully",
-      userCount: userCount,
-      bookingCount: bookingCount,
-      EnquiryCount: RecentCount,
-      packages: packages,
-      EnquiryData: EnquiryData
-    });
-  } catch (error) {
-    return res.status(500).json({
-      status: false,
-      message: "An error occurred while fetching the user count.",
-      error: error.message,
-    });
-  }
-});
+
 
 // if (username) {
 //   // Perform an exact match instead of regex if required
