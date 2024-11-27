@@ -3,7 +3,6 @@ const axios = require('axios');
 // Controller to handle the POST request
 exports.getPlaceDetails = async (req, res) => {
     const { placeId } = req.params;
-console.log("placeId",placeId)
     if (!placeId) {
         return res.status(400).json({ error: 'Place ID is required' });
     }

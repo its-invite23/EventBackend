@@ -107,7 +107,6 @@ exports.GarphApi = catchAsync(async (req, res) => {
 
 exports.search = catchAsync(async (req, res, next) => {
     try {
-        console.log("req.body", req.body)
         const { type, _id } = req.body;
         if (!type) {
             return res.status(400).json({
