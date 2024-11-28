@@ -1,6 +1,6 @@
 module.exports = (resetLink, userName) => {
     return `
-  <table style="max-width: 400px; font-family: arial; text-align: left; margin: 0 auto;" align="center" width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#000">
+  <table style="max-width: 600px; font-family: arial; text-align: left; margin: 0 auto;" align="center" width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#000">
 <tr bgcolor="#141414">
     <td style="padding: 20px 2px 0 2px; text-align: center;">
         <p style="margin: 1px;">
@@ -50,7 +50,7 @@ module.exports = (resetLink, userName) => {
 </tr>
 
 <tr>
-    <td style="padding: 0 0 30px 0; text-align: center;">
+    <td style="padding: 0 10px 30px 10px; text-align: left;">
         <p style="margin: 1px; font-size: 12px; font-weight: normal; color: #CCCCCC;">
             For security purposes, this link will expire in 24 hours. If you need further assistance or didn’t request this reset, please reach out to our support team immediately.
         </p>
