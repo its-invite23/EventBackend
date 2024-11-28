@@ -1,4 +1,12 @@
 module.exports = (paymentLink, userName, price) => {
+    const paymentMessage = paymentLink
+        ? `Please click on the below button to pay ${price} and confirm your booking with us.`
+        : `Unfortunately, the payment link is not available at the moment. Please contact support to proceed with your booking.`;
+
+    const paymentButton = paymentLink
+        ? `<a href="${paymentLink}" target="_blank" style="padding: 15px 20px; background: #EB3465; font-size: 12px; color: #ffffff; text-decoration: none; border-radius: 60px; display: inline-block;">Pay Now</a>`
+        : '';
+
     return `
   <table style="max-width: 400px; font-family: arial; text-align: left; margin: 0 auto;" align="center" width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#000">
 <tr bgcolor="#141414">
@@ -21,7 +29,7 @@ module.exports = (paymentLink, userName, price) => {
 
 <tr>
     <td style="padding: 40px 10px 30px 10px; text-align: left;">
-        <p style="margin: 1px; font-size: 12px; font-weight: normal; color: #CCCCCC;" ali->
+        <p style="margin: 1px; font-size: 12px; font-weight: normal; color: #CCCCCC;">
             Hi ${userName},
         </p>
     </td>
@@ -30,14 +38,14 @@ module.exports = (paymentLink, userName, price) => {
 <tr>
     <td style="padding: 0 10px 30px 10px; text-align: left;">
         <p style="margin: 1px; font-size: 12px; font-weight: normal; color: #CCCCCC;">
-           Please click on the below button to pay - ${price} and confirm your booking with us. 
+           ${paymentMessage}
         </p>
     </td>
 </tr>
 
 <tr>
     <td style="padding: 15px 0 50px 0; text-align: center;">
-        <a href=${paymentLink} target="_blank" style="padding: 15px 20px; background: #EB3465; font-size: 12px; color: #ffffff; text-decoration: none; border-radius: 60px; display: inline-block;">Pay Now</a>
+        ${paymentButton}
     </td>
 </tr>
 
