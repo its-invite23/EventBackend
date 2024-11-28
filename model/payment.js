@@ -1,24 +1,32 @@
-const mongoose = require("mongoose")
+const mongoose = require("mongoose");
 
 const paymentmongoose = mongoose.Schema({
   srNo: {
     type: Number,
     required: true,
   },
-  payment_status: { type: String, enum: ['pending', 'success', 'canceled'], default: 'pending' },
+  payment_status: {
+    type: String,
+    enum: ["pending", "success", "canceled"],
+    default: "pending",
+  },
   payment_type: {
     type: String,
     // required: true
   },
   userId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User"
+    ref: "User",
   },
   booking_id: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Booking"
+    ref: "Booking",
   },
   payment_id: {
+    type: String,
+    // required: true,
+  },
+  session_id: {
     type: String,
     // required: true,
   },
@@ -28,13 +36,13 @@ const paymentmongoose = mongoose.Schema({
   },
   currency: {
     type: String,
-    default: "INR"
+    default: "INR",
   },
   created_at: {
     type: Date,
-    default: Date.now
+    default: Date.now,
   },
-})
+});
 
 const payment = mongoose.model("payment", paymentmongoose);
 

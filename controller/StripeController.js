@@ -4,23 +4,38 @@ const Payment = require("../model/payment.js");
 const StripeKey = process.env.STRIPE_TEST_KEY
 const stripe = new Stripe("sk_test_51QCE0sCstph9qeprpctSkisKqoAQJIFaYlzvOlGK4MtmSvGQ65sygCrmnOS9RtECApL92p7UEN4HWihz22zwTUte00ppjS5cXy");
 
+const fetchPaymentId = async (sessionId, srNo) => {
+  try {
+    console.log("Function started");
+    const session = await stripe.checkout.sessions.retrieve(sessionId);
+    // console.log("session",session); 
+    const paymentId = session.payment_intent; 
+      console.log('Payment ID:', paymentId);
+      if (!srNo) {
+        return ;
+      }
+      const data = await Payment.findOne({ srNo: srNo });
+      if (!data) {
+        return ;
+      }
+      data.payment_id = paymentId;
+      console.log("data",data);
+      // datas.payment_type = data.paymentMethod;
+      await data.save();
+      return ;
+  } catch (error) {
+      console.error('Error fetching payment ID:', error);
+  }
+};
+
 exports.createCheckout = catchAsync(async (req, res) => {
   try {
     const { amount, email, userId, booking_id, currency } = req?.body;
+
     const lastpayment = await Payment.findOne().sort({ srNo: -1 });
     const srNo = lastpayment ? lastpayment.srNo + 1 : 1;
-    const newPayment = new Payment({
-      srNo,
-      payment_type: null,
-      payment_id: null,
-      currency,
-      userId,
-      booking_id,
-      amount,
-    });
-    await newPayment.save();
+
     const session = await stripe.checkout.sessions.create({
-      // payment_method_types: ["card"],
       mode: "payment",
       success_url: `https://user-event.vercel.app/success/${srNo}`,
       cancel_url: `https://user-event.vercel.app/cancel/${srNo}`,
@@ -34,12 +49,27 @@ exports.createCheckout = catchAsync(async (req, res) => {
             product_data: {
               name: "Booking Payment",
             },
-            unit_amount: req.body.amount * 100,
+            unit_amount: amount * 100,
           },
           quantity: 1,
         },
       ],
     });
+
+    console.log("session", session);
+    console.log("session_id", session?.id);
+
+    const newPayment = new Payment({
+      srNo,
+      payment_type: null,
+      payment_id: null,
+      session_id: session?.id, // Save session ID directly
+      currency,
+      userId,
+      booking_id,
+      amount,
+    });
+    await newPayment.save();
     res.status(200).json({ url: session.url, status: "true" });
   } catch (err) {
     res.status(err.statusCode || 500).json({ error: err.message });
@@ -99,6 +129,7 @@ exports.PaymentSuccess = catchAsync(async (req, res) => {
     }
     data.payment_status = "success";
     await data.save();
+    fetchPaymentId(data?.session_id,srNo);
     res.status(200).json({
       message: `Payment status updated`,
       status: true,
@@ -131,6 +162,7 @@ exports.PaymentCancel = catchAsync(async (req, res) => {
     }
     data.payment_status = "failed";
     await data.save();
+    fetchPaymentId(data?.session_id,srNo);
     res.status(200).json({
       message: `Payment status updated`,
       status: true,
@@ -142,5 +174,20 @@ exports.PaymentCancel = catchAsync(async (req, res) => {
       message: "Internal Server Error",
       status: false,
     });
+  }
+});
+
+exports.PaymentId = catchAsync(async (req, res, next) => {
+  const { sessionId } = req.params; 
+  console.log("sessionid",sessionId);
+
+  try { 
+    const session = await stripe.checkout.sessions.retrieve(sessionId);
+    console.log("session",session); 
+    const paymentId = session.payment_intent; // This is your payment ID 
+    res.json({ paymentId }); 
+  } catch (error) 
+  { 
+    res.status(500).send({ error: error.message }); 
   }
 });
