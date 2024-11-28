@@ -11,7 +11,7 @@ const bookingSchema = mongoose.Schema({
     },
     package_name: String,
     bookingDate: {
-        type: Date,
+        type: String,
         required: true
     },
     location: {
