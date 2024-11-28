@@ -25,7 +25,7 @@ exports.bookingpost = catchAsync(async (req, res) => {
     attendees,
     totalPrice,
   } = req.body;
-console.log(req.body)
+  console.log(req.body)
   try {
     const record = new Booking({
       package: Package,
