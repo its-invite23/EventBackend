@@ -46,7 +46,6 @@ const bucket_name = process.env.BUCKET_NAME;
 const bucket_id = process.env.BUCKET_ID;
 const APP_ID = process.env.CLOUD_APPLICATION_ID;
 const APP_KEY = process.env.CLOUD_APPLICATION_KEY;
-console.log("APP_KEY", APP_KEY, "APP_ID", APP_ID)
 const b2 = new B2({
   applicationKeyId: APP_ID,
   applicationKey: APP_KEY
