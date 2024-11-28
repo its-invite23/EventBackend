@@ -1,10 +1,12 @@
 const StripeRoute = require("express").Router();
-const { createCheckout, PaymentGet, PaymentSuccess, PaymentCancel } = require("../controller/StripeController");
+const { createCheckout, PaymentGet, PaymentSuccess, PaymentCancel, PaymentId } = require("../controller/StripeController");
 
 
 StripeRoute.post("/create-checkout-session", createCheckout);
 
 StripeRoute.get("/payment-get", PaymentGet);
+
+StripeRoute.get("/retrieve-payment/:sessionId", PaymentId);
 
 StripeRoute.get("/payment-success/:srNo", PaymentSuccess)
 
