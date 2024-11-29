@@ -1,17 +1,11 @@
 
 const dotenv = require("dotenv");
-const UserRoute = require("./route/UserRoute")
-const enauiryroute = require("./route/Enquiry")
-const packageroute = require("./route/Package")
-const bookingroute = require("./route/Booking")
-const Contactroute = require("./route/Contact")
-const placeRoutes = require("./route/placeRoute")
-const commonRoutes = require("./route/Dashboard");
+dotenv.config();
+
+
 const fs = require('fs');
 const B2 = require('backblaze-b2');
-
 require("./dbconfigration");
-dotenv.config();
 const express = require("express");
 const app = express();
 const cors = require("cors");
@@ -20,6 +14,14 @@ const multer = require("multer");
 const { verifyToken } = require("./controller/AuthController");
 const Files = require("./model/Files");
 const { default: axios } = require("axios");
+
+const UserRoute = require("./route/UserRoute")
+const enauiryroute = require("./route/Enquiry")
+const packageroute = require("./route/Package")
+const bookingroute = require("./route/Booking")
+const Contactroute = require("./route/Contact")
+const placeRoutes = require("./route/placeRoute")
+const commonRoutes = require("./route/Dashboard"); 
 const corsOptions = {
   origin: "*", // Allowed origins
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
@@ -46,6 +48,7 @@ const bucket_name = process.env.BUCKET_NAME;
 const bucket_id = process.env.BUCKET_ID;
 const APP_ID = process.env.CLOUD_APPLICATION_ID;
 const APP_KEY = process.env.CLOUD_APPLICATION_KEY;
+
 const b2 = new B2({
   applicationKeyId: APP_ID,
   applicationKey: APP_KEY
@@ -75,6 +78,7 @@ app.post('/cloud/upload', cors(corsOptions), verifyToken, upload.single('file'),
   await authorizeB2();
   try {
     const { file } = req;
+    console.log("file", file)
     if (!file) {
       return res.status(400).json({ status: false, message: 'No file found to upload.' });
     }
@@ -92,7 +96,7 @@ app.post('/cloud/upload', cors(corsOptions), verifyToken, upload.single('file'),
     });
 
     fs.unlinkSync(file.path);
-    const fileUrl = `https://files.runstream.cloud/file/${bucket_name}/${sanitizedFileName}`;
+    const fileUrl = `https://f003.backblazeb2.com/file/${bucket_name}/${sanitizedFileName}`;
 
     if (uploadResponse) {
       const uploadedfile = new Files({

@@ -27,6 +27,10 @@ const PackageSchema = new mongoose.Schema({
         type: String,
 
     },
+    image_filed : {
+        type: String,
+        default: ""
+    },
     package_duration: {
         type: Number,
         min: 1
