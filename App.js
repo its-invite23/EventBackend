@@ -94,7 +94,6 @@ app.post('/cloud/upload', cors(corsOptions), verifyToken, upload.single('file'),
     fs.unlinkSync(file.path);
     const fileUrl = `https://files.runstream.cloud/file/${bucket_name}/${sanitizedFileName}`;
 
-    console.log("uploadResponse", uploadResponse)
     if (uploadResponse) {
       const uploadedfile = new Files({
         name: file.originalname,

@@ -25,7 +25,6 @@ exports.bookingpost = catchAsync(async (req, res) => {
     attendees,
     totalPrice,
   } = req.body;
-  console.log(req.body)
   try {
     const record = new Booking({
       package: Package,
@@ -359,3 +358,39 @@ exports.BookingGetByID = catchAsync(async (req, res) => {
   }
 });
 
+
+exports.PaymentGetId = catchAsync(async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      return res.status(400).json({
+        status: false,
+        message: "Payment ID is required.",
+      });
+    }
+    // Fetch the current package record by ID
+    const packageRecord = await Booking.findById(id)
+
+    if (!packageRecord) {
+      return res.status(404).json({
+        status: false,
+        message: "Booking not found!",
+      });
+    }
+
+    res.status(200).json({
+      status: true,
+      data: packageRecord,
+      message: `Booking successfully.`,
+    });
+
+  } catch (error) {
+    console.error("Error updating package record:", error);
+
+    res.status(500).json({
+      status: false,
+      message: "An error occurred while updating the package. Please try again later.",
+      error: error.message,
+    });
+  }
+});

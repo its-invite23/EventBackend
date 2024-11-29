@@ -1,30 +1,27 @@
 const Stripe = require("stripe");
 const catchAsync = require("../utils/catchAsync");
 const Payment = require("../model/payment.js");
+const payment = require("../model/payment.js");
 const StripeKey = process.env.STRIPE_TEST_KEY
 const stripe = new Stripe("sk_test_51QCE0sCstph9qeprpctSkisKqoAQJIFaYlzvOlGK4MtmSvGQ65sygCrmnOS9RtECApL92p7UEN4HWihz22zwTUte00ppjS5cXy");
 
 const fetchPaymentId = async (sessionId, srNo) => {
   try {
-    console.log("Function started");
     const session = await stripe.checkout.sessions.retrieve(sessionId);
-    // console.log("session",session); 
-    const paymentId = session.payment_intent; 
-      console.log('Payment ID:', paymentId);
-      if (!srNo) {
-        return ;
-      }
-      const data = await Payment.findOne({ srNo: srNo });
-      if (!data) {
-        return ;
-      }
-      data.payment_id = paymentId;
-      console.log("data",data);
-      // datas.payment_type = data.paymentMethod;
-      await data.save();
-      return ;
+    const paymentId = session.payment_intent;
+    if (!srNo) {
+      return;
+    }
+    const data = await Payment.findOne({ srNo: srNo });
+    if (!data) {
+      return;
+    }
+    data.payment_id = paymentId;
+    // datas.payment_type = data.paymentMethod;
+    await data.save();
+    return;
   } catch (error) {
-      console.error('Error fetching payment ID:', error);
+    console.error('Error fetching payment ID:', error);
   }
 };
 
@@ -55,9 +52,6 @@ exports.createCheckout = catchAsync(async (req, res) => {
         },
       ],
     });
-
-    console.log("session", session);
-    console.log("session_id", session?.id);
 
     const newPayment = new Payment({
       srNo,
@@ -129,7 +123,7 @@ exports.PaymentSuccess = catchAsync(async (req, res) => {
     }
     data.payment_status = "success";
     await data.save();
-    fetchPaymentId(data?.session_id,srNo);
+    fetchPaymentId(data?.session_id, srNo);
     res.status(200).json({
       message: `Payment status updated`,
       status: true,
@@ -162,7 +156,7 @@ exports.PaymentCancel = catchAsync(async (req, res) => {
     }
     data.payment_status = "failed";
     await data.save();
-    fetchPaymentId(data?.session_id,srNo);
+    fetchPaymentId(data?.session_id, srNo);
     res.status(200).json({
       message: `Payment status updated`,
       status: true,
@@ -178,16 +172,15 @@ exports.PaymentCancel = catchAsync(async (req, res) => {
 });
 
 exports.PaymentId = catchAsync(async (req, res, next) => {
-  const { sessionId } = req.params; 
-  console.log("sessionid",sessionId);
+  const { sessionId } = req.params;
 
-  try { 
+  try {
     const session = await stripe.checkout.sessions.retrieve(sessionId);
-    console.log("session",session); 
     const paymentId = session.payment_intent; // This is your payment ID 
-    res.json({ paymentId }); 
-  } catch (error) 
-  { 
-    res.status(500).send({ error: error.message }); 
+    res.json({ paymentId });
+  } catch (error) {
+    res.status(500).send({ error: error.message });
   }
 });
+
+

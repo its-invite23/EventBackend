@@ -5,8 +5,8 @@ const { signup, login, profile, verifyToken, updateUserStatus, resetpassword, Us
 userRoute.post("/signup", signup)
 
 userRoute.post("/login", login)
-userRoute.post("/adminlogin", adminlogin)
 
+userRoute.post("/admin/login", adminlogin)
 
 userRoute.get("/profile", profile)
 
@@ -21,7 +21,6 @@ userRoute.post("/reset-password", verifyToken, resetpassword)
 userRoute.post("/delete", verifyToken, UserListIdDelete)
 
 userRoute.post("/update", verifyToken, UserUpdate)
-
 
 userRoute.get("/profile-token", verifyToken, profilegettoken)
 
