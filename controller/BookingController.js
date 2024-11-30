@@ -1,7 +1,8 @@
 const Booking = require("../model/Booking");
+const User = require("../model/User");
 const catchAsync = require("../utils/catchAsync");
 const sendEmail = require("../utils/EmailMailler");
-const emailTemplate = require("../emailTemplates/PaymentLink");
+const emailTemplate = require("../emailTemplates/Booking");
 const { errorResponse, successResponse } = require("../utils/ErrorHandling");
 const nodemailer = require("nodemailer");
 const { default: axios } = require("axios");
@@ -38,6 +39,15 @@ exports.bookingpost = catchAsync(async (req, res) => {
     });
 
     await record.save();
+    const userDetail = await User.findById({_id:userId});
+    console.log("userDetail",userDetail);
+    const subject="Booking request made successfully!"
+    await sendEmail({
+      email:userDetail.email, 
+      username:userDetail.username, 
+      message:"result.reply_message", 
+      subject:subject, 
+      emailTemplate:emailTemplate});
 
     return res.status(201).json({
       status: true,

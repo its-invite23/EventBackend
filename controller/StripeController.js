@@ -55,9 +55,9 @@ exports.createCheckout = catchAsync(async (req, res) => {
 
     const newPayment = new Payment({
       srNo,
-      payment_type: null,
+      payment_type: "card",
       payment_id: null,
-      session_id: session?.id, // Save session ID directly
+      session_id: session?.id,
       currency,
       userId,
       booking_id,
