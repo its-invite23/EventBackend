@@ -7,10 +7,10 @@ const bucket_name = process.env.BUCKET_NAME;
 const bucket_id = process.env.BUCKET_ID;
 const APP_ID = process.env.CLOUD_APPLICATION_ID;
 const APP_KEY = process.env.CLOUD_APPLICATION_KEY;
-console.log('CLOUD_APPLICATION_ID:',APP_ID);
+console.log('CLOUD_APPLICATION_ID:', APP_ID);
 console.log(bucket_id)
 console.log('CLOUD_APPLICATION_KEY:', APP_KEY);
-console.log("bucket_name",bucket_name)
+console.log("bucket_name", bucket_name)
 
 
 exports.packageadd = catchAsync(async (req, res) => {
@@ -45,7 +45,7 @@ exports.packageadd = catchAsync(async (req, res) => {
         package_price_min,
         package_services: updatedPackageServices,
         services_provider_phone,
-        image_filed,
+        fileId: image_filed,
         services_provider_name,
         services_provider_email,
         package_price_max,
@@ -143,7 +143,7 @@ exports.packageStatusget = catchAsync(async (req, res, next) => {
 
 exports.PackageUpdate = catchAsync(async (req, res, next) => {
     try {
-        const { Id, package_name, package_price_min,image_filed, package_services, services_provider_phone, services_provider_name, services_provider_email, package_price_max, package_categories, package_description, package_status, package_image, package_duration, package_discount, package_people, package_availability, } = req.body;
+        const { Id, package_name, package_price_min, image_filed, package_services, services_provider_phone, services_provider_name, services_provider_email, package_price_max, package_categories, package_description, package_status, package_image, package_duration, package_discount, package_people, package_availability, } = req.body;
         if (!Id) {
             return res.status(400).json({
                 status: false,
@@ -153,7 +153,7 @@ exports.PackageUpdate = catchAsync(async (req, res, next) => {
 
         const updatedRecord = await packages.findByIdAndUpdate(
             Id,
-            { package_name, package_price_min,image_filed, package_services, services_provider_phone, services_provider_name, services_provider_email, package_price_max, package_categories, package_description, package_status, package_image, package_duration, package_discount, package_people, package_availability, },
+            { package_name, package_price_min, fileId: image_filed, package_services, services_provider_phone, services_provider_name, services_provider_email, package_price_max, package_categories, package_description, package_status, package_image, package_duration, package_discount, package_people, package_availability, },
             { new: true, runValidators: true }
         );
 
@@ -270,12 +270,12 @@ exports.PackagegetId = catchAsync(async (req, res, next) => {
 
 
 const b2 = new B2({
-  applicationKeyId: process.env.CLOUD_APPLICATION_ID, // Use environment variables for security
-  applicationKey: process.env.CLOUD_APPLICATION_KEY
+    applicationKeyId: process.env.CLOUD_APPLICATION_ID, // Use environment variables for security
+    applicationKey: process.env.CLOUD_APPLICATION_KEY
 });
 
-async function deleteFile(fileName) {
-    console.log(fileName);
+async function deleteFile(fileName, fileId) {
+    console.log(fileName, fileId);
     try {
         await b2.authorize();
         const response = await b2.deleteFileVersion({
@@ -315,14 +315,14 @@ exports.PackageIdDelete = catchAsync(async (req, res, next) => {
 
         // Delete associated images
         if (record.package_image) {
-            const fileDeleted = await deleteFile(record.package_image.split('/').pop() , record?.image_filed);
+            const fileDeleted = await deleteFile(record.package_image.split('/').pop(), record?.fileId);
             if (!fileDeleted) allFilesDeleted = false; // Mark as failed
         }
 
         if (record.package_services && record.package_services.length > 0) {
             for (const service of record.package_services) {
                 if (service.services_provider_image) {
-                    const fileDeleted = await deleteFile(service.services_provider_image.split('/').pop());
+                    const fileDeleted = await deleteFile(service.services_provider_image.split('/').pop(), service.services_image_filed);
                     if (!fileDeleted) allFilesDeleted = false; // Mark as failed
                 }
             }
@@ -352,5 +352,4 @@ exports.PackageIdDelete = catchAsync(async (req, res, next) => {
         });
     }
 });
-
 

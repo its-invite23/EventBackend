@@ -27,7 +27,7 @@ const PackageSchema = new mongoose.Schema({
         type: String,
 
     },
-    image_filed : {
+    fileId : {
         type: String,
         default: ""
     },
