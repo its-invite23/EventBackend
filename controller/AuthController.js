@@ -6,8 +6,6 @@ const bcrypt = require("bcrypt");
 const nodemailer = require("nodemailer");
 const ForgetPassword = require("../emailTemplates/ForgetPassword");
 const Booking = require("../model/Booking");
-const Enquiry = require("../model/Enquiry");
-const Package = require("../model/Package");
 const { validationErrorResponse, errorResponse, successResponse } = require("../utils/ErrorHandling");
 const VerifyAccount = require("../emailTemplates/VerifyAccount");
 

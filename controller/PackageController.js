@@ -267,7 +267,6 @@ const b2 = new B2({
 });
 
 async function deleteFile(fileName, fileId) {
-    console.log(fileName, fileId);
     try {
         await b2.authorize();
         const response = await b2.deleteFileVersion({
@@ -293,7 +292,6 @@ exports.PackageIdDelete = catchAsync(async (req, res, next) => {
         }
         // Find the package record first
         const record = await packages.findById(Id);
-        console.log("record", record);
         if (!record) {
             return res.status(404).json({
                 status: false,

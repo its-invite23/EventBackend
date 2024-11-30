@@ -1,16 +1,14 @@
-const emailTemplate = require("../emailTemplates/replyMessage");
-const EmailBooking = require("../emailTemplates/Booking");
-
+const EmailContact = require("../emailTemplates/ContactReply");
 const contactmodal = require("../model/Contact");
 const catchAsync = require('../utils/catchAsync');
 const sendEmail = require("../utils/EmailMailler");
 
 
 exports.ContactPost = (async (req, res) => {
-    const { email, name, message , phone_code , phone_number} = req.body;
+    const { email, name, message, phone_code, phone_number } = req.body;
 
     const record = new contactmodal({
-        email, name, message ,phone_code , phone_number
+        email, name, message, phone_code, phone_number
     });
 
     const result = await record.save();
@@ -79,9 +77,18 @@ exports.ContactReply = async (req, res) => {
             },
             { new: true }
         );
+
         const subject = "Thank You for Contact US"
         if (result) {
-            await sendEmail(result.email, result.name, result.reply_message, subject, emailTemplate); // Use the middleware to send the email
+            await sendEmail(
+                {
+                    email: result.email,
+                    name: result.name,
+                    message: result.reply_message,
+                    subject: subject,
+                    emailTemplate: EmailContact
+                }
+            ); // Use the middleware to send the email
             return res.json({
                 status: true,
                 message: "You have successfully replied to your query!",

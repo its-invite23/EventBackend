@@ -39,15 +39,9 @@ exports.bookingpost = catchAsync(async (req, res) => {
     });
 
     await record.save();
-    const userDetail = await User.findById({_id:userId});
-    console.log("userDetail",userDetail);
-    const subject="Booking request made successfully!"
-    await sendEmail({
-      email:userDetail.email, 
-      username:userDetail.username, 
-      message:"result.reply_message", 
-      subject:subject, 
-      emailTemplate:emailTemplate});
+    const userDetail = await User.findById(userId); 
+     const subject = "Booking request made successfully!";
+      await sendEmail({ email: userDetail.email, username: userDetail.username, message: "Your booking request was successful!", subject: subject, emailTemplate: emailTemplate });
 
     return res.status(201).json({
       status: true,

@@ -78,7 +78,6 @@ app.post('/cloud/upload', cors(corsOptions), verifyToken, upload.single('file'),
   await authorizeB2();
   try {
     const { file } = req;
-    console.log("file", file)
     if (!file) {
       return res.status(400).json({ status: false, message: 'No file found to upload.' });
     }

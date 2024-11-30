@@ -152,7 +152,13 @@ exports.EnquiryReply = async (req, res) => {
         // // enquire_status: 'active',
         if (updatedEnquiry) {
             try {
-                await sendEmail(updatedEnquiry.email, updatedEnquiry.name, reply_message, subject, emailTemplate
+                await sendEmail({
+                   email : updatedEnquiry.email, 
+                   name : updatedEnquiry.name,
+                   message : reply_message, 
+                   subject : subject, 
+                   emailTemplate :emailTemplate
+                }
 
                 );
             } catch (emailError) {
