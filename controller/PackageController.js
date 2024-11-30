@@ -344,3 +344,5 @@ exports.PackageIdDelete = catchAsync(async (req, res, next) => {
     }
 });
 
+
+exports.deleteFileHandler = async (req, res) => { const { fileName, fileId } = req.body; try { if (!fileName || !fileId) { return res.status(400).json({ error: 'fileName and fileId are required' }); } await deleteFile(fileName, fileId); res.status(200).json({ message: 'File deleted successfully' }); } catch (error) { res.status(500).json({ error: 'Failed to delete file' }); } };
