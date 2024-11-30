@@ -291,7 +291,6 @@ exports.PackageIdDelete = catchAsync(async (req, res, next) => {
                 message: 'Package ID is required.',
             });
         }
-
         // Find the package record first
         const record = await packages.findById(Id);
         console.log("record", record);
