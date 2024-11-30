@@ -1,6 +1,8 @@
 const nodemailer = require('nodemailer');
 
-const sendEmail = async (email, name, replyMessage, subject, emailTemplate) => {
+const sendEmail = async (data) => {
+    console.log(data)
+    const {email, username, message, subject, emailTemplate} = data
     let transporter = nodemailer.createTransport({
         host: "smtp.gmail.com",
         port: 587,
@@ -10,7 +12,7 @@ const sendEmail = async (email, name, replyMessage, subject, emailTemplate) => {
             pass: process.env.password,
         },
     });
-    const emailHtml = emailTemplate(name, replyMessage); // Assuming emailTemplate is defined elsewhere
+    const emailHtml = emailTemplate(username, message); // Assuming emailTemplate is defined elsewhere
     const mailOptions = {
         from: process.env.user,
         to: email,
