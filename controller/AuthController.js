@@ -409,7 +409,6 @@ exports.UserListIdDelete = catchAsync(async (req, res, next) => {
         message: "User ID is required.",
       });
     }
-
     const record = await User.findOneAndUpdate(
       { _id: Id, isDeleted: false },
       { isDeleted: true },
@@ -492,8 +491,8 @@ exports.forgotlinkrecord = async (req, res) => {
         port: 587,
         secure: false,
       auth: {
-        user: process.env.user,
-        pass: process.env.password,
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
       },
     });
     const emailHtml = ForgetPassword(resetLink, customerUser);

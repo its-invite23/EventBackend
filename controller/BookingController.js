@@ -19,6 +19,7 @@ exports.bookingpost = catchAsync(async (req, res) => {
 
   const {
     Package,
+    CurrencyCode,
     package_name,
     bookingDate,
     location,
@@ -33,6 +34,7 @@ exports.bookingpost = catchAsync(async (req, res) => {
       bookingDate,
       location,
       status,
+      CurrencyCode,
       userId,
       attendees,
       totalPrice,
@@ -60,7 +62,7 @@ exports.bookingpost = catchAsync(async (req, res) => {
 exports.BookingGet = catchAsync(async (req, res, next) => {
   try {
     const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 10;
+    const limit = parseInt(req.query.limit) || 25;
     const skip = (page - 1) * limit;
     const totalBooking = await Booking.countDocuments();
     const BookingData = await Booking.find({})
@@ -193,7 +195,7 @@ exports.BookingPayment = catchAsync(async (req, res) => {
 
 exports.BookingPrice = catchAsync(async (req, res) => {
   try {
-    const { _id, price } = req.body;
+    const { _id, price , currency } = req.body;
     if (!_id || !price) {
       return res.status(400).json({
         message: "Booking ID and price both are required.",
@@ -208,6 +210,7 @@ exports.BookingPrice = catchAsync(async (req, res) => {
       });
     }
     bookingstatus.totalPrice = price;
+    bookingstatus.CurrencyCode = currency;
     await bookingstatus.save();
     res.status(200).json({
       message: `Booking Price Updated`,
@@ -223,70 +226,6 @@ exports.BookingPrice = catchAsync(async (req, res) => {
   }
 });
 
-// exports.BookingGetByID = catchAsync(async (req, res) => {
-//   try {
-//     const { id } = req.params;
-//     if (!id) {
-//       return res.status(400).json({
-//         message: "Booking ID is required.",
-//         status: false,
-//       });
-//     }
-//     const booking = await Booking.findById({ _id: id }).populate({
-//       path: "userId",
-//       select: "username email",
-//       //  model: 'User'
-//     });
-//     try {
-//       // Fetch Google Place details from Google API
-//       const API_KEY = process.env.GOOGLE_MAPS_API_KEY; // Replace with your actual Google API key
-//       const placeUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&key=${API_KEY}`;
-//       const placeResponse = await axios.get(placeUrl);
-
-//       if (placeResponse.data.status !== 'OK') {
-//           throw new Error(placeResponse.data.error_message || 'Failed to fetch place details');
-//       }
-
-//       // Extract place details from the Google API response
-//       const placeDetails = placeResponse.data.result;
-
-//       // Extract image URLs from photo references
-//       const photoUrls = placeDetails.photos ? placeDetails.photos.map(photo => {
-//           return `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${photo.photo_reference}&key=${API_KEY}`;
-//       }) : [];
-
-//       // Add photo URLs to the place details
-//       placeDetails.photoUrls = photoUrls;
-
-//       const response = {
-//           success: true,
-//           data: placeDetails,
-//       };
-
-//       return res.status(200).json(response);
-//   } catch (error) {
-//       console.error("Error:", error); // Log the error for debugging
-//       return res.status(500).json({ success: false, error: error.message });
-//   }
-//     if (!booking) {
-//       return res.status(404).json({
-//         message: "Booking not found",
-//         status: false,
-//       });
-//     }
-//     res.status(200).json({
-//       message: `Data retrieved successfully`,
-//       status: true,
-//       data: booking,
-//     });
-//   } catch (error) {
-//     console.error("Error updating booking status:", error);
-//     res.status(500).json({
-//       message: "Internal Server Error",
-//       status: false,
-//     });
-//   }
-// });
 
 exports.BookingGetByID = catchAsync(async (req, res) => {
   try {

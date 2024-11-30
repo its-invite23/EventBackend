@@ -29,7 +29,7 @@ exports.EnquiryPost = catchAsync(async (req, res) => {
 exports.EnquiryGet = catchAsync(async (req, res, next) => {
     try {
         const page = parseInt(req.query.page) || 1;
-        const limit = parseInt(req.query.limit) || 10;
+        const limit = parseInt(req.query.limit) || 5;
         const skip = (page - 1) * limit;
         const totalEnquireModal = await EnquireModal.countDocuments();
         const Enquiryget = await EnquireModal.find({}).sort({ created_at: -1 })

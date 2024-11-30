@@ -28,7 +28,7 @@ const fetchPaymentId = async (sessionId, srNo) => {
 exports.createCheckout = catchAsync(async (req, res) => {
   try {
     const { amount, email, userId, booking_id, currency } = req?.body;
-
+console.log("req?.body",req?.body)
     const lastpayment = await Payment.findOne().sort({ srNo: -1 });
     const srNo = lastpayment ? lastpayment.srNo + 1 : 1;
 
@@ -42,7 +42,7 @@ exports.createCheckout = catchAsync(async (req, res) => {
       line_items: [
         {
           price_data: {
-            currency: "inr",
+            currency: currency,
             product_data: {
               name: "Booking Payment",
             },
@@ -73,7 +73,7 @@ exports.createCheckout = catchAsync(async (req, res) => {
 exports.PaymentGet = catchAsync(async (req, res, next) => {
   try {
     const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 10;
+    const limit = parseInt(req.query.limit) || 15;
     const skip = (page - 1) * limit;
     const totalpaymenttmodal = await Payment.countDocuments();
     const paymentget = await Payment.find({})
