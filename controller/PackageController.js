@@ -2,16 +2,10 @@ const packages = require("../model/Package");
 const catchAsync = require("../utils/catchAsync");
 const { v4: uuidv4 } = require('uuid');
 const B2 = require('backblaze-b2');
-
 const bucket_name = process.env.BUCKET_NAME;
 const bucket_id = process.env.BUCKET_ID;
 const APP_ID = process.env.CLOUD_APPLICATION_ID;
 const APP_KEY = process.env.CLOUD_APPLICATION_KEY;
-console.log('CLOUD_APPLICATION_ID:', APP_ID);
-console.log(bucket_id)
-console.log('CLOUD_APPLICATION_KEY:', APP_KEY);
-console.log("bucket_name", bucket_name)
-
 
 exports.packageadd = catchAsync(async (req, res) => {
     const {
@@ -266,8 +260,6 @@ exports.PackagegetId = catchAsync(async (req, res, next) => {
         });
     }
 });
-
-
 
 const b2 = new B2({
     applicationKeyId: process.env.CLOUD_APPLICATION_ID, // Use environment variables for security
