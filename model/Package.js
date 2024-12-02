@@ -10,7 +10,11 @@ const PackageSchema = new mongoose.Schema({
         required: true
     },
     package_subtitle: {
-        type: Array,
+        type: String,
+        required: true
+    },
+    package_description: {
+        type: String,
         required: true
     },
     package_price_min: {
