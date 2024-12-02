@@ -108,7 +108,7 @@ exports.signup = catchAsync(async (req, res) => {
       }
       return res.status(400).json({
         status: false,
-        message: 'User already exists',
+        message: 'Email and phone number already exists',
         errors,
       });
     }
@@ -167,8 +167,6 @@ exports.signup = catchAsync(async (req, res) => {
     return errorResponse(res, error.message || "Internal Server Error", 500);
   }
 });
-
-
 
 exports.login = catchAsync(async (req, res, next) => {
   try {
