@@ -41,9 +41,9 @@ exports.bookingpost = catchAsync(async (req, res) => {
     });
 
     await record.save();
-    const userDetail = await User.findById(userId); 
-     const subject = "Booking request made successfully!";
-      await sendEmail({ email: userDetail.email, username: userDetail.username, message: "Your booking request was successful!", subject: subject, emailTemplate: emailTemplate });
+    const userDetail = await User.findById(userId);
+    const subject = "Booking request made successfully!";
+    await sendEmail({ email: userDetail.email, username: userDetail.username, message: "Your booking request was successful!", subject: subject, emailTemplate: emailTemplate });
 
     return res.status(201).json({
       status: true,
@@ -184,7 +184,6 @@ exports.BookingPayment = catchAsync(async (req, res) => {
     return successResponse(res, "Payment link sent successfully!");
   } catch (error) {
     console.error("Error updating booking status:", error);
-
     // Respond with an error message
     res.status(500).json({
       message: "Internal Server Error",
@@ -195,7 +194,7 @@ exports.BookingPayment = catchAsync(async (req, res) => {
 
 exports.BookingPrice = catchAsync(async (req, res) => {
   try {
-    const { _id, price , currency } = req.body;
+    const { _id, price, currency } = req.body;
     if (!_id || !price) {
       return res.status(400).json({
         message: "Booking ID and price both are required.",
@@ -333,6 +332,30 @@ exports.PaymentGetId = catchAsync(async (req, res, next) => {
     res.status(500).json({
       status: false,
       message: "An error occurred while updating the package. Please try again later.",
+      error: error.message,
+    });
+  }
+});
+
+
+exports.BookingFilter = catchAsync(async (req, res, next) => {
+  try {
+    const { package_name } = req.body;  // Changed to req.query for query params
+    let filter = {};
+    if (package_name) {
+      // Perform an exact match with case insensitivity if required
+      filter.package_name = { $regex: `^${package_name}$`, $options: 'i' };
+    }
+    const filterdata = await Booking.find(filter);
+    return res.status(200).json({
+      status: true,
+      filterdata: filterdata,
+    });
+  } catch (error) {
+    console.error("Error fetching booking:", error);
+    return res.status(500).json({
+      status: false,
+      message: "An error occurred while fetching booking.",
       error: error.message,
     });
   }

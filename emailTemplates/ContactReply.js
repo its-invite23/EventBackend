@@ -30,7 +30,7 @@ module.exports = (username, message) => {
     <tr>
         <td style="padding: 0 10px 30px 10px;">
             <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#CCCCCC; text-align: left; line-height: 19px;">
-                Thank you for your message. <br> We have received your query and our team will respond to you shortly
+                Thank you for your message.  We have received your query and our team will respond to you shortly
                
             </p>
         </td>

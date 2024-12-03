@@ -147,14 +147,14 @@ exports.signup = catchAsync(async (req, res) => {
         port: 587,
         secure: false,
         auth: {
-          user: process.env.user,
-          pass: process.env.password,
+          user: process.env.EMAIL_USER,
+          pass: process.env.EMAIL_PASS,
         },
       });
 
       const emailHtml = VerifyAccount(resetLink, customerUser);
       await transporter.sendMail({
-        from: process.env.user,
+        from: process.env.EMAIL_USER,
         to: result.email,
         subject: "Verify your Account",
         html: emailHtml,
