@@ -1,4 +1,4 @@
-module.exports = (username, message) => {
+module.exports = (username) => {
   return ` 
   <table align="center" style="max-width: 600px; font-family: arial;" width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#000">
 <tr bgcolor="#141414">
@@ -19,7 +19,7 @@ module.exports = (username, message) => {
 </tr>
 <tr>
   <td style="padding:40px 0 30px 20px;">
-    <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#CCCCCC"> Hi ${username} ${message}, </p>
+    <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#CCCCCC"> Hi ${username}, </p>
   </td>
 </tr>
 <tr>
