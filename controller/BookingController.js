@@ -126,7 +126,7 @@ exports.BookingStatus = catchAsync(async (req, res) => {
 
     // Respond with success message
     res.status(200).json({
-      message: `Booking status updated to ${status}`,
+      message: `Booking status updated and ${status}`,
       status: true,
       data: bookingstatus,
     });
