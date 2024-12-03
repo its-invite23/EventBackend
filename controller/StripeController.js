@@ -80,6 +80,9 @@ exports.PaymentGet = catchAsync(async (req, res, next) => {
       .populate({
         path: "userId",
         select: "username",
+      }) .populate({
+        path: "booking_id",
+        select: "package_name , booking_id",
       })
       .sort({ created_at: -1 })
       .skip(skip)

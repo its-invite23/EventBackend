@@ -72,6 +72,7 @@ const signEmail = async (id) => {
   });
   return token;
 };
+
 exports.signup = catchAsync(async (req, res) => {
   try {
     const {
