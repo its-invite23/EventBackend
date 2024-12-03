@@ -15,7 +15,7 @@ exports.ContactPost = (async (req, res) => {
     if (result) {
         res.json({
             status: true,
-            message: "You have been Contact successfully !!.",
+            message: "Request Sent Successfully!!.",
         });
     } else {
         res.json({
