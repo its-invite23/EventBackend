@@ -5,7 +5,7 @@ module.exports = (paymentLink, userName, price) => {
     <td style="padding: 20px 2px 0 2px; text-align: center;">
         <p style="margin: 1px;">
             <a href="https://user-event.vercel.app/">
-                <img src="https://i.ibb.co/yg37Knk/logo.png" alt="Logo">
+                <img src="https://f003.backblazeb2.com/file/Event-management/logo.png" alt="Logo">
             </a>
         </p>
     </td>

@@ -4,8 +4,8 @@ module.exports = (userName) => {
 <tr bgcolor="#141414">
     <td style="padding: 20px 2px 0 2px; text-align: center;">
         <p style="margin: 1px;">
-            <a href="#">
-                <img src="https://i.ibb.co/yg37Knk/logo.png" alt="">
+            <a href="https://user-event.vercel.app/">
+                <img src="https://f003.backblazeb2.com/file/Event-management/logo.png" alt="">
             </a>
         </p>
     </td>
