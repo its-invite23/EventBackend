@@ -340,21 +340,42 @@ exports.PaymentGetId = catchAsync(async (req, res, next) => {
 
 exports.BookingFilter = catchAsync(async (req, res, next) => {
   try {
-    const { package_name } = req.body;  
-    let filter = {};
-    if (package_name) {
-      filter.package_name = { $regex: `^${package_name}$`, $options: 'i' };
+    const { name } = req.body;
+
+    if (!name) {
+      return res.status(400).json({
+        status: false,
+        message: "Name is required for filtering bookings.",
+      });
     }
-    const filterdata = await Booking.find(filter);
+
+    // Find users whose name matches the search query
+    const matchingUserIds = await User.find({ 
+      username: { $regex: name, $options: "i" } 
+    }).distinct("_id");
+
+    // Find bookings where package_name matches or userId is in the matching users
+    const bookings = await Booking.find({
+      $or: [
+        { package_name: { $regex: name, $options: "i" } }, // Partial match on package_name
+        { userId: { $in: matchingUserIds } }, // Match userId with matching users
+      ],
+    }).populate({
+      path: "userId",
+      select: "username email", // Populate user details with username and email
+    });
+
+    // Respond with the filtered bookings
     return res.status(200).json({
       status: true,
-      filterdata: filterdata,
+      message: "Bookings fetched successfully.",
+      data: bookings,
     });
   } catch (error) {
     console.error("Error fetching booking:", error);
     return res.status(500).json({
       status: false,
-      message: "An error occurred while fetching booking.",
+      message: "An error occurred while fetching bookings.",
       error: error.message,
     });
   }
