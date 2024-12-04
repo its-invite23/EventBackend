@@ -1,9 +1,10 @@
 const Stripe = require("stripe");
 const catchAsync = require("../utils/catchAsync");
 const Payment = require("../model/payment.js");
-const payment = require("../model/payment.js");
-const StripeKey = process.env.STRIPE_TEST_KEY
-const stripe = new Stripe("sk_test_51QCE0sCstph9qeprpctSkisKqoAQJIFaYlzvOlGK4MtmSvGQ65sygCrmnOS9RtECApL92p7UEN4HWihz22zwTUte00ppjS5cXy");
+const stripe =new Stripe(process.env.STRIPE_TEST_KEY);
+// const stripe = "sk_test_51QCE0sCstph9qeprpctSkisKqoAQJIFaYlzvOlGK4MtmSvGQ65sygCrmnOS9RtECApL92p7UEN4HWihz22zwTUte00ppjS5cXy");
+const sendEmail = require("../utils/EmailMailler");
+const emailTemplate = require("../emailTemplates/Payment.js");
 
 const fetchPaymentId = async (sessionId, srNo) => {
   try {
@@ -28,12 +29,12 @@ const fetchPaymentId = async (sessionId, srNo) => {
 exports.createCheckout = catchAsync(async (req, res) => {
   try {
     const { amount, email, userId, booking_id, currency } = req?.body;
-console.log("req?.body",req?.body)
+    console.log("req?.body", req?.body)
     const lastpayment = await Payment.findOne().sort({ srNo: -1 });
     const srNo = lastpayment ? lastpayment.srNo + 1 : 1;
 
     const session = await stripe.checkout.sessions.create({
-      mode: "payment",
+      payment_method_types: ['card'], 
       success_url: `https://user-event.vercel.app/success/${srNo}`,
       cancel_url: `https://user-event.vercel.app/cancel/${srNo}`,
       submit_type: "pay",
@@ -80,7 +81,7 @@ exports.PaymentGet = catchAsync(async (req, res, next) => {
       .populate({
         path: "userId",
         select: "username",
-      }) .populate({
+      }).populate({
         path: "booking_id",
         select: "package_name , booking_id",
       })
@@ -127,6 +128,16 @@ exports.PaymentSuccess = catchAsync(async (req, res) => {
     data.payment_status = "success";
     await data.save();
     fetchPaymentId(data?.session_id, srNo);
+    const subject = "Payment  successfully!";
+console.log("data", data)
+    await sendEmail({
+      email: userDetail.email,
+      name: userDetail.username,
+      package: data, // Pass the saved record
+      message: "Your booking request was successful!",
+      subject: subject,
+      emailTemplate: emailTemplate,
+    });
     res.status(200).json({
       message: `Payment status updated`,
       status: true,

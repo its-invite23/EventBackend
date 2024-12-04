@@ -1,13 +1,13 @@
-module.exports = (paymentLink, userName, price) => {
+module.exports = (paymentLink, userName, price ,currency) => {
     return `
  <table align="center" style="max-width: 600px; font-family: arial; text-align: left; margin: 0 auto;" align="left" width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#000">
 <tr bgcolor="#141414">
     <td style="padding: 20px 2px 0 2px; text-align: center;">
-        <p style="margin: 1px;">
-            <a href="https://user-event.vercel.app/">
-                <img src="https://f003.backblazeb2.com/file/Event-management/logo.png" alt="Logo">
-            </a>
-        </p>
+       <p style="margin: 1px;">
+        <a href="https://user-event.vercel.app/">
+          <img style="max-width:150px;" src="https://f003.backblazeb2.com/file/Event-management/logo.png" alt="Event Logo">
+        </a>
+      </p>
     </td>
 </tr>
 
@@ -30,13 +30,13 @@ module.exports = (paymentLink, userName, price) => {
 <tr>
     <td style="padding: 0 10px 30px 10px; text-align: left;">
         <p style="margin: 1px; font-size: 14px;line-height: 18px; font-weight: normal; color: #CCCCCC;">
-           Please click on the below button to pay - ${price} and confirm your booking with us. 
+           Please click on the below button to pay -  ${price} and confirm your booking with us. 
         </p>
     </td>
 </tr>
 
 <tr>
-    <td style="padding: 15px 0 50px 10px; text-align: left;">
+    <td style="padding: 15px 0 50px 10px; text-align: center;">
         <a href=${paymentLink} target="_blank" style="padding: 15px 20px; background: #EB3465; font-size: 14px; color: #ffffff; text-decoration: none; border-radius: 60px; display: inline-block;">Pay Now</a>
     </td>
 </tr>

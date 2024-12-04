@@ -1,13 +1,13 @@
-module.exports = (userName) => {
+module.exports = (name , package) => {
     return `
 <table align="center" style="max-width: 600px; font-family: arial;" width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#000">
 <tr bgcolor="#141414">
     <td style="padding: 20px 2px 0 2px; text-align: center;">
-        <p style="margin: 1px;">
-            <a href="https://user-event.vercel.app/">
-                <img src="https://f003.backblazeb2.com/file/Event-management/logo.png" alt="">
-            </a>
-        </p>
+<p style="margin: 1px;">
+        <a href="https://user-event.vercel.app/">
+          <img style="max-width:150px;" src="https://f003.backblazeb2.com/file/Event-management/logo.png" alt="Event Logo">
+        </a>
+      </p>
     </td>
 </tr>
 
@@ -22,7 +22,7 @@ module.exports = (userName) => {
 <tr>
     <td style="padding:40px 0 30px 20px;">
         <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#CCCCCC">
-            Hi ${userName},
+            Hi ${name},
         </p>
     </td>
 </tr>

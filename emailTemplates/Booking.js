@@ -1,11 +1,12 @@
 module.exports = (name, package) => {
+  console.log("name",name)
   return `
 <table align="center" style="max-width: 600px; font-family: Arial;" width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#000">
   <tr bgcolor="#141414">
     <td style="padding: 20px 2px 0 2px; text-align: center;">
       <p style="margin: 1px;">
         <a href="https://user-event.vercel.app/">
-          <img src="https://f003.backblazeb2.com/file/Event-management/logo.png" alt="Event Logo">
+          <img style="max-width:150px;" src="https://f003.backblazeb2.com/file/Event-management/logo.png" alt="Event Logo">
         </a>
       </p>
     </td>
@@ -24,9 +25,12 @@ module.exports = (name, package) => {
       <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#CCCCCC;">
         Hi ${name},
       </p>
+${package?.package?.map((service) => `
       <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#CCCCCC;">
-        Thank you for your payment! You've successfully booked [Service Provider’s Name] for your upcoming event.
+        Thank you for your payment! You've successfully booked ${service?.services_provider_name} for your upcoming event.
       </p>
+`)}
+      
     </td>
   </tr>
 

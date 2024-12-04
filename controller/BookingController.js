@@ -3,20 +3,25 @@ const User = require("../model/User");
 const catchAsync = require("../utils/catchAsync");
 const sendEmail = require("../utils/EmailMailler");
 const emailTemplate = require("../emailTemplates/Booking");
+const PaymentLink = require("../emailTemplates/PaymentLink");
+
+
 const { errorResponse, successResponse } = require("../utils/ErrorHandling");
 const nodemailer = require("nodemailer");
 const { default: axios } = require("axios");
 
 exports.bookingpost = catchAsync(async (req, res) => {
   const userId = req?.User?._id;
+
+  // Validate User ID
   if (!userId) {
     return res.status(400).json({
       status: false,
-      message:
-        "User information not found in the request or userId is undefined.",
+      message: "User information not found in the request or userId is undefined.",
     });
   }
 
+  // Destructure request body
   const {
     Package,
     CurrencyCode,
@@ -27,7 +32,17 @@ exports.bookingpost = catchAsync(async (req, res) => {
     attendees,
     totalPrice,
   } = req.body;
+
+  // Validate required fields
+  if (!Package || !package_name || !bookingDate || !location || !totalPrice) {
+    return res.status(400).json({
+      status: false,
+      message: "Required fields are missing. Please provide all necessary information.",
+    });
+  }
+
   try {
+    // Create the booking record
     const record = new Booking({
       package: Package,
       package_name,
@@ -39,24 +54,53 @@ exports.bookingpost = catchAsync(async (req, res) => {
       attendees,
       totalPrice,
     });
-    await record.save();
+
+    console.log("reocrd", record)
+    const data = await record.save();
+    console.log("data", data)
     const userDetail = await User.findById(userId);
+    if (!userDetail) {
+      return res.status(404).json({
+        status: false,
+        message: "User not found.",
+      });
+    }
     const subject = "Booking request made successfully!";
-    await sendEmail({ email: userDetail.email, username: userDetail.username, package:record, message: "Your booking request was successful!", subject: subject, emailTemplate: emailTemplate });
+    await sendEmail({
+      email: process.env.Admin_Email,
+      name: userDetail.username,
+      package: data, // Pass the saved record
+      message: "Your booking request was successful!",
+      subject: subject,
+      emailTemplate: emailTemplate,
+    });
+    await sendEmail({
+      email: userDetail.email,
+      name: userDetail.username,
+      package: data, // Pass the saved record
+      message: "Your booking request was successful!",
+      subject: subject,
+      emailTemplate: emailTemplate,
+    });
+
 
     return res.status(201).json({
       status: true,
       message: "Booking successfully created!",
       data: record,
     });
+
   } catch (error) {
+    console.error("Error during booking creation:", error);
     return res.status(500).json({
       status: false,
       message: "An error occurred while creating the booking.",
       error: error.message,
     });
   }
+
 });
+
 
 exports.BookingGet = catchAsync(async (req, res, next) => {
   try {
@@ -162,18 +206,18 @@ exports.BookingPayment = catchAsync(async (req, res) => {
       //  model: 'User'
     });
     const paymentLink = `https://user-event.vercel.app/payment/${bookingstatus?._id}`;
-    const emailHtml = emailTemplate(paymentLink, bookingstatus?.userId?.username, bookingstatus?.totalPrice);
+    const emailHtml = PaymentLink(paymentLink, bookingstatus?.userId?.username, bookingstatus?.totalPrice  , bookingstatus?.currency);
     let transporter = nodemailer.createTransport({
       host: "smtp.gmail.com",
       port: 587,
       secure: false,
       auth: {
-        user: process.env.user,
-        pass: process.env.password,
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
       },
     });
     await transporter.sendMail({
-      from: process.env.user,
+      from: process.env.EMAIL_USER,
       to: bookingstatus.userId?.email,
       subject: "Payment Link for your Booking",
       html: emailHtml,
@@ -339,7 +383,7 @@ exports.PaymentGetId = catchAsync(async (req, res, next) => {
 
 exports.BookingFilter = catchAsync(async (req, res, next) => {
   try {
-    const { package_name } = req.body;  
+    const { package_name } = req.body;
     let filter = {};
     if (package_name) {
       filter.package_name = { $regex: `^${package_name}$`, $options: 'i' };
