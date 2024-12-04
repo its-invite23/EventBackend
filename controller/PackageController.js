@@ -281,7 +281,6 @@ async function deleteFile(fileName, fileId) {
             fileName: fileName,
             fileId: fileId, // Ensure `fileId` is properly defined or passed
         });
-        console.log('File deleted successfully:', response);
         return true; // Indicate successful deletion
     } catch (error) {
         console.error('Error deleting file:', error);

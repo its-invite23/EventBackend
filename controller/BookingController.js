@@ -55,9 +55,7 @@ exports.bookingpost = catchAsync(async (req, res) => {
       totalPrice,
     });
 
-    console.log("reocrd", record)
     const data = await record.save();
-    console.log("data", data)
     const userDetail = await User.findById(userId);
     if (!userDetail) {
       return res.status(404).json({

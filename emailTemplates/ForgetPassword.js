@@ -44,7 +44,7 @@ module.exports = (resetLink, userName) => {
 </tr>
 
 <tr>
-    <td style="padding: 15px 0 50px 10px; text-align: left;">
+    <td style="padding: 15px 0 50px 10px; text-align: center;">
         <a href=${resetLink} target="_blank" style="padding: 15px 20px; background: #EB3465; font-size: 14px; color: #ffffff; text-decoration: none; border-radius: 60px; display: inline-block;">Reset My Password</a>
     </td>
 </tr>

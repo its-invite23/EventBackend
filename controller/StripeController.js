@@ -29,9 +29,7 @@ const fetchPaymentId = async (sessionId, srNo) => {
 
 exports.createCheckout = catchAsync(async (req, res) => {
   try {
-    console.log(req?.body)
     const { amount, email, userId, booking_id, currency } = req?.body;
-    console.log("req?.body", req?.body)
     const lastpayment = await Payment.findOne().sort({ srNo: -1 });
     const srNo = lastpayment ? lastpayment.srNo + 1 : 1;
 
@@ -68,7 +66,6 @@ exports.createCheckout = catchAsync(async (req, res) => {
       booking_id,
       amount,
     });
-    console.log("newPayment", newPayment)
     await newPayment.save();
     res.status(200).json({ url: session.url, status: "true" });
   } catch (err) {
@@ -145,7 +142,6 @@ exports.PaymentSuccess = catchAsync(async (req, res) => {
     await data.save();
     fetchPaymentId(data?.session_id, srNo);
     const subject = "Payment  successfully!";
-    console.log("data", data)
     await sendEmail({
       email: userDetail.email,
       name: userDetail.username,
