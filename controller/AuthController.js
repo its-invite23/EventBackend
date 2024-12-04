@@ -170,56 +170,7 @@ exports.signup = catchAsync(async (req, res) => {
   }
 });
 
-exports.login = catchAsync(async (req, res, next) => {
-  try {
-    const { email, password } = req.body;
-    if (!email || !password) {
-      return res.status(401).json({
-        status: false,
-        message: "Email and password are required!",
-      });
-    }
 
-    const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(401).json({
-        status: false,
-        message: "Invalid Email or password",
-      });
-    }
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid) {
-      return res.status(400).json({
-        status: false,
-        message: "Incorrect password. Please try again.",
-      });
-    }
-
-    if (user.user_status === "inactive") {
-      return res.status(403).json({
-        status: false,
-        message: "Your account is inactive. Please contact support.",
-      });
-    }
-    if (!user.verified) {
-      return res.status(403).json({
-        status: false,
-        message: "Your account is not verified. Please verify it.",
-      });
-    }
-    const token = await signToken(user._id);
-    res.json({
-      status: true,
-      message: "Login Successfully!",
-      token,
-    });
-  } catch (error) {
-    return res.status(500).json({
-      error,
-      message: "An unknown error occured. Please try later"
-    });
-  }
-});
 
 exports.adminlogin = catchAsync(async (req, res, next) => {
   try {
@@ -290,7 +241,74 @@ exports.adminlogin = catchAsync(async (req, res, next) => {
   }
 });
 
+exports.login = catchAsync(async (req, res, next) => {
+  try {
+    const { email, password, role } = req.body;
 
+    // Check if email and password are provided
+    if (!email || !password) {
+      return res.status(401).json({
+        status: false,
+        message: "Email and password are required!",
+      });
+    }
+
+    // Find the user by email
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(401).json({
+        status: false,
+        message: "Invalid Email or password",
+      });
+    }
+
+    // Validate password
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(400).json({
+        status: false,
+        message: "Incorrect password. Please try again.",
+      });
+    }
+
+    // Check if the user account is inactive
+    if (user.user_status === "inactive") {
+      return res.status(403).json({
+        status: false,
+        message: "Your account is inactive. Please contact support.",
+      });
+    }
+
+    // Check if the user is verified
+    if (!user.verified) {
+      return res.status(403).json({
+        status: false,
+        message: "Your account is not verified. Please verify it.",
+      });
+    }
+
+    // Validate user role
+    if (user.role !== "user") {
+      return res.status(403).json({
+        status: false,
+        message: "Access denied. Only user can log in.",
+      });
+    }
+
+    // Generate a token for the user
+    const token = await signToken(user._id);
+    res.json({
+      status: true,
+      message: "Login Successfully!",
+      token,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      error,
+      message: "An unknown error occurred. Please try later.",
+    });
+  }
+});
 
 
 exports.profile = catchAsync(async (req, res, next) => {
