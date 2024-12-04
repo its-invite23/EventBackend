@@ -98,22 +98,22 @@ exports.signup = catchAsync(async (req, res) => {
     }
 
     // Check if user already exists
-     // Check if user already exists
-     const existingUser = await User.findOne({ $or: [{ email }, { phone_number }] });
-     if (existingUser) {
-       const errors = {};
-       if (existingUser.email === email) {
-         errors.email = 'Email is already in use!';
-       }
-       if (existingUser.phone_number === phone_number) {
-         errors.phone_number = 'Phone number is already in use!';
-       }
-       return res.status(400).json({
-         status: false,
-         message: 'Email or phone number already exists',
-         errors,
-       });
-     }
+    // Check if user already exists
+    const existingUser = await User.findOne({ $or: [{ email }, { phone_number }] });
+    if (existingUser) {
+      const errors = {};
+      if (existingUser.email === email) {
+        errors.email = 'Email is already in use!';
+      }
+      if (existingUser.phone_number === phone_number) {
+        errors.phone_number = 'Phone number is already in use!';
+      }
+      return res.status(400).json({
+        status: false,
+        message: 'Email or phone number already exists',
+        errors,
+      });
+    }
 
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 12);
@@ -506,8 +506,8 @@ exports.forgotlinkrecord = async (req, res) => {
     const customerUser = record.username;
     let transporter = nodemailer.createTransport({
       host: "smtp.gmail.com",
-        port: 587,
-        secure: false,
+      port: 587,
+      secure: false,
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
@@ -571,20 +571,32 @@ exports.profilegettoken = catchAsync(async (req, res, next) => {
 
 exports.userfilter = catchAsync(async (req, res, next) => {
   try {
-    const { username, user_status } = req.body;  // Changed to req.query for query params
+    const { username, user_status } = req.body; // Use req.body for body params, or req.query for query params
     let filter = {};
 
+    // Add `user_status` to filter if it exists
     if (user_status) {
       filter.user_status = user_status;
     }
 
-    if (username) {
-      // Perform an exact match with case insensitivity if required
-      filter.username = { $regex: `^${username}$`, $options: 'i' };
+    // Add `username` to filter if it's not blank
+    if (username && username.trim() !== "") {
+      filter.username = { $regex: `^${username}$`, $options: "i" }; // Exact match with case-insensitive regex
     }
 
+    // Fetch users based on the filter
     const users = await User.find(filter).select("-password");
 
+    // If no users are found, return an appropriate message
+    if (!users.length) {
+      return res.status(200).json({
+        status: true,
+        message: "No users found for the given filter.",
+        users: [],
+      });
+    }
+
+    // Return users if found
     return res.status(200).json({
       status: true,
       message: "Users retrieved successfully",
