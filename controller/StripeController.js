@@ -5,8 +5,8 @@ const stripe = new Stripe(process.env.STRIPE_TEST_KEY);
 // const stripe = "sk_test_51QCE0sCstph9qeprpctSkisKqoAQJIFaYlzvOlGK4MtmSvGQ65sygCrmnOS9RtECApL92p7UEN4HWihz22zwTUte00ppjS5cXy");
 const sendEmail = require("../utils/EmailMailler");
 const emailTemplate = require("../emailTemplates/Payment.js");
-const User = require("../model/User.js");
-
+const Booking = require("../model/Booking");
+const User = require("../model/User");
 const fetchPaymentId = async (sessionId, srNo) => {
   try {
     const session = await stripe.checkout.sessions.retrieve(sessionId);
@@ -213,4 +213,45 @@ exports.PaymentId = catchAsync(async (req, res, next) => {
   }
 });
 
+exports.PaymentFilter = catchAsync(async (req, res, next) => {
+  try {
+    const { name } = req.body;
+
+    if (!name) {
+      return res.status(400).json({
+        status: false,
+        message: "Name is required for filtering payments.",
+      });
+    }
+    const matchingUserIds = await User.find({
+      username: { $regex: name, $options: "i" }
+    }).distinct("_id");
+
+    const matchingBookingIds = await Booking.find({
+      package_name: { $regex: name, $options: "i" }
+    }).distinct("_id");
+
+    const payments = await Payment.find({
+      $or: [
+        { userId: { $in: matchingUserIds } },
+        { booking_id: { $in: matchingBookingIds } },
+      ],
+    })
+      .populate({ path: "userId", select: "username email" })
+      .populate({ path: "booking_id", select: "package_name location" });
+
+    return res.status(200).json({
+      status: true,
+      message: "Payments fetched successfully.",
+      data: payments,
+    });
+  } catch (error) {
+    console.error("Error fetching payments:", error);
+    return res.status(500).json({
+      status: false,
+      message: "An error occurred while fetching payments.",
+      error: error.message,
+    });
+  }
+});
 
