@@ -248,57 +248,57 @@ exports.PaymentCancel = catchAsync(async (req, res) => {
   }
 });
 
-exports.PaymentId = catchAsync(async (req, res, next) => {
-  const { sessionId } = req.params;
-
+exports.PaymentGetByID = catchAsync(async (req, res) => {
   try {
-    const session = await stripe.checkout.sessions.retrieve(sessionId);
-    const paymentId = session.payment_intent; // This is your payment ID
-    res.json({ paymentId });
-  } catch (error) {
-    res.status(500).send({ error: error.message });
-  }
-});
-
-exports.PaymentFilter = catchAsync(async (req, res, next) => {
-  try {
-    const { name } = req.body;
-
-    if (!name) {
+    const { booking_id } = req.params;
+    if (!booking_id) {
       return res.status(400).json({
+        message: "Booking ID is required.",
         status: false,
-        message: "Name is required for filtering payments.",
       });
     }
-    const matchingUserIds = await User.find({ 
-      username: { $regex: name, $options: "i" } 
-    }).distinct("_id");
 
-    const matchingBookingIds = await Booking.find({ 
-      package_name: { $regex: name, $options: "i" } 
-    }).distinct("_id");
+    const data = await Payment.findOne({booking_id:booking_id});
 
-    const payments = await Payment.find({
-      $or: [
-        { userId: { $in: matchingUserIds } },
-        { booking_id: { $in: matchingBookingIds } },
-      ],
-    })
-      .populate({ path: "userId", select: "username email" }) 
-      .populate({ path: "booking_id", select: "package_name location" });
-      
-    return res.status(200).json({
+    if (!data) {
+      return res.status(202).json({
+        message: "Data not found",
+        status: true,
+        payment: false,
+      });
+    }
+    if(data?.payment_status === "success"){
+      return res.status(202).json({
+        message: "Payment not done successfully",
+        status: true,
+        payment: true,
+      });
+    }
+
+   return res.status(202).json({
+      message: "Data Found",
       status: true,
-      message: "Payments fetched successfully.",
-      data: payments,
+      payment: false,
     });
+
   } catch (error) {
-    console.error("Error fetching payments:", error);
-    return res.status(500).json({
+    console.error("Error finding payment status:", error);
+    res.status(500).json({
+      message: "Internal Server Error",
       status: false,
-      message: "An error occurred while fetching payments.",
-      error: error.message,
     });
   }
 });
+
+// exports.PaymentId = catchAsync(async (req, res, next) => {
+//   const { sessionId } = req.params;
+
+//   try {
+//     const session = await stripe.checkout.sessions.retrieve(sessionId);
+//     const paymentId = session.payment_intent; // This is your payment ID
+//     res.json({ paymentId });
+//   } catch (error) {
+//     res.status(500).send({ error: error.message });
+//   }
+// });
 
