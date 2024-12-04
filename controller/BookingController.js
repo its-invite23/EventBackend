@@ -10,6 +10,38 @@ const { errorResponse, successResponse } = require("../utils/ErrorHandling");
 const nodemailer = require("nodemailer");
 const { default: axios } = require("axios");
 
+
+const BookingFilter = async(name) => {
+  try {
+    if (!name) {
+      return res.status(400).json({
+        status: false,
+        message: "Name is required for filtering bookings.",
+      });
+    }
+    const matchingUserIds = await User.find({ 
+      username: { $regex: name, $options: "i" } 
+    }).distinct("_id");
+    const bookings = await Booking.find({
+      $or: [
+        { package_name: { $regex: name, $options: "i" } }, 
+        { userId: { $in: matchingUserIds } }, 
+      ],
+    }).populate({
+      path: "userId",
+      select: "username email", 
+    });
+    return bookings;
+  } catch (error) {
+    console.error("Error fetching booking:", error);
+    return res.status(500).json({
+      status: false,
+      message: "An error occurred while fetching bookings.",
+      error: error.message,
+    });
+  }
+};
+
 exports.bookingpost = catchAsync(async (req, res) => {
   const userId = req?.User?._id;
 
@@ -104,9 +136,12 @@ exports.BookingGet = catchAsync(async (req, res, next) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 25;
-    const skip = (page - 1) * limit;
-    const totalBooking = await Booking.countDocuments();
-    const BookingData = await Booking.find({})
+    const search = req.query.search || "";
+    let BookingData, totalPages,totalBooking;
+    if(search ===""){
+      const skip = (page - 1) * limit;
+      totalBooking = await Booking.countDocuments();
+      BookingData = await Booking.find({})
       .sort({ created_at: -1 })
       .skip(skip)
       .limit(limit)
@@ -115,7 +150,13 @@ exports.BookingGet = catchAsync(async (req, res, next) => {
         select: "username email",
         //  model: 'User'
       });
-    const totalPages = Math.ceil(totalBooking / limit);
+      totalPages = Math.ceil(totalBooking / limit);
+    }
+    else{
+      BookingData= await BookingFilter(search);
+      totalPages=1;
+      totalBooking=BookingData;
+    }
     res.status(200).json({
       data: {
         bookingdata: BookingData,
@@ -373,50 +414,6 @@ exports.PaymentGetId = catchAsync(async (req, res, next) => {
     res.status(500).json({
       status: false,
       message: "An error occurred while updating the package. Please try again later.",
-      error: error.message,
-    });
-  }
-});
-
-
-exports.BookingFilter = catchAsync(async (req, res, next) => {
-  try {
-    const { name } = req.body;
-
-    if (!name) {
-      return res.status(400).json({
-        status: false,
-        message: "Name is required for filtering bookings.",
-      });
-    }
-
-    // Find users whose name matches the search query
-    const matchingUserIds = await User.find({ 
-      username: { $regex: name, $options: "i" } 
-    }).distinct("_id");
-
-    // Find bookings where package_name matches or userId is in the matching users
-    const bookings = await Booking.find({
-      $or: [
-        { package_name: { $regex: name, $options: "i" } }, // Partial match on package_name
-        { userId: { $in: matchingUserIds } }, // Match userId with matching users
-      ],
-    }).populate({
-      path: "userId",
-      select: "username email", // Populate user details with username and email
-    });
-
-    // Respond with the filtered bookings
-    return res.status(200).json({
-      status: true,
-      message: "Bookings fetched successfully.",
-      data: bookings,
-    });
-  } catch (error) {
-    console.error("Error fetching booking:", error);
-    return res.status(500).json({
-      status: false,
-      message: "An error occurred while fetching bookings.",
       error: error.message,
     });
   }
