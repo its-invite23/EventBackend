@@ -110,7 +110,7 @@ exports.signup = catchAsync(async (req, res) => {
        }
        return res.status(400).json({
          status: false,
-         message: 'Email and phone number already exists',
+         message: 'Email or phone number already exists',
          errors,
        });
      }
