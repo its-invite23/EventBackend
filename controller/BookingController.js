@@ -39,7 +39,6 @@ exports.bookingpost = catchAsync(async (req, res) => {
       attendees,
       totalPrice,
     });
-console.log("record",record )
     await record.save();
     const userDetail = await User.findById(userId);
     const subject = "Booking request made successfully!";

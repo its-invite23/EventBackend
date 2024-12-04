@@ -1,4 +1,4 @@
-module.exports = (userName, packagedata) => {
+module.exports = (name, package) => {
   return `
 <table align="center" style="max-width: 600px; font-family: Arial;" width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#000">
   <tr bgcolor="#141414">
@@ -22,7 +22,7 @@ module.exports = (userName, packagedata) => {
   <tr>
     <td style="padding:40px 20px 30px 20px;">
       <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#CCCCCC;">
-        Hi ${userName},
+        Hi ${name},
       </p>
       <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#CCCCCC;">
         Thank you for your payment! You've successfully booked [Service Provider’s Name] for your upcoming event.
@@ -38,52 +38,38 @@ module.exports = (userName, packagedata) => {
     </td>
   </tr>
 
-  ${
-    packagedata && packagedata.length > 0
-      ? packagedata
-          .map(
-            (services) => `
             <tr>
               <td style="padding: 20px;">
                 <table width="100%" cellspacing="0" cellpadding="0">
                   <tr>
-                    <td style="padding: 5px 10px; font-size: 14px; color: #CCCCCC;">Service Provider:</td>
-                    <td style="padding: 5px 10px; font-size: 14px; color: #FFFFFF;">${services.services_provider_name}</td>
+                    <td style="padding: 5px 10px; font-size: 14px; color: #CCCCCC;">Package Name:</td>
+                    <td style="padding: 5px 10px; font-size: 14px; color: #FFFFFF;">${package.package_name}</td>
+                  </tr>
+                   <tr>
+                    <td style="padding: 5px 10px; font-size: 14px; color: #CCCCCC;">Location:</td>
+                    <td style="padding: 5px 10px; font-size: 14px; color: #FFFFFF;">${package.location}</td>
                   </tr>
                   <tr>
-                    <td style="padding: 5px 10px; font-size: 14px; color: #CCCCCC;">Service Type:</td>
-                    <td style="padding: 5px 10px; font-size: 14px; color: #FFFFFF;">${services.service_type}</td>
+                    <td style="padding: 5px 10px; font-size: 14px; color: #CCCCCC;">Booking Date:</td>
+                    <td style="padding: 5px 10px; font-size: 14px; color: #FFFFFF;">${package.bookingDate}</td>
+                  </tr>
+                    <tr>
+                    <td style="padding: 5px 10px; font-size: 14px; color: #CCCCCC;">Booking Status:</td>
+                    <td style="padding: 5px 10px; font-size: 14px; color: #FFFFFF;">${package.status}</td>
                   </tr>
                   <tr>
-                    <td style="padding: 5px 10px; font-size: 14px; color: #CCCCCC;">Event Date:</td>
-                    <td style="padding: 5px 10px; font-size: 14px; color: #FFFFFF;">${services.event_date}</td>
+                    <td style="padding: 5px 10px; font-size: 14px; color: #CCCCCC;">Attendees:</td>
+                    <td style="padding: 5px 10px; font-size: 14px; color: #FFFFFF;">${package.attendees}</td>
                   </tr>
                   <tr>
                     <td style="padding: 5px 10px; font-size: 14px; color: #CCCCCC;">Amount Paid:</td>
-                    <td style="padding: 5px 10px; font-size: 14px; color: #FFFFFF;">${services.amount_paid}</td>
+                    <td style="padding: 5px 10px; font-size: 14px; color: #FFFFFF;">${package.totalPrice}</td>
                   </tr>
-                  <tr>
-                    <td style="padding: 5px 10px; font-size: 14px; color: #CCCCCC;">Transaction ID:</td>
-                    <td style="padding: 5px 10px; font-size: 14px; color: #FFFFFF;">${services.transaction_id}</td>
-                  </tr>
-                  <tr>
-                    <td style="padding: 5px 10px; font-size: 14px; color: #CCCCCC;">Date of Payment:</td>
-                    <td style="padding: 5px 10px; font-size: 14px; color: #FFFFFF;">${services.payment_date}</td>
-                  </tr>
+                
+                 
                 </table>
               </td>
             </tr>
-          `
-          )
-          .join("")
-      : `
-      <tr>
-        <td style="padding: 20px; font-size: 14px; color: #CCCCCC;">
-          No package details found.
-        </td>
-      </tr>
-    `
-  }
 
   <tr>
     <td style="padding: 20px; font-size: 14px; color: #CCCCCC;">
