@@ -7,7 +7,7 @@ module.exports = (name, package) => {
     <td style="padding: 20px 2px 0 2px; text-align: center;">
 <p style="margin: 1px;">
         <a href="https://user-event.vercel.app/">
-          <img style="max-width:150px;" src="https://f003.backblazeb2.com/file/Event-management/logo.png" alt="Event Logo">
+          <img style="max-width:150px;" src="https://f003.backblazeb2.com/file/Event-management/logo.png" alt="">
         </a>
       </p>
     </td>
@@ -150,7 +150,7 @@ ${package?.amount}
             <tr>
                 <td style="padding: 0 15px 10px 0;">
                     <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#CCCCCC">
-                        Transaction ID:
+                        Payment ID:
                     </p>
                 </td>
 
