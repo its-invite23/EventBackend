@@ -173,8 +173,7 @@ exports.PaymentSuccess = catchAsync(async (req, res) => {
     }
     const data = await Payment.findOne({ srNo: srNo }).populate({
       path: "booking_id",
-      select: "package_name bookingDate package",
-      //  model: 'User'
+       model: 'Booking'
     });
     const userDetail = await User.findById(data?.userId);
     if (!userDetail) {
@@ -192,6 +191,7 @@ exports.PaymentSuccess = catchAsync(async (req, res) => {
     data.payment_status = "success";
     await data.save();
     fetchPaymentId(data?.session_id, srNo);
+    console.log("data",data)
     const subject = "Payment  successfully!";
     await sendEmail({
       email: userDetail.email,

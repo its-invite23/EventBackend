@@ -42,7 +42,7 @@ ${package?.package?.map((service) => `
   </tr>
 
             <tr>
-              <td style="padding: 20px;">
+              <td style="padding: 20px 20px 20px 0;">
                 <table width="100%" cellspacing="0" cellpadding="0">
                   <tr>
                     <td style="padding: 5px 10px; font-size: 14px; color: #CCCCCC;">Package Name:</td>

@@ -29,15 +29,7 @@ module.exports = (name, package) => {
     </td>
 </tr>
 
-<tr>
-    <td style="padding: 0 20px 30px 20px;">
-       ${package?.package?.map((service) => `
-      <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#CCCCCC;">
-        Thank you for your payment! You've successfully booked ${service?.services_provider_name} for your upcoming event.
-      </p>
-`)}
-    </td>
-</tr>
+
 
 <tr>
     <td style="padding: 0 20px 25px 20px;">
