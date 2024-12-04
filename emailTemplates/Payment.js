@@ -1,4 +1,6 @@
-module.exports = (name , package) => {
+
+const formatDate = (dateString) => { const options = { year: 'numeric', month: 'short', day: 'numeric' }; const date = new Date(dateString); return date.toLocaleDateString('en-GB', options); };
+module.exports = (name, package) => {
     return `
 <table align="center" style="max-width: 600px; font-family: arial;" width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#000">
 <tr bgcolor="#141414">
@@ -29,9 +31,11 @@ module.exports = (name , package) => {
 
 <tr>
     <td style="padding: 0 20px 30px 20px;">
-        <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#CCCCCC">
-            Thank you for your payment! You've successfully booked [Service Provider’s Name] for your upcoming event.
-        </p>
+       ${package?.package?.map((service) => `
+      <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#CCCCCC;">
+        Thank you for your payment! You've successfully booked ${service?.services_provider_name} for your upcoming event.
+      </p>
+`)}
     </td>
 </tr>
 
@@ -47,54 +51,86 @@ module.exports = (name , package) => {
 <tr>
     <td style="padding: 0 0 40px 20px;">
         <table>
-            <tr>
+           <tr>
                 <td style="padding: 0 15px 10px 0;">
                     <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#CCCCCC">
-                        Service Provider:
+                        Payment Date:
                     </p>
                 </td>
 
                 <td style="padding: 0 15px 10px 0;">
                     <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#fff">
                        <strong>
-                        Service Provider's Name:
+${formatDate(package?.created_at)}
                        </strong>
                     </p>
                 </td>
-            </tr>
+            </tr>  
+          
 
-            <tr>
+             <tr>
                 <td style="padding: 0 15px 10px 0;">
                     <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#CCCCCC">
-                        Service Type:
+                        Package Name:
                     </p>
                 </td>
 
                 <td style="padding: 0 15px 10px 0;">
                     <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#fff">
                        <strong>
-                       [Service Type]
+${package?.booking_id?.package_name}
                        </strong>
                     </p>
                 </td>
             </tr>
 
-            <tr>
+                  <tr>
                 <td style="padding: 0 15px 10px 0;">
                     <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#CCCCCC">
-                        Event Date:
+                        Booking Date:
                     </p>
                 </td>
 
                 <td style="padding: 0 15px 10px 0;">
                     <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#fff">
                        <strong>
-                        [Event Date]
+${package?.booking_id?.bookingDate}
                        </strong>
                     </p>
                 </td>
             </tr>
 
+               <tr>
+                <td style="padding: 0 15px 10px 0;">
+                    <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#CCCCCC">
+                        Payment Type:
+                    </p>
+                </td>
+
+                <td style="padding: 0 15px 10px 0;">
+                    <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#fff">
+                       <strong>
+${package?.payment_type}
+                       </strong>
+                    </p>
+                </td>
+            </tr>
+          
+   <tr>
+                <td style="padding: 0 15px 10px 0;">
+                    <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#CCCCCC">
+                        Payment Status:
+                    </p>
+                </td>
+
+                <td style="padding: 0 15px 10px 0;">
+                    <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#fff">
+                       <strong>
+${package?.payment_status}
+                       </strong>
+                    </p>
+                </td>
+            </tr>
             <tr>
                 <td style="padding: 0 15px 10px 0;">
                     <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#CCCCCC">
@@ -105,7 +141,7 @@ module.exports = (name , package) => {
                 <td style="padding: 0 15px 10px 0;">
                     <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#fff">
                        <strong>
-                        Payment Amount
+${package?.amount}
                        </strong>
                     </p>
                 </td>
@@ -121,27 +157,13 @@ module.exports = (name , package) => {
                 <td style="padding: 0 15px 15px 0;">
                     <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#fff">
                        <strong>
-                        [Transaction ID]
+                                  ${package?.payment_id}
                        </strong>
                     </p>
                 </td>
             </tr>
 
-            <tr>
-                <td style="padding: 0 15px 10px 0;">
-                    <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#CCCCCC">
-                        Date of Payment:
-                    </p>
-                </td>
-
-                <td style="padding: 0 15px 10px 0;">
-                    <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#fff">
-                       <strong>
-                        [Date of Payment]
-                       </strong>
-                    </p>
-                </td>
-            </tr>
+           
         </table>
     </td>
 </tr>

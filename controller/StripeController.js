@@ -1,10 +1,11 @@
 const Stripe = require("stripe");
 const catchAsync = require("../utils/catchAsync");
 const Payment = require("../model/payment.js");
-const stripe =new Stripe(process.env.STRIPE_TEST_KEY);
+const stripe = new Stripe(process.env.STRIPE_TEST_KEY);
 // const stripe = "sk_test_51QCE0sCstph9qeprpctSkisKqoAQJIFaYlzvOlGK4MtmSvGQ65sygCrmnOS9RtECApL92p7UEN4HWihz22zwTUte00ppjS5cXy");
 const sendEmail = require("../utils/EmailMailler");
 const emailTemplate = require("../emailTemplates/Payment.js");
+const User = require("../model/User.js");
 
 const fetchPaymentId = async (sessionId, srNo) => {
   try {
@@ -28,13 +29,15 @@ const fetchPaymentId = async (sessionId, srNo) => {
 
 exports.createCheckout = catchAsync(async (req, res) => {
   try {
+    console.log(req?.body)
     const { amount, email, userId, booking_id, currency } = req?.body;
     console.log("req?.body", req?.body)
     const lastpayment = await Payment.findOne().sort({ srNo: -1 });
     const srNo = lastpayment ? lastpayment.srNo + 1 : 1;
 
     const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'], 
+      payment_method_types: ['card'],
+      mode: 'payment', // Correct mode value
       success_url: `https://user-event.vercel.app/success/${srNo}`,
       cancel_url: `https://user-event.vercel.app/cancel/${srNo}`,
       submit_type: "pay",
@@ -54,6 +57,7 @@ exports.createCheckout = catchAsync(async (req, res) => {
       ],
     });
 
+
     const newPayment = new Payment({
       srNo,
       payment_type: "card",
@@ -64,6 +68,7 @@ exports.createCheckout = catchAsync(async (req, res) => {
       booking_id,
       amount,
     });
+    console.log("newPayment", newPayment)
     await newPayment.save();
     res.status(200).json({ url: session.url, status: "true" });
   } catch (err) {
@@ -118,7 +123,18 @@ exports.PaymentSuccess = catchAsync(async (req, res) => {
         status: false,
       });
     }
-    const data = await Payment.findOne({ srNo: srNo });
+    const data = await Payment.findOne({ srNo: srNo }).populate({
+      path: "booking_id",
+      select: "package_name bookingDate package",
+      //  model: 'User'
+    });
+    const userDetail = await User.findById(data?.userId);
+    if (!userDetail) {
+      return res.status(404).json({
+        status: false,
+        message: "User not found.",
+      });
+    }
     if (!data) {
       return res.status(404).json({
         message: "Data not found",
@@ -129,7 +145,7 @@ exports.PaymentSuccess = catchAsync(async (req, res) => {
     await data.save();
     fetchPaymentId(data?.session_id, srNo);
     const subject = "Payment  successfully!";
-console.log("data", data)
+    console.log("data", data)
     await sendEmail({
       email: userDetail.email,
       name: userDetail.username,
