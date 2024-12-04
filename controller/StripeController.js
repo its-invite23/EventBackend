@@ -3,8 +3,10 @@ const catchAsync = require("../utils/catchAsync");
 const Payment = require("../model/payment.js");
 const Booking = require("../model/Booking");
 const User = require("../model/User");
-const StripeKey = process.env.STRIPE_TEST_KEY
-const stripe = new Stripe("sk_test_51QCE0sCstph9qeprpctSkisKqoAQJIFaYlzvOlGK4MtmSvGQ65sygCrmnOS9RtECApL92p7UEN4HWihz22zwTUte00ppjS5cXy");
+const StripeKey = process.env.STRIPE_TEST_KEY;
+const stripe = new Stripe(
+  "sk_test_51QCE0sCstph9qeprpctSkisKqoAQJIFaYlzvOlGK4MtmSvGQ65sygCrmnOS9RtECApL92p7UEN4HWihz22zwTUte00ppjS5cXy"
+);
 
 const fetchPaymentId = async (sessionId, srNo) => {
   try {
@@ -22,14 +24,50 @@ const fetchPaymentId = async (sessionId, srNo) => {
     await data.save();
     return;
   } catch (error) {
-    console.error('Error fetching payment ID:', error);
+    console.error("Error fetching payment ID:", error);
+  }
+};
+
+const PaymentFilter = async (name) => {
+  try {
+    if (!name) {
+      return res.status(400).json({
+        status: false,
+        message: "Name is required for filtering payments.",
+      });
+    }
+    const matchingUserIds = await User.find({
+      username: { $regex: name, $options: "i" },
+    }).distinct("_id");
+
+    const matchingBookingIds = await Booking.find({
+      package_name: { $regex: name, $options: "i" },
+    }).distinct("_id");
+
+    const payments = await Payment.find({
+      $or: [
+        { userId: { $in: matchingUserIds } },
+        { booking_id: { $in: matchingBookingIds } },
+      ],
+    })
+      .populate({ path: "userId", select: "username email" })
+      .populate({ path: "booking_id", select: "package_name location" });
+
+    return payments;
+  } catch (error) {
+    console.error("Error fetching payments:", error);
+    return res.status(500).json({
+      status: false,
+      message: "An error occurred while fetching payments.",
+      error: error.message,
+    });
   }
 };
 
 exports.createCheckout = catchAsync(async (req, res) => {
   try {
     const { amount, email, userId, booking_id, currency } = req?.body;
-console.log("req?.body",req?.body)
+    console.log("req?.body", req?.body);
     const lastpayment = await Payment.findOne().sort({ srNo: -1 });
     const srNo = lastpayment ? lastpayment.srNo + 1 : 1;
 
@@ -75,20 +113,29 @@ exports.PaymentGet = catchAsync(async (req, res, next) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 15;
-    const skip = (page - 1) * limit;
-    const totalpaymenttmodal = await Payment.countDocuments();
-    const paymentget = await Payment.find({})
-      .populate({
-        path: "userId",
-        select: "username",
-      }) .populate({
-        path: "booking_id",
-        select: "package_name , booking_id",
-      })
-      .sort({ created_at: -1 })
-      .skip(skip)
-      .limit(limit);
-    const totalPages = Math.ceil(totalpaymenttmodal / limit);
+    const search = req.query.search || "";
+    let paymentget, totalpaymenttmodal, totalPages;
+    if (search === "") {
+      const skip = (page - 1) * limit;
+      totalpaymenttmodal = await Payment.countDocuments();
+      paymentget = await Payment.find({})
+        .populate({
+          path: "userId",
+          select: "username",
+        })
+        .populate({
+          path: "booking_id",
+          select: "package_name , booking_id",
+        })
+        .sort({ created_at: -1 })
+        .skip(skip)
+        .limit(limit);
+      totalPages = Math.ceil(totalpaymenttmodal / limit);
+    } else {
+      paymentget = await PaymentFilter(search);
+      totalPages = 1;
+      totalpaymenttmodal = paymentget;
+    }
     res.status(200).json({
       data: {
         payment: paymentget,
@@ -180,52 +227,9 @@ exports.PaymentId = catchAsync(async (req, res, next) => {
 
   try {
     const session = await stripe.checkout.sessions.retrieve(sessionId);
-    const paymentId = session.payment_intent; // This is your payment ID 
+    const paymentId = session.payment_intent; // This is your payment ID
     res.json({ paymentId });
   } catch (error) {
     res.status(500).send({ error: error.message });
   }
 });
-
-exports.PaymentFilter = catchAsync(async (req, res, next) => {
-  try {
-    const { name } = req.body;
-
-    if (!name) {
-      return res.status(400).json({
-        status: false,
-        message: "Name is required for filtering payments.",
-      });
-    }
-    const matchingUserIds = await User.find({ 
-      username: { $regex: name, $options: "i" } 
-    }).distinct("_id");
-
-    const matchingBookingIds = await Booking.find({ 
-      package_name: { $regex: name, $options: "i" } 
-    }).distinct("_id");
-
-    const payments = await Payment.find({
-      $or: [
-        { userId: { $in: matchingUserIds } },
-        { booking_id: { $in: matchingBookingIds } },
-      ],
-    })
-      .populate({ path: "userId", select: "username email" }) 
-      .populate({ path: "booking_id", select: "package_name location" });
-      
-    return res.status(200).json({
-      status: true,
-      message: "Payments fetched successfully.",
-      data: payments,
-    });
-  } catch (error) {
-    console.error("Error fetching payments:", error);
-    return res.status(500).json({
-      status: false,
-      message: "An error occurred while fetching payments.",
-      error: error.message,
-    });
-  }
-});
-
