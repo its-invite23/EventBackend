@@ -340,10 +340,9 @@ exports.PaymentGetId = catchAsync(async (req, res, next) => {
 
 exports.BookingFilter = catchAsync(async (req, res, next) => {
   try {
-    const { package_name } = req.body;  // Changed to req.query for query params
+    const { package_name } = req.body;  
     let filter = {};
     if (package_name) {
-      // Perform an exact match with case insensitivity if required
       filter.package_name = { $regex: `^${package_name}$`, $options: 'i' };
     }
     const filterdata = await Booking.find(filter);
