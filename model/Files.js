@@ -6,7 +6,11 @@ const fileSchema = new mongoose.Schema({
   filename: String,
   fileId: String,
   url: String,
-  user: mongoose.Schema.Types.ObjectId,
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  },
   size: Number,
 });
 
