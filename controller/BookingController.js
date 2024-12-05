@@ -65,14 +65,7 @@ exports.bookingpost = catchAsync(async (req, res) => {
     totalPrice,
   } = req.body;
 
-  // Validate required fields
-  if (!Package || !package_name || !bookingDate || !location || !totalPrice) {
-    return res.status(400).json({
-      status: false,
-      message: "Required fields are missing. Please provide all necessary information.",
-    });
-  }
-
+ 
   try {
     // Create the booking record
     const record = new Booking({
