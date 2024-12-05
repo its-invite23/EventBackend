@@ -22,13 +22,16 @@ module.exports = (name, package) => {
 </tr>
 
 <tr>
-    <td style="padding:40px 0 30px 20px;">
-        <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#CCCCCC">
-            Hi ${name},
-        </p>
+    <td style="padding:40px 20px 30px 20px;">
+      <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#CCCCCC;">
+        Hi ${name},
+      </p>
+      <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#CCCCCC;">
+        Thank you for your payment! You've successfully booked  your upcoming event.
+      </p>
+      
     </td>
-</tr>
-
+  </tr>
 
 
 <tr>

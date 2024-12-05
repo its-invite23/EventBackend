@@ -24,11 +24,9 @@ module.exports = (name, package) => {
       <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#CCCCCC;">
         Hi ${name},
       </p>
-${package?.package?.map((service) => `
       <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#CCCCCC;">
-        Thank you for your payment! You've successfully booked ${service?.services_provider_name} for your upcoming event.
+        Thank you for your payment! You've successfully booked  your upcoming event.
       </p>
-`)}
       
     </td>
   </tr>
