@@ -11,7 +11,7 @@ const nodemailer = require("nodemailer");
 const { default: axios } = require("axios");
 
 
-const BookingFilter = async(name) => {
+const BookingFilter = async (name) => {
   try {
     if (!name) {
       return res.status(400).json({
@@ -19,17 +19,17 @@ const BookingFilter = async(name) => {
         message: "Name is required for filtering bookings.",
       });
     }
-    const matchingUserIds = await User.find({ 
-      username: { $regex: name, $options: "i" } 
+    const matchingUserIds = await User.find({
+      username: { $regex: name, $options: "i" }
     }).distinct("_id");
     const bookings = await Booking.find({
       $or: [
-        { package_name: { $regex: name, $options: "i" } }, 
-        { userId: { $in: matchingUserIds } }, 
+        { package_name: { $regex: name, $options: "i" } },
+        { userId: { $in: matchingUserIds } },
       ],
     }).populate({
       path: "userId",
-      select: "username email", 
+      select: "username email",
     });
     return bookings;
   } catch (error) {
@@ -52,7 +52,7 @@ exports.bookingpost = catchAsync(async (req, res) => {
       message: "User information not found in the request or userId is undefined.",
     });
   }
-console.log("req.body",req.body)
+  console.log("req.body", req.body)
   // Destructure request body
   const {
     Package,
@@ -78,7 +78,7 @@ console.log("req.body",req.body)
       attendees,
       totalPrice,
     });
-    console.log("record",record)
+    console.log("record", record)
 
     const data = await record.save();
     const userDetail = await User.findById(userId);
@@ -130,25 +130,25 @@ exports.BookingGet = catchAsync(async (req, res, next) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 25;
     const search = req.query.search || "";
-    let BookingData, totalPages,totalBooking;
-    if(search ===""){
+    let BookingData, totalPages, totalBooking;
+    if (search === "") {
       const skip = (page - 1) * limit;
       totalBooking = await Booking.countDocuments();
       BookingData = await Booking.find({})
-      .sort({ created_at: -1 })
-      .skip(skip)
-      .limit(limit)
-      .populate({
-        path: "userId",
-        select: "username email",
-        //  model: 'User'
-      });
+        .sort({ created_at: -1 })
+        .skip(skip)
+        .limit(limit)
+        .populate({
+          path: "userId",
+          select: "username email",
+          //  model: 'User'
+        });
       totalPages = Math.ceil(totalBooking / limit);
     }
-    else{
-      BookingData= await BookingFilter(search);
-      totalPages=1;
-      totalBooking=BookingData;
+    else {
+      BookingData = await BookingFilter(search);
+      totalPages = 1;
+      totalBooking = BookingData;
     }
     res.status(200).json({
       data: {
@@ -244,8 +244,8 @@ exports.BookingPayment = catchAsync(async (req, res) => {
     });
     console.log("bookingstatus", bookingstatus);
     const paymentLink = `https://user-event.vercel.app/payment/${bookingstatus?._id}`;
-    const currencyCode = bookingstatus?.CurrencyCode || 'USD'; 
-    const currency = currencySymbol[currencyCode] || '$'; 
+    const currencyCode = bookingstatus?.CurrencyCode || 'USD';
+    const currency = currencySymbol[currencyCode] || '$';
     const emailHtml = PaymentLink(paymentLink, bookingstatus?.userId?.username, bookingstatus?.totalPrice, currency);
     let transporter = nodemailer.createTransport({
       host: "smtp.gmail.com",
