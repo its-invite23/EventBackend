@@ -1,4 +1,4 @@
-module.exports = (paymentLink, userName, price ,currency) => {
+module.exports = (paymentLink, userName, price, CurrencyCode) => {
     return `
  <table align="center" style="max-width: 600px; font-family: arial; text-align: left; margin: 0 auto;" align="left" width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#000">
 <tr bgcolor="#141414">
@@ -30,7 +30,11 @@ module.exports = (paymentLink, userName, price ,currency) => {
 <tr>
     <td style="padding: 0 10px 30px 10px; text-align: left;">
         <p style="margin: 1px; font-size: 14px;line-height: 18px; font-weight: normal; color: #CCCCCC;">
-           Please click on the below button to pay -  ${price} and confirm your booking with us. 
+           Please click on the below button to pay - 
+          <span style="font-weight: bold; font-family: Arial, sans-serif;">
+  ${CurrencyCode} ${price}
+</span>
+           and confirm your booking with us. 
         </p>
     </td>
 </tr>

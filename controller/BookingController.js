@@ -237,8 +237,9 @@ exports.BookingPayment = catchAsync(async (req, res) => {
       select: "username email",
       //  model: 'User'
     });
+    console.log("bookingstatus",bookingstatus)
     const paymentLink = `https://user-event.vercel.app/payment/${bookingstatus?._id}`;
-    const emailHtml = PaymentLink(paymentLink, bookingstatus?.userId?.username, bookingstatus?.totalPrice  , bookingstatus?.currency);
+    const emailHtml = PaymentLink(paymentLink, bookingstatus?.userId?.username, bookingstatus?.totalPrice  , bookingstatus?.CurrencyCode);
     let transporter = nodemailer.createTransport({
       host: "smtp.gmail.com",
       port: 587,
