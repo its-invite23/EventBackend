@@ -227,38 +227,26 @@ const currencySymbol = {
 exports.BookingPayment = catchAsync(async (req, res) => {
   try {
     const { _id, payment_genrator_link } = req.body;
-
     if (!_id) {
       return res.status(400).json({
         message: "Booking ID is required.",
         status: false,
       });
     }
-
     const updatedRecord = await Booking.findByIdAndUpdate(
       _id,
       { payment_genrator_link },
       { new: true, runValidators: true }
     );
-
     const bookingstatus = await Booking.findById(_id).populate({
       path: "userId",
       select: "username email",
     });
-
     console.log("bookingstatus", bookingstatus);
-
-    // Generate the payment link
     const paymentLink = `https://user-event.vercel.app/payment/${bookingstatus?._id}`;
-
-    // Retrieve the currency symbol from the mapping
-    const currencyCode = bookingstatus?.CurrencyCode || 'USD'; // Default to USD if CurrencyCode is missing
-    const currency = currencySymbol[currencyCode] || '$'; // Default to '$' if currency symbol not found
-
-    // Create the HTML for the email
+    const currencyCode = bookingstatus?.CurrencyCode || 'USD'; 
+    const currency = currencySymbol[currencyCode] || '$'; 
     const emailHtml = PaymentLink(paymentLink, bookingstatus?.userId?.username, bookingstatus?.totalPrice, currency);
-
-    // Create a transporter for sending the email
     let transporter = nodemailer.createTransport({
       host: "smtp.gmail.com",
       port: 587,
