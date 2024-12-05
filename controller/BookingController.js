@@ -52,7 +52,7 @@ exports.bookingpost = catchAsync(async (req, res) => {
       message: "User information not found in the request or userId is undefined.",
     });
   }
-
+console.log("req.body",req.body)
   // Destructure request body
   const {
     Package,
@@ -65,7 +65,6 @@ exports.bookingpost = catchAsync(async (req, res) => {
     totalPrice,
   } = req.body;
 
- 
   try {
     // Create the booking record
     const record = new Booking({
@@ -79,6 +78,7 @@ exports.bookingpost = catchAsync(async (req, res) => {
       attendees,
       totalPrice,
     });
+    console.log("record",record)
 
     const data = await record.save();
     const userDetail = await User.findById(userId);
