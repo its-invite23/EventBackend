@@ -1,5 +1,11 @@
 
 const formatDate = (dateString) => { const options = { year: 'numeric', month: 'short', day: 'numeric' }; const date = new Date(dateString); return date.toLocaleDateString('en-GB', options); };
+const moment = require('moment');
+
+const formatDaatDate = (dateString) => {
+  return moment(dateString).format("DD MMM YYYY");
+};
+
 module.exports = (name, package) => {
     return `
 <table align="center" style="max-width: 600px; font-family: arial;" width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#000">
@@ -63,7 +69,7 @@ module.exports = (name, package) => {
           </td>
           <td style="padding: 0 15px 10px 0;">
             <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#fff">
-              <strong> ${package?.booking_id?.bookingDate} </strong>
+              <strong> ${formatDaatDate(package?.booking_id?.bookingDate)} </strong>
             </p>
           </td>
         </tr>

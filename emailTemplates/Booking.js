@@ -1,5 +1,9 @@
+const moment = require('moment');
+
+const formatDaatDate = (dateString) => {
+  return moment(dateString).format("DD MMM YYYY");
+};
 module.exports = (name, package) => {
-  console.log("name, package", name, package);
   return `
 <table align="center" style="max-width: 600px; font-family: Arial;" width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#000">
   <tr bgcolor="#141414">
@@ -46,7 +50,7 @@ module.exports = (name, package) => {
         </tr>
         <tr>
           <td style="padding: 5px 20px; font-size: 14px; color: #CCCCCC;">Booking Date:</td>
-          <td style="padding: 5px 10px; font-size: 14px; color: #FFFFFF;">${package.bookingDate}</td>
+          <td style="padding: 5px 10px; font-size: 14px; color: #FFFFFF;">${formatDaatDate( package.bookingDate   )  }</td>
         </tr>
         <tr>
           <td style="padding: 5px 20px; font-size: 14px; color: #CCCCCC;">Booking Status:</td>
