@@ -216,12 +216,21 @@ exports.BookingStatus = catchAsync(async (req, res) => {
   }
 });
 
+const currencySymbol = {
+  USD: '$',
+  EUR: '€',
+  AED: 'د.إ',
+  GBP: '£',
+};
+
+// The BookingPayment function
 exports.BookingPayment = catchAsync(async (req, res) => {
   try {
     const { _id, payment_genrator_link } = req.body;
+
     if (!_id) {
       return res.status(400).json({
-        message: "Booking ID  are required.",
+        message: "Booking ID is required.",
         status: false,
       });
     }
@@ -235,11 +244,21 @@ exports.BookingPayment = catchAsync(async (req, res) => {
     const bookingstatus = await Booking.findById(_id).populate({
       path: "userId",
       select: "username email",
-      //  model: 'User'
     });
-    console.log("bookingstatus",bookingstatus)
+
+    console.log("bookingstatus", bookingstatus);
+
+    // Generate the payment link
     const paymentLink = `https://user-event.vercel.app/payment/${bookingstatus?._id}`;
-    const emailHtml = PaymentLink(paymentLink, bookingstatus?.userId?.username, bookingstatus?.totalPrice  , bookingstatus?.CurrencyCode);
+
+    // Retrieve the currency symbol from the mapping
+    const currencyCode = bookingstatus?.CurrencyCode || 'USD'; // Default to USD if CurrencyCode is missing
+    const currency = currencySymbol[currencyCode] || '$'; // Default to '$' if currency symbol not found
+
+    // Create the HTML for the email
+    const emailHtml = PaymentLink(paymentLink, bookingstatus?.userId?.username, bookingstatus?.totalPrice, currency);
+
+    // Create a transporter for sending the email
     let transporter = nodemailer.createTransport({
       host: "smtp.gmail.com",
       port: 587,
@@ -249,6 +268,8 @@ exports.BookingPayment = catchAsync(async (req, res) => {
         pass: process.env.EMAIL_PASS,
       },
     });
+
+    // Send the email with the generated payment link
     await transporter.sendMail({
       from: process.env.EMAIL_USER,
       to: bookingstatus.userId?.email,
@@ -256,11 +277,10 @@ exports.BookingPayment = catchAsync(async (req, res) => {
       html: emailHtml,
     });
 
-
+    // Return a success response
     return successResponse(res, "Payment link sent successfully!");
   } catch (error) {
     console.error("Error updating booking status:", error);
-    // Respond with an error message
     res.status(500).json({
       message: "Internal Server Error",
       status: false,
