@@ -1,7 +1,7 @@
 const nodemailer = require('nodemailer');
 
 const sendEmail = async (data) => {
-    const { email, name, message,package, subject, emailTemplate } = data;
+    const { email, name, message,package, payment_id, subject, emailTemplate } = data;
 
     let transporter = nodemailer.createTransport({
         host: "smtp.gmail.com",
@@ -13,7 +13,7 @@ const sendEmail = async (data) => {
         },
     });
 
-    const emailHtml = emailTemplate(name, package, message);
+    const emailHtml = emailTemplate(name, package, payment_id, message);
     const mailOptions = {
         from: process.env.EMAIL_USER,
         to: email,

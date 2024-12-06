@@ -2,13 +2,10 @@ const Stripe = require("stripe");
 const catchAsync = require("../utils/catchAsync");
 const Payment = require("../model/payment.js");
 const stripe = new Stripe(process.env.STRIPE_TEST_KEY);
-// const stripe = "sk_test_51QCE0sCstph9qeprpctSkisKqoAQJIFaYlzvOlGK4MtmSvGQ65sygCrmnOS9RtECApL92p7UEN4HWihz22zwTUte00ppjS5cXy");
 const sendEmail = require("../utils/EmailMailler");
 const emailTemplate = require("../emailTemplates/Payment.js");
 const Booking = require("../model/Booking");
 const User = require("../model/User");
-const StripeKey = process.env.STRIPE_TEST_KEY
-
 
 
 const fetchPaymentId = async (sessionId, srNo) => {
@@ -20,14 +17,15 @@ const fetchPaymentId = async (sessionId, srNo) => {
     }
     const data = await Payment.findOne({ srNo: srNo });
     if (!data) {
-      return;
+      return null;
     }
     data.payment_id = paymentId;
     // datas.payment_type = data.paymentMethod;
     await data.save();
-    return;
-  } catch (error) {
+    return paymentId;
+  } catch (error) { 
     console.error("Error fetching payment ID:", error);
+    return null;
   }
 };
 
@@ -190,13 +188,15 @@ exports.PaymentSuccess = catchAsync(async (req, res) => {
     }
     data.payment_status = "success";
     await data.save();
-    fetchPaymentId(data?.session_id, srNo);
+  const Payment_ID =   await fetchPaymentId(data?.session_id, srNo ,"success");
     console.log("data",data)
-    const subject = "Payment  successfully!";
+
+    const subject = "Your Booking successfully!";
     await sendEmail({
       email: userDetail.email,
       name: userDetail.username,
       package: data, // Pass the saved record
+      payment_id :Payment_ID,
       message: "Your booking request was successful!",
       subject: subject,
       emailTemplate: emailTemplate,
@@ -233,7 +233,7 @@ exports.PaymentCancel = catchAsync(async (req, res) => {
     }
     data.payment_status = "failed";
     await data.save();
-    fetchPaymentId(data?.session_id, srNo);
+    fetchPaymentId(data?.session_id, srNo ,"cancel");
     res.status(200).json({
       message: `Payment status updated`,
       status: true,

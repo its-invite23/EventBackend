@@ -37,23 +37,26 @@ module.exports = (name, package) => {
     <td style="padding: 20px 20px 20px 0px;">
       <table width="100%" cellspacing="0" cellpadding="0">
         <tr>
-          <td style="padding: 5px 20px; font-size: 14px; color: #CCCCCC;">Package Name:</td>
+          <td style="padding: 5px 20px; font-size: 14px; color: #CCCCCC;">Event Name:</td>
           <td style="padding: 5px 10px; font-size: 14px; color: #FFFFFF;">${package.package_name}</td>
         </tr>
         <tr>
-          <td style="padding: 5px 20px; font-size: 14px; color: #CCCCCC;">Location:</td>
+          <td style="padding: 5px 20px; font-size: 14px; color: #CCCCCC;">Your Location:</td>
           <td style="padding: 5px 10px; font-size: 14px; color: #FFFFFF;">${package.location}</td>
         </tr>
         <tr>
           <td style="padding: 5px 20px; font-size: 14px; color: #CCCCCC;">Booking Date:</td>
-          <td style="padding: 5px 10px; font-size: 14px; color: #FFFFFF;">${ package.bookingDate    }</td>
+          <td style="padding: 5px 10px; font-size: 14px; color: #FFFFFF;">${package.bookingDate}</td>
         </tr>
         <tr>
           <td style="padding: 5px 20px; font-size: 14px; color: #CCCCCC;">Booking Status:</td>
-          <td style="padding: 5px 10px; font-size: 14px; color: #FFFFFF;">${package.status}</td>
+         <td style="padding: 5px 10px; font-size: 14px; color: #FFFFFF; text-transform: capitalize;">
+    ${package.status}
+</td>
+
         </tr>
         <tr>
-          <td style="padding: 5px 20px; font-size: 14px; color: #CCCCCC;">Attendees:</td>
+          <td style="padding: 5px 20px; font-size: 14px; color: #CCCCCC;">Number Of Attendees:</td>
           <td style="padding: 5px 10px; font-size: 14px; color: #FFFFFF;">${package.attendees}</td>
         </tr>
         <tr>

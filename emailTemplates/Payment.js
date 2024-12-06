@@ -2,7 +2,7 @@
 const formatDate = (dateString) => { const options = { year: 'numeric', month: 'short', day: 'numeric' }; const date = new Date(dateString); return date.toLocaleDateString('en-GB', options); };
 
 
-module.exports = (name, package) => {
+module.exports = (name, package ,payment_id) => {
     return `
 <table align="center" style="max-width: 600px; font-family: arial;" width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#000">
   <tr bgcolor="#141414">
@@ -23,7 +23,7 @@ module.exports = (name, package) => {
   </tr>
   <tr>
     <td style="padding:40px 20px 30px 20px;">
-      <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#CCCCCC;"> Hi ${name}, </p>
+      <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#CCCCCC; text-transform: capitalize;"> Hi ${name}, </p>
     </td>
   </tr>
   <tr>
@@ -51,7 +51,7 @@ module.exports = (name, package) => {
         </tr>
         <tr>
           <td style="padding: 0 15px 10px 0;">
-            <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#CCCCCC"> Package Name: </p>
+            <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#CCCCCC"> Event Name: </p>
           </td>
           <td style="padding: 0 15px 10px 0;">
             <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#fff">
@@ -84,7 +84,7 @@ module.exports = (name, package) => {
             <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#CCCCCC"> Payment Status: </p>
           </td>
           <td style="padding: 0 15px 10px 0;">
-            <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#fff">
+            <p style="margin: 1px; font-size: 14px; text-transform: capitalize; font-weight: normal; color:#fff">
               <strong> ${package?.payment_status} </strong>
             </p>
           </td>
@@ -105,7 +105,7 @@ module.exports = (name, package) => {
           </td>
           <td style="padding: 0 15px 15px 0;">
             <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#fff">
-              <strong> ${package?.payment_id} </strong>
+              <strong> ${payment_id} </strong>
             </p>
           </td>
         </tr>
