@@ -68,7 +68,7 @@ const signToken = async (id) => {
 
 const signEmail = async (id) => {
   const token = jwt.sign({ id }, process.env.JWT_SECRET_KEY, {
-    expiresIn: "3m",
+    expiresIn: "15m",
   });
   return token;
 };
