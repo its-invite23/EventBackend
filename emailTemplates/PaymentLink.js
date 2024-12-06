@@ -1,4 +1,4 @@
-module.exports = (paymentLink, userName, price, CurrencyCode) => {
+module.exports = (paymentLink, userName,  CurrencyCode , price) => {
   return `
  <table align="center" style="max-width: 600px; font-family: arial; text-align: center; margin: 0 auto;" align="left" width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#000">
   <tr bgcolor="#141414">
