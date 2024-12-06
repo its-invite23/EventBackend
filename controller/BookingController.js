@@ -4,11 +4,11 @@ const catchAsync = require("../utils/catchAsync");
 const sendEmail = require("../utils/EmailMailler");
 const emailTemplate = require("../emailTemplates/Booking");
 const PaymentLink = require("../emailTemplates/PaymentLink");
-
-
-const { errorResponse, successResponse } = require("../utils/ErrorHandling");
 const nodemailer = require("nodemailer");
 const { default: axios } = require("axios");
+const payment = require("../model/payment");
+const { errorResponse, successResponse } = require("../utils/ErrorHandling");
+
 
 
 const BookingFilter = async (name) => {
@@ -242,7 +242,9 @@ exports.BookingPayment = catchAsync(async (req, res) => {
       path: "userId",
       select: "username email",
     });
-    console.log("bookingstatus", bookingstatus);
+    const paymentdata = await payment.findOne({ booking_id: _id });
+console.log("paymentdata", paymentdata);
+console.log(bookingstatus)
     const paymentLink = `https://user-event.vercel.app/payment/${bookingstatus?._id}`;
     const currencyCode = bookingstatus?.CurrencyCode || 'USD';
     const currency = currencySymbol[currencyCode] || '$';
@@ -385,7 +387,7 @@ exports.BookingGetByID = catchAsync(async (req, res) => {
 });
 
 
-exports.PaymentGetId = catchAsync(async (req, res, next) => {
+exports.BookingDataId = catchAsync(async (req, res, next) => {
   try {
     const { id } = req.params;
     if (!id) {
@@ -396,7 +398,8 @@ exports.PaymentGetId = catchAsync(async (req, res, next) => {
     }
     // Fetch the current package record by ID
     const packageRecord = await Booking.findById(id)
-
+const paymentRecord = await payment.findOne({booking_id:packageRecord._id})
+console.log("paymentRecord",paymentRecord)
     if (!packageRecord) {
       return res.status(404).json({
         status: false,
