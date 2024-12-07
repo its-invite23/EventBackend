@@ -78,13 +78,13 @@ exports.ContactReply = async (req, res) => {
             { new: true }
         );
 
-        const subject = "Thank you for Contacting Us"
+        const subject = "Thank You For Contacting Us!"
         if (result) {
             await sendEmail(
                 {
                     email: result.email,
                     name: result.name,
-                    message: result.reply_message,
+                    message: reply_message,
                     subject: subject,
                     emailTemplate: EmailContact
                 }
