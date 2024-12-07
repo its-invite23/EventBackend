@@ -142,7 +142,7 @@ exports.EnquiryReply = async (req, res) => {
             { new: true }
         );
 
-        const subject = "Thank You for Your Enquiry";
+        const subject = "Thank you for your Enquiry";
         // email: 'ankit.jain@futureprofilez.com',
         // message: 'hello  sir ',
         // reply_message: 'Hello',

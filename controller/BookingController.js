@@ -263,7 +263,7 @@ console.log(bookingstatus)
     await transporter.sendMail({
       from: process.env.EMAIL_USER,
       to: bookingstatus.userId?.email,
-      subject: "Payment Link for your Booking",
+      subject: "Payment Link to confirm your Booking",
       html: emailHtml,
     });
 

@@ -517,7 +517,7 @@ exports.forgotlinkrecord = async (req, res) => {
     await transporter.sendMail({
       from: process.env.EMAIL_USER,
       to: record.email,
-      subject: "Forgot Your Password",
+      subject: "Reset Your Password",
       html: emailHtml,
     });
 

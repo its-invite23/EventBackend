@@ -191,7 +191,7 @@ exports.PaymentSuccess = catchAsync(async (req, res) => {
   const Payment_ID =   await fetchPaymentId(data?.session_id, srNo ,"success");
     console.log("data",data)
 
-    const subject = "Your Booking successfully!";
+    const subject = "Booking confirmed Successfully!";
     await sendEmail({
       email: userDetail.email,
       name: userDetail.username,
