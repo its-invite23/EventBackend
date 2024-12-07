@@ -302,3 +302,42 @@ exports.PaymentGetByID = catchAsync(async (req, res) => {
 //   }
 // });
 
+
+
+exports.PackagegetByBookingId = catchAsync(async (req, res, next) => {
+  try {
+      // Extract `booking_id` from query parameters
+      const { booking_id } = req.query;
+
+      if (!booking_id) {
+          return res.status(400).json({
+              status: false,
+              message: "Booking ID is required.",
+          });
+      }
+
+      // Fetch the package record associated with the booking ID
+      const packageRecord = await Payment.findOne({ booking_id }); // Ensure the `booking_id` field exists in your schema
+
+      if (!packageRecord) {
+          return res.status(404).json({
+              status: false,
+              message: "Package not found for the provided booking ID.",
+          });
+      }
+
+      res.status(200).json({
+          status: true,
+          data: packageRecord,
+          message: `Package data retrieved successfully.`,
+      });
+  } catch (error) {
+      console.error("Error retrieving package record:", error);
+
+      res.status(500).json({
+          status: false,
+          message: "An error occurred while retrieving the package data. Please try again later.",
+          error: error.message,
+      });
+  }
+});

@@ -324,7 +324,7 @@ exports.BookingGetByID = catchAsync(async (req, res) => {
 
     const booking = await Booking.findById(id).populate({
       path: "userId",
-      select: "username email",
+      select: "username email phone_number phone_code",
     });
 
     if (!booking) {
@@ -409,7 +409,7 @@ console.log("paymentRecord",paymentRecord)
 
     res.status(200).json({
       status: true,
-      data: packageRecord,
+      data: paymentRecord,
       message: `Booking successfully.`,
     });
 
