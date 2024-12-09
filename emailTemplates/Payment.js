@@ -1,7 +1,7 @@
 
 const formatDate = (dateString) => { const options = { year: 'numeric', month: 'short', day: 'numeric' }; const date = new Date(dateString); return date.toLocaleDateString('en-GB', options); };
 
-function formatedDate(dateString) { const options = { day: '2-digit', month: 'short', year: 'numeric' }; const date = new Date(dateString); return date.toLocaleDateString('en-GB', options).replace(/ /g, '-'); }
+function formatedDate(dateString) { const options = { day: '2-digit', month: 'short', year: 'numeric' }; const date = new Date(dateString); return date.toLocaleDateString('en-GB', options).replace(/ /g, ' '); }
 
 module.exports = ({ name, package ,payment_id  }) => {
     return `

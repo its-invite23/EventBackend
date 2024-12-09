@@ -86,6 +86,7 @@ exports.bookingpost = catchAsync(async (req, res) => {
         message: "User not found.",
       });
     }
+    console.log(data)
     const subject = "Booking request made successfully!";
     await sendEmail({
       email: process.env.EMAIL_USER,
