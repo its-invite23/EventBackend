@@ -553,10 +553,8 @@ exports.forgotpassword = async (req, res) => {
 
 exports.profilegettoken = catchAsync(async (req, res, next) => {
   try {
-    // const user = req?.User?._id
-    // const userprofile = await User.findById({ _id: user }).select('-password');
-    const userprofile = await User.find().select('-password');
-
+    const user = req?.User?._id
+    const userprofile = await User.findById({ _id: user }).select('-password');
     res.status(200).json({
       data: userprofile,
       msg: "Profile Get",

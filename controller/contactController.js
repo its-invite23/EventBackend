@@ -59,7 +59,6 @@ exports.ContactGet = catchAsync(async (req, res, next) => {
 
 exports.ContactReply = async (req, res) => {
     const { _id, reply_message } = req.body;
-console.log("req.body",req.body)
     try {
         const EmailFind = await contactmodal.findById(_id);
         if (!EmailFind) {
@@ -77,7 +76,6 @@ console.log("req.body",req.body)
             },
             { new: true }
         );
-        console.log("result",result)
         const subject = "Thank You For Contacting Us!";
         if (result) {
             await sendEmail(

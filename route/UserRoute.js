@@ -22,9 +22,9 @@ userRoute.post("/delete", verifyToken, UserListIdDelete)
 
 userRoute.post("/update", verifyToken, UserUpdate)
 
-// userRoute.get("/profile-token", verifyToken, profilegettoken)
+userRoute.get("/profile-token", verifyToken, profilegettoken)
 
-userRoute.get("/profile-token", profilegettoken)
+// userRoute.get("/profile-token", profilegettoken)
 
 
 userRoute.post("/verifyaccount", VerifyUser)

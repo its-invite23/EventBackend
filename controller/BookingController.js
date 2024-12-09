@@ -52,7 +52,6 @@ exports.bookingpost = catchAsync(async (req, res) => {
       message: "User information not found in the request or userId is undefined.",
     });
   }
-  console.log("req.body", req.body)
   // Destructure request body
   const {
     Package,
@@ -78,7 +77,6 @@ exports.bookingpost = catchAsync(async (req, res) => {
       attendees,
       totalPrice,
     });
-    console.log("record", record)
 
     const data = await record.save();
     const userDetail = await User.findById(userId);
@@ -243,8 +241,6 @@ exports.BookingPayment = catchAsync(async (req, res) => {
       select: "username email",
     });
     const paymentdata = await payment.findOne({ booking_id: _id });
-console.log("paymentdata", paymentdata);
-console.log(bookingstatus)
     const paymentLink = `https://user-event.vercel.app/payment/${bookingstatus?._id}`;
     const currencyCode = bookingstatus?.CurrencyCode || 'USD';
     const currency = currencySymbol[currencyCode] || '$';
@@ -399,7 +395,6 @@ exports.BookingDataId = catchAsync(async (req, res, next) => {
     // Fetch the current package record by ID
     const packageRecord = await Booking.findById(id)
 const paymentRecord = await payment.findOne({booking_id:packageRecord._id})
-console.log("paymentRecord",paymentRecord)
     if (!packageRecord) {
       return res.status(404).json({
         status: false,

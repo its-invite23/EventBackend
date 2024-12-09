@@ -69,7 +69,6 @@ const PaymentFilter = async (name) => {
 exports.createCheckout = catchAsync(async (req, res) => {
   try {
     const { amount, email, userId, booking_id, currency } = req?.body;
-console.log("req?.body",req?.body)
     const lastpayment = await Payment.findOne().sort({ srNo: -1 });
     const srNo = lastpayment ? lastpayment.srNo + 1 : 1;
 
@@ -189,7 +188,6 @@ exports.PaymentSuccess = catchAsync(async (req, res) => {
     data.payment_status = "success";
     await data.save();
   const Payment_ID =   await fetchPaymentId(data?.session_id, srNo ,"success");
-    console.log("data",data)
 
     const subject = "Booking confirmed Successfully!";
     await sendEmail({
