@@ -409,6 +409,7 @@ console.log("paymentRecord",paymentRecord)
 
     res.status(200).json({
       status: true,
+      packageRecord:packageRecord,
       data: paymentRecord,
       message: `Booking successfully.`,
     });
