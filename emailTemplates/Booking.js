@@ -74,7 +74,7 @@ module.exports = ({name , package}) => {
   </tr>
   <tr bgcolor="#141414">
     <td style="padding: 20px; text-align: center;">
-      <p style="margin: 1px; font-size: 14px; color: #CCCCCC;"> Best regards, <br>[Company Name] Team </p>
+      <p style="margin: 1px; font-size: 14px; color: #CCCCCC;"> Best regards, <br> Itsinvite Team </p>
     </td>
   </tr>
   <tr bgcolor="#141414">

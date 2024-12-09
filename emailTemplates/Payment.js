@@ -130,7 +130,7 @@ module.exports = ({ name, package ,payment_id  }) => {
   </tr>
   <tr>
     <td style="padding: 0 0 45px 20px;">
-      <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#CCCCCC"> Best regards, <br>[Company Name] Team </p>
+      <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#CCCCCC"> Best regards, <br> Itsinvite Team </p>
     </td>
   </tr>
   <tr bgcolor="#141414">
