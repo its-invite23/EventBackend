@@ -1,6 +1,7 @@
 
 const formatDate = (dateString) => { const options = { year: 'numeric', month: 'short', day: 'numeric' }; const date = new Date(dateString); return date.toLocaleDateString('en-GB', options); };
 
+function formatedDate(dateString) { const options = { day: '2-digit', month: 'short', year: 'numeric' }; const date = new Date(dateString); return date.toLocaleDateString('en-GB', options).replace(/ /g, '-'); }
 
 module.exports = ({ name, package ,payment_id  }) => {
     return `
@@ -65,7 +66,7 @@ module.exports = ({ name, package ,payment_id  }) => {
           </td>
           <td style="padding: 0 15px 10px 0;">
             <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#fff">
-              <strong> ${package?.booking_id?.bookingDate} </strong>
+              <strong> ${formatedDate(package?.booking_id?.bookingDate) } </strong>
             </p>
           </td>
         </tr>

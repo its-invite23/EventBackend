@@ -1,4 +1,6 @@
 
+
+function formatDate(dateString) { const options = { day: '2-digit', month: 'short', year: 'numeric' }; const date = new Date(dateString); return date.toLocaleDateString('en-GB', options).replace(/ /g, '-'); }
 module.exports = ({name , package}) => {
   return `
 <table align="center" style="max-width: 600px; font-family: Arial;" width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#000">
@@ -46,7 +48,7 @@ module.exports = ({name , package}) => {
         </tr>
         <tr>
           <td style="padding: 5px 20px; font-size: 14px; color: #CCCCCC;">Booking Date:</td>
-          <td style="padding: 5px 10px; font-size: 14px; color: #FFFFFF;">${package.bookingDate}</td>
+          <td style="padding: 5px 10px; font-size: 14px; color: #FFFFFF;">${formatDate(package.bookingDate)}</td>
         </tr>
         <tr>
           <td style="padding: 5px 20px; font-size: 14px; color: #CCCCCC;">Booking Status:</td>
