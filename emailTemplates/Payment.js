@@ -2,7 +2,7 @@
 const formatDate = (dateString) => { const options = { year: 'numeric', month: 'short', day: 'numeric' }; const date = new Date(dateString); return date.toLocaleDateString('en-GB', options); };
 
 
-module.exports = (name, package ,payment_id) => {
+module.exports = ({ name, package ,payment_id  }) => {
     return `
 <table align="center" style="max-width: 600px; font-family: arial;" width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#000">
   <tr bgcolor="#141414">

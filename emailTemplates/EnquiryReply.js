@@ -1,4 +1,4 @@
-module.exports = (name, message) => {
+module.exports = ({name ,message}) => {
   return ` 
 <table align="center" style="max-width: 600px; font-family: arial;text-align: left;" width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#000">
   <tr bgcolor="#141414">

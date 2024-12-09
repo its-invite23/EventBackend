@@ -59,7 +59,7 @@ exports.ContactGet = catchAsync(async (req, res, next) => {
 
 exports.ContactReply = async (req, res) => {
     const { _id, reply_message } = req.body;
-
+console.log("req.body",req.body)
     try {
         const EmailFind = await contactmodal.findById(_id);
         if (!EmailFind) {
@@ -77,14 +77,14 @@ exports.ContactReply = async (req, res) => {
             },
             { new: true }
         );
-
-        const subject = "Thank You For Contacting Us!"
+        console.log("result",result)
+        const subject = "Thank You For Contacting Us!";
         if (result) {
             await sendEmail(
                 {
                     email: result.email,
                     name: result.name,
-                    message: reply_message,
+                    message: result?.reply_message,
                     subject: subject,
                     emailTemplate: EmailContact
                 }
