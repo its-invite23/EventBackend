@@ -19,12 +19,10 @@ const PackageSchema = new mongoose.Schema({
     },
     package_price_min: {
         type: Number,
-        required: true,
-        min: 0
+
     },
     package_price_max: {
         type: Number,
-        required: true,
     },
     package_status: {
         type: String,
@@ -35,7 +33,7 @@ const PackageSchema = new mongoose.Schema({
         type: String,
 
     },
-    fileId : {
+    fileId: {
         type: String,
         default: ""
     },

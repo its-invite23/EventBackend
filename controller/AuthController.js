@@ -12,52 +12,108 @@ const VerifyAccount = require("../emailTemplates/VerifyAccount");
 
 
 exports.verifyToken = async (req, res, next) => {
-  let authHeader = req.headers.Authorization || req.headers.authorization;
-  if (authHeader && authHeader.startsWith("Bearer")) {
+  try {
+    console.log("req.headers.authorization",req.headers)
+    // Fetch the Authorization header
+    let authHeader = req.headers.authorization || req.headers.Authorization;
+
+    // Check if the header exists and starts with "Bearer"
+    if (!authHeader || !authHeader.startsWith("Bearer")) {
+      return res.status(400).json({
+        status: false,
+        message: "Token is missing or malformed",
+      });
+    }
+
+    // Extract the token
     let token = authHeader.split(" ")[1];
     if (!token) {
       return res.status(400).json({
         status: false,
-        message: "User is not authorized",
+        message: "Token is missing",
       });
-    } else {
-      try {
-        const decode = await promisify(jwt.verify)(
-          token,
-          process.env.JWT_SECRET_KEY
-        );
-        if (decode) {
-          let result = await User.findById({ _id: decode.id });
-          if (result) {
-            req.User = result;
-            next();
-          } else {
-            return res.status(404).json({
-              status: false,
-              message: "User not found",
-            });
-          }
-        } else {
-          return res.status(401).json({
-            status: false,
-            message: "Unauthorized",
-          });
-        }
-      } catch (err) {
-        return res.status(401).json({
-          status: false,
-          message: "Invalid or expired token",
-          error: err,
-        });
-      }
     }
-  } else {
-    return res.status(400).json({
+
+    // Verify the token
+    const decode = await promisify(jwt.verify)(
+      token,
+      process.env.JWT_SECRET_KEY
+    );
+
+    if (!decode) {
+      return res.status(401).json({
+        status: false,
+        message: "Unauthorized or invalid token",
+      });
+    }
+
+    // Check the user in the database
+    const user = await User.findById(decode.id);
+    if (!user) {
+      return res.status(404).json({
+        status: false,
+        message: "User not found",
+      });
+    }
+
+    // Attach user to request object and proceed
+    req.User = user;
+    next();
+  } catch (err) {
+    return res.status(401).json({
       status: false,
-      message: "User is not authorized or Token is missing",
+      message: "Invalid or expired token",
+      error: err.message,
     });
   }
 };
+// exports.verifyToken = async (req, res, next) => {
+//   let authHeader = req.headers.Authorization || req.headers.authorization;
+//   if (authHeader && authHeader.startsWith("Bearer")) {
+//     let token = authHeader.split(" ")[1];
+//     if (!token) {
+//       return res.status(400).json({
+//         status: false,
+//         message: "User is not authorized",
+//       });
+//     } else {
+//       try {
+//         const decode = await promisify(jwt.verify)(
+//           token,
+//           process.env.JWT_SECRET_KEY
+//         );
+//         if (decode) {
+//           let result = await User.findById({ _id: decode.id });
+//           if (result) {
+//             req.User = result;
+//             next();
+//           } else {
+//             return res.status(404).json({
+//               status: false,
+//               message: "User not found",
+//             });
+//           }
+//         } else {
+//           return res.status(401).json({
+//             status: false,
+//             message: "Unauthorized",
+//           });
+//         }
+//       } catch (err) {
+//         return res.status(401).json({
+//           status: false,
+//           message: "Invalid or expired token",
+//           error: err,
+//         });
+//       }
+//     }
+//   } else {
+//     return res.status(400).json({
+//       status: false,
+//       message: "User is not authorized or Token is missing",
+//     });
+//   }
+// };
 
 const signToken = async (id) => {
   const token = jwt.sign({ id }, process.env.JWT_SECRET_KEY, {
