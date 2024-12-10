@@ -172,12 +172,12 @@ exports.BookingGet = catchAsync(async (req, res, next) => {
 exports.BookingStatus = catchAsync(async (req, res) => {
   try {
 
-    const { _id, status } = req.body;
+    const { _id, status, attendees, CurrencyCode } = req.body;
 
-    // Check if required fields are provided
-    if (!_id || !status) {
+    // Check if all required fields are provided
+    if (!_id || !status || !attendees || !CurrencyCode) {
       return res.status(400).json({
-        message: "Booking ID and status are required.",
+        message: "Booking ID, status, attendees, and CurrencyCode are required.",
         status: false,
       });
     }
@@ -194,13 +194,15 @@ exports.BookingStatus = catchAsync(async (req, res) => {
 
     // Update the status
     bookingstatus.status = status;
-
+    // Update the attendees
+    bookingstatus.attendees = attendees;
+    bookingstatus.CurrencyCode = CurrencyCode;
     // Save the updated document
     await bookingstatus.save();
 
     // Respond with success message
     res.status(200).json({
-      message: `Booking status updated and ${status}`,
+      message: `Booking updated `,
       status: true,
       data: bookingstatus,
     });
@@ -277,36 +279,78 @@ exports.BookingPayment = catchAsync(async (req, res) => {
 
 exports.BookingPrice = catchAsync(async (req, res) => {
   try {
-    const { _id, price, currency } = req.body;
-    if (!_id || !price) {
+    const { _id, place_id, price } = req.body;
+    if (!_id || !place_id || !price) {
       return res.status(400).json({
-        message: "Booking ID and price both are required.",
+        message: "Package ID, place ID, and price are required.",
         status: false,
       });
     }
-    const bookingstatus = await Booking.findById(_id);
-    if (!bookingstatus) {
+
+    // Find the package by its ID
+    const packageData = await Booking.findById(_id);
+
+    if (!packageData) {
       return res.status(404).json({
-        message: "Booking not found",
+        message: "Package not found",
         status: false,
       });
     }
-    bookingstatus.totalPrice = price;
-    bookingstatus.CurrencyCode = currency;
-    await bookingstatus.save();
-    res.status(200).json({
-      message: `Booking Price Updated`,
-      status: true,
-      data: bookingstatus,
-    });
+
+    const serviceIndex = packageData.package.findIndex(
+      (service) => service.place_id === place_id || service.place_id === place_id.toString()
+    );
+
+    if (serviceIndex === -1) {
+      return res.status(404).json({
+        message: "Service with the given place ID not found",
+        status: false,
+      });
+    }
+
+    // Update the specific service
+    const service = packageData.package[serviceIndex];
+    let isUpdated = false;
+
+    if (service.services_provider_price !== undefined) {
+      service.services_provider_price = price;
+      isUpdated = true;
+    } else if (service.price_level !== undefined) {
+      service.price_level = price;
+      isUpdated = true;
+    } else {
+      return res.status(400).json({
+        message: "Neither services_provider_price nor price_level exists on the service",
+        status: false,
+      });
+    }
+
+    if (isUpdated) {
+      // Mark the `package` array as modified
+      packageData.markModified("package");
+
+      // Save the updated document
+      const updatedPackage = await packageData.save();
+
+      return res.status(200).json({
+        message: "Service price updated successfully",
+        status: true,
+        data: updatedPackage,
+      });
+    }
   } catch (error) {
-    console.error("Error updating booking status:", error);
-    res.status(500).json({
+    console.error("Error updating service price:", error);
+    return res.status(500).json({
       message: "Internal Server Error",
       status: false,
     });
   }
 });
+
+
+
+
+
 
 
 exports.BookingGetByID = catchAsync(async (req, res) => {
@@ -331,7 +375,6 @@ exports.BookingGetByID = catchAsync(async (req, res) => {
       });
     }
 
-    // Define a function to fetch place details using Google Maps API
     const fetchPlaceDetails = async (placeId) => {
       try {
         const API_KEY = process.env.GOOGLE_MAPS_API_KEY; // Google API key
@@ -395,7 +438,7 @@ exports.BookingDataId = catchAsync(async (req, res, next) => {
     }
     // Fetch the current package record by ID
     const packageRecord = await Booking.findById(id)
-const paymentRecord = await payment.findOne({booking_id:packageRecord._id})
+    const paymentRecord = await payment.findOne({ booking_id: packageRecord._id })
     if (!packageRecord) {
       return res.status(404).json({
         status: false,
@@ -405,7 +448,7 @@ const paymentRecord = await payment.findOne({booking_id:packageRecord._id})
 
     res.status(200).json({
       status: true,
-      packageRecord:packageRecord,
+      packageRecord: packageRecord,
       data: paymentRecord,
       message: `Booking successfully.`,
     });

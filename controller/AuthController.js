@@ -219,7 +219,7 @@ exports.adminlogin = catchAsync(async (req, res, next) => {
     }
 
     // Validate user role
-    if (user.role !== "admin") {
+    if (user.role !== role) {
       return res.status(403).json({
         status: false,
         message: "Access denied. Only admins can log in.",
@@ -553,19 +553,37 @@ exports.forgotpassword = async (req, res) => {
 
 exports.profilegettoken = catchAsync(async (req, res, next) => {
   try {
-    const user = req?.User?._id
-    const userprofile = await User.findById({ _id: user }).select('-password');
+    const userId = req?.User?._id;
+
+    if (!userId) {
+      return res.status(401).json({
+        status: false,
+        message: "User is not authorized or Token is missing",
+      });
+    }
+
+    const userprofile = await User.findById(userId).select('-password');
+    if (!userprofile) {
+      return res.status(404).json({
+        status: false,
+        message: "User profile not found",
+      });
+    }
+
     res.status(200).json({
+      status: true,
       data: userprofile,
-      msg: "Profile Get",
+      message: "Profile retrieved successfully",
     });
   } catch (error) {
     res.status(500).json({
-      msg: "Failed to fetch profile",
+      status: false,
+      message: "Failed to fetch profile",
       error: error.message,
     });
   }
 });
+
 
 
 
