@@ -5,7 +5,7 @@ const { default: axios } = require("axios");
 const fetchExchangeRates = async () => {
   try {
     const response = await axios.get(
-      "https://v6.exchangerate-api.com/v6/90251a2aafca2363f9340269/latest/USD"
+      `https://v6.exchangerate-api.com/v6/${process.env.CURRENCY_API_KEY}/latest/USD`
     );
     console.log("Exchange Rate Data:", response.data);
     return response?.data?.conversion_rates;
