@@ -11,7 +11,6 @@ const PackageSchema = new mongoose.Schema({
     },
     package_subtitle: {
         type: String,
-        required: true
     },
     package_description: {
         type: String,

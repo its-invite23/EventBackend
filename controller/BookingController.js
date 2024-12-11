@@ -68,7 +68,7 @@ exports.bookingpost = catchAsync(async (req, res) => {
   try {
     // Create the booking record
     const record = new Booking({
-      formData:formData,
+      formData: formData,
       package: Package,
       package_name,
       bookingDate,
@@ -278,10 +278,12 @@ exports.BookingPayment = catchAsync(async (req, res) => {
     });
   }
 });
-
 exports.BookingPrice = catchAsync(async (req, res) => {
   try {
-    const { _id, place_id, price } = req.body;
+    const { _id, place_id, price, totalPrice } = req.body;
+    console.log("req.body", req.body);
+
+    // Validate input data
     if (!_id || !place_id || !price) {
       return res.status(400).json({
         message: "Package ID, place ID, and price are required.",
@@ -292,6 +294,7 @@ exports.BookingPrice = catchAsync(async (req, res) => {
     // Find the package by its ID
     const packageData = await Booking.findById(_id);
 
+    console.log("packageData", packageData);
     if (!packageData) {
       return res.status(404).json({
         message: "Package not found",
@@ -299,6 +302,7 @@ exports.BookingPrice = catchAsync(async (req, res) => {
       });
     }
 
+    packageData.totalPrice = totalPrice;
     const serviceIndex = packageData.package.findIndex(
       (service) => service.place_id === place_id || service.place_id === place_id.toString()
     );
@@ -312,21 +316,22 @@ exports.BookingPrice = catchAsync(async (req, res) => {
 
     // Update the specific service
     const service = packageData.package[serviceIndex];
+    console.log("service before update", service);
     let isUpdated = false;
 
     if (service.services_provider_price !== undefined) {
       service.services_provider_price = price;
       isUpdated = true;
-    } else if (service.price_level !== undefined) {
+    }
+    if (service.price_level !== undefined) {
       service.price_level = price;
       isUpdated = true;
-    } else {
-      return res.status(400).json({
-        message: "Neither services_provider_price nor price_level exists on the service",
-        status: false,
-      });
     }
-
+    if (!isUpdated) {
+      // If neither services_provider_price nor price_level exists, add price_level
+      service.price_level = price;
+      isUpdated = true;
+    }
     if (isUpdated) {
       // Mark the `package` array as modified
       packageData.markModified("package");
@@ -342,12 +347,13 @@ exports.BookingPrice = catchAsync(async (req, res) => {
     }
   } catch (error) {
     console.error("Error updating service price:", error);
-    return res.status(500).json({
+    res.status(500).json({
       message: "Internal Server Error",
       status: false,
     });
   }
 });
+
 
 
 
