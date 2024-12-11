@@ -336,7 +336,6 @@ exports.BookingPrice = catchAsync(async (req, res) => {
     if (isUpdated) {
       // Mark the `package` array as modified
       packageData.markModified("package");
-
       // Save the updated document
       const updatedPackage = await packageData.save();
 
