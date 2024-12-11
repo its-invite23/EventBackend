@@ -62,11 +62,13 @@ exports.bookingpost = catchAsync(async (req, res) => {
     status,
     attendees,
     totalPrice,
+    formData,
   } = req.body;
 
   try {
     // Create the booking record
     const record = new Booking({
+      formData:formData,
       package: Package,
       package_name,
       bookingDate,

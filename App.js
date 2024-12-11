@@ -103,7 +103,7 @@ app.post('/cloud/upload', cors(corsOptions), verifyToken, upload.single('file'),
         filename: uploadResponse.data.fileName,
         fileId: uploadResponse.data.fileId,
         url: fileUrl,
-        user: req.user?._id,
+        user: req.User?._id,
         size: uploadResponse.data.contentLength,
       });
 
