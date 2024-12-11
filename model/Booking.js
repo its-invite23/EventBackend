@@ -32,6 +32,9 @@ const bookingSchema = mongoose.Schema({
         type: Date,
         default: Date.now,
     },
+    formData: {
+        type: String,
+    },
     attendees: Number,
     totalPrice: Number,
 });
