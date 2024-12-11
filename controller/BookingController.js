@@ -80,7 +80,6 @@ exports.bookingpost = catchAsync(async (req, res) => {
       totalPrice,
     });
 
-    const data = await record.save();
     const userDetail = await User.findById(userId);
     if (!userDetail) {
       return res.status(404).json({
@@ -106,7 +105,9 @@ exports.bookingpost = catchAsync(async (req, res) => {
       subject: subject,
       emailTemplate: emailTemplate,
     });
-
+   
+    // Saving data only if email is sent successfully 
+    const data = await record.save();
 
     return res.status(201).json({
       status: true,

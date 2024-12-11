@@ -1,4 +1,3 @@
-
 const dotenv = require("dotenv");
 dotenv.config();
 
@@ -12,7 +11,7 @@ const StripeRoute = require("./route/StripeRoute");
 const multer = require("multer");
 const { verifyToken } = require("./controller/AuthController");
 const Files = require("./model/Files");
-const { default: axios } = require("axios");
+const cron = require('node-cron');
 
 const UserRoute = require("./route/UserRoute")
 const enauiryroute = require("./route/Enquiry")
@@ -20,7 +19,9 @@ const packageroute = require("./route/Package")
 const bookingroute = require("./route/Booking")
 const Contactroute = require("./route/Contact")
 const placeRoutes = require("./route/placeRoute")
+const currencyRoutes = require("./route/CurrencyRoute")
 const commonRoutes = require("./route/Dashboard"); 
+const { UpdateCurrencyRates } = require("./controller/CurrencyController");
 const corsOptions = {
   origin: "*", // Allowed origins
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
@@ -42,6 +43,7 @@ app.use("/package", packageroute)
 app.use("/booking", bookingroute)
 app.use("/contact", Contactroute)
 app.use('/place', placeRoutes);
+app.use('/currency', currencyRoutes);
 
 const bucket_name = process.env.BUCKET_NAME;
 const bucket_id = process.env.BUCKET_ID;
@@ -130,6 +132,9 @@ app.post('/cloud/upload', cors(corsOptions), verifyToken, upload.single('file'),
     });
   }
 });
+
+
+cron.schedule("0 9 * * *", UpdateCurrencyRates);
 
 
 const PORT = process.env.REACT_APP_SERVER_DOMIN;
