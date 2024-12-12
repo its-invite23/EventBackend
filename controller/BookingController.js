@@ -288,7 +288,7 @@ const currencySymbol = {
 
 exports.BookingPayment = catchAsync(async (req, res) => {
   try {
-    const { _id, payment_genrator_link , totalPrice} = req.body;
+    const { _id, payment_genrator_link , totalPrice, payment_genrator_date} = req.body;
     if (!_id) {
       return res.status(400).json({
         message: "Booking ID is required.",
@@ -297,7 +297,7 @@ exports.BookingPayment = catchAsync(async (req, res) => {
     }
     const updatedRecord = await Booking.findByIdAndUpdate(
       _id,
-      { payment_genrator_link ,totalPrice},
+      { payment_genrator_link ,totalPrice ,payment_genrator_date},
       { new: true, runValidators: true }
     );
 
@@ -457,10 +457,7 @@ exports.BookingGetByID = catchAsync(async (req, res) => {
         if (placeResponse.data.status !== 'OK') {
           throw new Error(placeResponse.data.error_message || 'Failed to fetch place details');
         }
-
         const placeDetails = placeResponse.data.result;
-
-        // Extract photo URLs from photo references
         const photoUrls = placeDetails.photos ? placeDetails.photos.map(photo => {
           return `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${photo.photo_reference}&key=${API_KEY}`;
         }) : [];
@@ -482,7 +479,6 @@ exports.BookingGetByID = catchAsync(async (req, res) => {
       return pkg; // If place_id is missing or place details could not be fetched, return the original package
     }));
 
-    // Update the booking with the new package details
     booking.package = updatedPackage;
 
     res.status(200).json({
@@ -528,7 +524,6 @@ exports.BookingDataId = catchAsync(async (req, res, next) => {
 
   } catch (error) {
     console.error("Error updating package record:", error);
-
     res.status(500).json({
       status: false,
       message: "An error occurred while updating the package. Please try again later.",

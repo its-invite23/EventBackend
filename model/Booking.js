@@ -23,6 +23,9 @@ const bookingSchema = mongoose.Schema({
         type: Boolean,
         default: false,
     },
+    payment_genrator_date: {
+        type: Date,
+    },
     status: {
         type: String,
         enum: ['pending', 'approved', 'rejected'],
