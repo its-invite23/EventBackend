@@ -87,14 +87,13 @@ exports.bookingpost = catchAsync(async (req, res) => {
         message: "User not found.",
       });
     }
-       // Saving data only if email is sent successfully 
        const data = await record.save();
     console.log(data)
     const subject = "Booking request made successfully!";
     await sendEmail({
       email: process.env.EMAIL_USER,
       name: userDetail.username,
-      package: data, // Pass the saved record
+      package: data, 
       message: "Your booking request was successful!",
       subject: subject,
       emailTemplate: emailTemplate,
@@ -282,7 +281,7 @@ exports.BookingPayment = catchAsync(async (req, res) => {
 });
 exports.BookingPrice = catchAsync(async (req, res) => {
   try {
-    const { _id, place_id, price, totalPrice } = req.body;
+    const { _id, place_id, price, totalPrice, currency } = req.body;
     console.log("req.body", req.body);
 
     // Validate input data
@@ -305,6 +304,7 @@ exports.BookingPrice = catchAsync(async (req, res) => {
     }
 
     packageData.totalPrice = totalPrice;
+    packageData.CurrencyCode = currency;
     const serviceIndex = packageData.package.findIndex(
       (service) => service.place_id === place_id || service.place_id === place_id.toString()
     );
