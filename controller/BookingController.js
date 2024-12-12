@@ -300,10 +300,8 @@ exports.BookingPayment = catchAsync(async (req, res) => {
       { payment_genrator_link ,totalPrice},
       { new: true, runValidators: true }
     );
-    console.log("updatedRecord", updatedRecord);
 
     const user_currency_rate = req.user_currency_rate;
-    console.log("Currency Rate:", user_currency_rate);
 
     const bookingstatus = await Booking.findById(_id).populate({
       path: "userId",
