@@ -228,9 +228,67 @@ const currencySymbol = {
 };
 
 // The BookingPayment function
+// exports.BookingPayment = catchAsync(async (req, res) => {
+//   try {
+//     const { _id, payment_genrator_link } = req.body;
+//     if (!_id) {
+//       return res.status(400).json({
+//         message: "Booking ID is required.",
+//         status: false,
+//       });
+//     }
+//     const updatedRecord = await Booking.findByIdAndUpdate(
+//       _id,
+//       { payment_genrator_link   },
+//       { new: true, runValidators: true }
+//     );
+//     console.log("updatedRecord",updatedRecord);
+
+//     const  currency = updatedRecord?.currencyCode;
+
+//     return false;
+
+//     const bookingstatus = await Booking.findById(_id).populate({
+//       path: "userId",
+//       select: "username email",
+//     });
+//     const paymentdata = await payment.findOne({ booking_id: _id });
+//     const paymentLink = `https://user-event.vercel.app/payment/${bookingstatus?._id}`;
+//     const currencyCode = bookingstatus?.CurrencyCode || 'USD';
+//     const currency = currencySymbol[currencyCode] || '$';
+//     const emailHtml = PaymentLink(paymentLink, bookingstatus?.userId?.username, bookingstatus?.totalPrice, currency);
+//     let transporter = nodemailer.createTransport({
+//       host: "smtp.gmail.com",
+//       port: 587,
+//       secure: false,
+//       auth: {
+//         user: process.env.EMAIL_USER,
+//         pass: process.env.EMAIL_PASS,
+//       },
+//     });
+
+//     // Send the email with the generated payment link
+//     await transporter.sendMail({
+//       from: process.env.EMAIL_USER,
+//       to: bookingstatus.userId?.email,
+//       subject: "Payment Link to confirm your Booking",
+//       html: emailHtml,
+//     });
+
+//     // Return a success response
+//     return successResponse(res, "Payment link sent successfully!");
+//   } catch (error) {
+//     console.error("Error updating booking status:", error);
+//     res.status(500).json({
+//       message: "Internal Server Error",
+//       status: false,
+//     });
+//   }
+// });
+
 exports.BookingPayment = catchAsync(async (req, res) => {
   try {
-    const { _id, payment_genrator_link } = req.body;
+    const { _id, payment_genrator_link , totalPrice} = req.body;
     if (!_id) {
       return res.status(400).json({
         message: "Booking ID is required.",
@@ -239,9 +297,14 @@ exports.BookingPayment = catchAsync(async (req, res) => {
     }
     const updatedRecord = await Booking.findByIdAndUpdate(
       _id,
-      { payment_genrator_link },
+      { payment_genrator_link ,totalPrice},
       { new: true, runValidators: true }
     );
+    console.log("updatedRecord", updatedRecord);
+
+    const user_currency_rate = req.user_currency_rate;
+    console.log("Currency Rate:", user_currency_rate);
+
     const bookingstatus = await Booking.findById(_id).populate({
       path: "userId",
       select: "username email",
@@ -279,9 +342,10 @@ exports.BookingPayment = catchAsync(async (req, res) => {
     });
   }
 });
+
 exports.BookingPrice = catchAsync(async (req, res) => {
   try {
-    const { _id, place_id, price, totalPrice, currency } = req.body;
+    const { _id, place_id, price, totalPrice, currency, attendens,User_totalprice } = req.body;
     console.log("req.body", req.body);
 
     // Validate input data
@@ -304,7 +368,9 @@ exports.BookingPrice = catchAsync(async (req, res) => {
     }
 
     packageData.totalPrice = totalPrice;
+    packageData.User_totalprice = User_totalprice,
     packageData.CurrencyCode = currency;
+    packageData.attendees = attendens;
     const serviceIndex = packageData.package.findIndex(
       (service) => service.place_id === place_id || service.place_id === place_id.toString()
     );
