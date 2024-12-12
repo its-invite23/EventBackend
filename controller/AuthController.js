@@ -13,6 +13,7 @@ const VerifyAccount = require("../emailTemplates/VerifyAccount");
 
 exports.verifyToken = async (req, res, next) => {
   try {
+    // Fetch the Authorization header
     let authHeader = req.headers.authorization || req.headers.Authorization;
 
     // Check if the header exists and starts with "Bearer"
