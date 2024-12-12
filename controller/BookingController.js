@@ -87,7 +87,8 @@ exports.bookingpost = catchAsync(async (req, res) => {
         message: "User not found.",
       });
     }
-    console.log(data)
+    const data = await record.save();
+    // console.log(data)
     const subject = "Booking request made successfully!";
     await sendEmail({
       email: process.env.EMAIL_USER,
@@ -107,7 +108,6 @@ exports.bookingpost = catchAsync(async (req, res) => {
     });
    
     // Saving data only if email is sent successfully 
-    const data = await record.save();
 
     return res.status(201).json({
       status: true,
