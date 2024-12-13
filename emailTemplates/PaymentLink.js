@@ -24,7 +24,7 @@ module.exports = (paymentLink, userName,  price ,CurrencyCode) => {
   </tr>
   <tr>
     <td style="padding: 0 10px 30px 10px; text-align: center;">
-      <p style="margin: 1px; font-size: 14px;line-height: 18px; font-weight: normal; color: #CCCCCC;"> Please click on the below button to pay - <span style="font-weight: bold; font-family: Arial, sans-serif;"> ${CurrencyCode}  ${price} </span> and confirm your booking with us. </p>
+      <p style="margin: 1px; font-size: 14px;line-height: 18px; font-weight: normal; color: #CCCCCC;"> Please click on the below button to pay - <span style="font-weight: bold; font-family: Arial, sans-serif;">${price} ${CurrencyCode}</span> and confirm your booking with us. </p>
     </td>
   </tr>
   <tr>
