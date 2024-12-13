@@ -344,7 +344,6 @@ exports.BookingPayment = catchAsync(async (req, res) => {
 exports.BookingPrice = catchAsync(async (req, res) => {
   try {
     const { _id, place_id, price, totalPrice, currency, attendens,User_totalprice } = req.body;
-    console.log("req.body", req.body);
 
     // Validate input data
     if (!_id || !place_id || !price) {
@@ -357,7 +356,6 @@ exports.BookingPrice = catchAsync(async (req, res) => {
     // Find the package by its ID
     const packageData = await Booking.findById(_id);
 
-    console.log("packageData", packageData);
     if (!packageData) {
       return res.status(404).json({
         message: "Package not found",
@@ -473,14 +471,16 @@ exports.BookingGetByID = catchAsync(async (req, res) => {
       if (pkg.place_id) {
         const placeDetails = await fetchPlaceDetails(pkg.place_id);
         if (placeDetails) {
-          return { ...pkg, placeDetails }; // Merge place details into the package
+          return { ...pkg, placeDetails }; 
         }
       }
-      return pkg; // If place_id is missing or place details could not be fetched, return the original package
+      return pkg; 
     }));
 
     booking.package = updatedPackage;
-
+    
+    console.log("booking", booking)
+    
     res.status(200).json({
       message: "Data retrieved successfully",
       status: true,
@@ -508,6 +508,41 @@ exports.BookingDataId = catchAsync(async (req, res, next) => {
     // Fetch the current package record by ID
     const packageRecord = await Booking.findById(id)
     const paymentRecord = await payment.findOne({ booking_id: packageRecord._id })
+   
+    const fetchPlaceDetails = async (placeId) => {
+      try {
+        const API_KEY = process.env.GOOGLE_MAPS_API_KEY; // Google API key
+        const placeUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&key=${API_KEY}`;
+        const placeResponse = await axios.get(placeUrl);
+
+        if (placeResponse.data.status !== 'OK') {
+          throw new Error(placeResponse.data.error_message || 'Failed to fetch place details');
+        }
+        const placeDetails = placeResponse.data.result;
+        const photoUrls = placeDetails.photos ? placeDetails.photos.map(photo => {
+          return `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${photo.photo_reference}&key=${API_KEY}`;
+        }) : [];
+
+        placeDetails.photoUrls = photoUrls; // Add photo URLs to place details
+        return placeDetails;
+      } catch (error) {
+        console.error("Error fetching place details:", error);
+        return null;
+      }
+    };
+    const updatedPackage = await Promise.all(packageRecord.package.map(async (pkg) => {
+      if (pkg.place_id) {
+        const placeDetails = await fetchPlaceDetails(pkg.place_id);
+        if (placeDetails) {
+          return { ...pkg, placeDetails }; 
+        }
+      }
+      return pkg; 
+    }));
+
+    packageRecord.package = updatedPackage;
+    
+    console.log("booking", paymentRecord)
     if (!packageRecord) {
       return res.status(404).json({
         status: false,

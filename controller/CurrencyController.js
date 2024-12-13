@@ -7,7 +7,6 @@ const fetchExchangeRates = async () => {
     const response = await axios.get(
       `https://v6.exchangerate-api.com/v6/${process.env.CURRENCY_API_KEY}/latest/USD`
     );
-    console.log("Exchange Rate Data:", response.data);
     return response?.data?.conversion_rates;
   } catch (error) {
     console.error("Error fetching exchange rate data:", error.message);
@@ -54,9 +53,7 @@ exports.UpdateCurrencyRates = catchAsync(async (req, res) => {
 exports.GetRate = catchAsync(async (req, res) => {
   try {
     const { currency } = req.params;
-    console.log("currency",currency);
     const data = await Currency.findOne({ currency: currency });
-    console.log("data",data);
     if (!data) {
       if (!data) {
         return res.status(404).json({
