@@ -27,12 +27,12 @@ module.exports = ({name , package}) => {
   </tr>
   <tr>
     <td style="padding: 0px 20px 20px 20px">
-      <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#CCCCCC;"> Thank you for your payment! You've successfully booked your upcoming event. </p>
+      <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#CCCCCC;"> Thank you for your booking request! Your booking request for the upcoming event has been successfully sent. </p>
     </td>
   </tr>
   <tr>
     <td style="padding: 0px 20px 20px 20px">
-      <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#CCCCCC;"> Here are the details of your transaction: </p>
+      <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#CCCCCC;"> Here are the details of your request: </p>
     </td>
   </tr>
   <tr>
@@ -51,25 +51,14 @@ module.exports = ({name , package}) => {
           <td style="padding: 5px 10px; font-size: 14px; color: #FFFFFF;">${formatDate(package.bookingDate)}</td>
         </tr>
         <tr>
-          <td style="padding: 5px 20px; font-size: 14px; color: #CCCCCC;">Booking Status:</td>
-         <td style="padding: 5px 10px; font-size: 14px; color: #FFFFFF; text-transform: capitalize;">
-    ${package.status}
-</td>
-
-        </tr>
-        <tr>
           <td style="padding: 5px 20px; font-size: 14px; color: #CCCCCC;">Number Of Attendees:</td>
           <td style="padding: 5px 10px; font-size: 14px; color: #FFFFFF;">${package.attendees}</td>
-        </tr>
-        <tr>
-          <td style="padding: 5px 20px; font-size: 14px; color: #CCCCCC;">Amount Paid:</td>
-          <td style="padding: 5px 10px; font-size: 14px; color: #FFFFFF;">${package.CurrencyCode} ${package.totalPrice}</td>
         </tr>
       </table>
     </td>
   </tr>
   <tr>
-    <td style="padding: 20px; font-size: 14px; color: #CCCCCC;"> Our team will notify the service provider, and you can now relax knowing your event is in good hands. If you need to modify any details, view your booking, or get in touch with the service provider, please contact us. </td>
+    <td style="padding: 20px; font-size: 14px; color: #CCCCCC;"> Our team will review your request and get back to you shortly. If you need to modify any details or view your booking request, please reach out to us. </td>
   </tr>
   <tr bgcolor="#141414">
     <td style="padding: 20px; text-align: center;">
@@ -77,11 +66,8 @@ module.exports = ({name , package}) => {
     </td>
   </tr>
   <tr bgcolor="#141414">
-    <td style="padding: 10px 0; text-align: center; border-top: 1px solid #444444;">
+    <td style="padding: 15px 0 15px 0; text-align: center; border-top: 1px solid #444444;">
       <p style="margin: 1px; font-size: 14px; color: #CCCCCC;">Thank you for choosing us to make your event special!</p>
-      <p style="margin: 1px; font-size: 14px; color: #CCCCCC;">
-        <a href="#" style="color: #CCCCCC;">Unsubscribe</a>
-      </p>
     </td>
   </tr>
 </table>
