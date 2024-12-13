@@ -96,7 +96,7 @@ module.exports = ({ name, package ,payment_id  }) => {
           </td>
           <td style="padding: 0 15px 10px 0;">
             <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#fff">
-              <strong> ${package?.amount} </strong>
+              <strong> ${package?.amount * package?.user_currency_rate} </strong>
             </p>
           </td>
         </tr>
