@@ -308,11 +308,12 @@ exports.BookingPayment = catchAsync(async (req, res) => {
       path: "userId",
       select: "username email",
     });
+    console.log("bookingstatus",bookingstatus)
     const paymentdata = await payment.findOne({ booking_id: _id });
     const paymentLink = `https://user-event.vercel.app/payment/${bookingstatus?._id}`;
     const currencyCode = bookingstatus?.CurrencyCode || 'USD';
     const currency = currencySymbol[currencyCode] || '$';
-    const emailHtml = PaymentLink(paymentLink, bookingstatus?.userId?.username, bookingstatus?.totalPrice, currency);
+    const emailHtml = PaymentLink(paymentLink, bookingstatus?.userId?.username, bookingstatus?.totalPrice*user_currency_rate, currency);
     let transporter = nodemailer.createTransport({
       host: "smtp.gmail.com",
       port: 587,

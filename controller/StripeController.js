@@ -71,7 +71,7 @@ exports.createCheckout = catchAsync(async (req, res) => {
     const { amount, email, userId, booking_id, currency } = req?.body;
     const lastpayment = await Payment.findOne().sort({ srNo: -1 });
     const srNo = lastpayment ? lastpayment.srNo + 1 : 1;
-
+    const amountInCents = Math.round(amount * 100);
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       mode: 'payment', // Correct mode value
@@ -87,7 +87,7 @@ exports.createCheckout = catchAsync(async (req, res) => {
             product_data: {
               name: "Booking Payment",
             },
-            unit_amount: amount * 100,
+            unit_amount: amountInCents,
           },
           quantity: 1,
         },
