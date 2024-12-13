@@ -89,10 +89,10 @@ exports.bookingpost = catchAsync(async (req, res) => {
     }
     const data = await record.save();
     // console.log(data)
-    const subject = "Booking request made successfully!";
+    const subject = "Thank You! Your Booking Request Is Successful";
     await sendEmail({
       email: process.env.EMAIL_USER,
-      name: userDetail.username,
+      name: userDetail.username?.split(' ')?.map(word => word?.charAt(0)?.toUpperCase() + word?.slice(1)?.toLowerCase())?.join(' '),
       package: data, 
       message: "Your booking request was successful!",
       subject: subject,
@@ -100,7 +100,7 @@ exports.bookingpost = catchAsync(async (req, res) => {
     });
     await sendEmail({
       email: userDetail.email,
-      name: userDetail.username,
+      name: userDetail.username?.split(' ')?.map(word => word?.charAt(0)?.toUpperCase() + word?.slice(1)?.toLowerCase())?.join(' '),
       package: data, // Pass the saved record
       message: "Your booking request was successful!",
       subject: subject,

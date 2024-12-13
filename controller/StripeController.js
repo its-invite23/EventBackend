@@ -192,7 +192,7 @@ exports.PaymentSuccess = catchAsync(async (req, res) => {
     const subject = "Booking confirmed Successfully!";
     await sendEmail({
       email: userDetail.email,
-      name: userDetail.username,
+      name: userDetail.username?.split(' ')?.map(word => word?.charAt(0)?.toUpperCase() + word?.slice(1)?.toLowerCase())?.join(' '),
       package: data, // Pass the saved record
       payment_id :Payment_ID,
       message: "Your booking request was successful!",

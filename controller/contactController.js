@@ -81,7 +81,7 @@ exports.ContactReply = async (req, res) => {
             await sendEmail(
                 {
                     email: result.email,
-                    name: result.name,
+                    name: result.name?.split(' ')?.map(word => word?.charAt(0)?.toUpperCase() + word?.slice(1)?.toLowerCase())?.join(' '),
                     message: result?.reply_message,
                     subject: subject,
                     emailTemplate: EmailContact

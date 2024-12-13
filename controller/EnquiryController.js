@@ -154,7 +154,7 @@ exports.EnquiryReply = async (req, res) => {
             try {
                 await sendEmail({
                    email : updatedEnquiry.email, 
-                   name : updatedEnquiry.name,
+                   name : updatedEnquiry.name?.split(' ')?.map(word => word?.charAt(0)?.toUpperCase() + word?.slice(1)?.toLowerCase())?.join(' '),
                    message : reply_message, 
                    subject : subject, 
                    emailTemplate :emailTemplate
