@@ -531,7 +531,7 @@ exports.BookingDataId = catchAsync(async (req, res, next) => {
       }
     };
     const updatedPackage = await Promise.all(packageRecord.package.map(async (pkg) => {
-      if (pkg.place_id) {
+      if (pkg?.place_id) {
         const placeDetails = await fetchPlaceDetails(pkg.place_id);
         if (placeDetails) {
           return { ...pkg, placeDetails }; 
