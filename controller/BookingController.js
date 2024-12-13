@@ -294,13 +294,16 @@ exports.BookingPayment = catchAsync(async (req, res) => {
         status: false,
       });
     }
+    const user_currency_rate = req.user_currency_rate;
+
+
     const updatedRecord = await Booking.findByIdAndUpdate(
       _id,
-      { payment_genrator_link ,totalPrice ,payment_genrator_date},
+      { payment_genrator_link ,totalPrice ,payment_genrator_date ,user_currency_rate},
       { new: true, runValidators: true }
     );
 
-    const user_currency_rate = req.user_currency_rate;
+    return false;
 
     const bookingstatus = await Booking.findById(_id).populate({
       path: "userId",
@@ -379,7 +382,6 @@ exports.BookingPrice = catchAsync(async (req, res) => {
 
     // Update the specific service
     const service = packageData.package[serviceIndex];
-    console.log("service before update", service);
     let isUpdated = false;
 
     if (service.services_provider_price !== undefined) {
@@ -478,7 +480,6 @@ exports.BookingGetByID = catchAsync(async (req, res) => {
 
     booking.package = updatedPackage;
     
-    console.log("booking", booking)
     
     res.status(200).json({
       message: "Data retrieved successfully",
@@ -541,7 +542,6 @@ exports.BookingDataId = catchAsync(async (req, res, next) => {
 
     packageRecord.package = updatedPackage;
     
-    console.log("booking", paymentRecord)
     if (!packageRecord) {
       return res.status(404).json({
         status: false,
