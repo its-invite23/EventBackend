@@ -303,7 +303,6 @@ exports.BookingPayment = catchAsync(async (req, res) => {
       { new: true, runValidators: true }
     );
 
-    return false;
 
     const bookingstatus = await Booking.findById(_id).populate({
       path: "userId",
