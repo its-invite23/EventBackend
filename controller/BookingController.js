@@ -175,12 +175,12 @@ exports.BookingGet = catchAsync(async (req, res, next) => {
 exports.BookingStatus = catchAsync(async (req, res) => {
   try {
 
-    const { _id, status, attendees, CurrencyCode } = req.body;
+    const { _id, status, attendees} = req.body;
 
     // Check if all required fields are provided
-    if (!_id || !status || !attendees || !CurrencyCode) {
+    if (!_id || !status || !attendees ) {
       return res.status(400).json({
-        message: "Booking ID, status, attendees, and CurrencyCode are required.",
+        message: "Booking ID, status, attendees are required.",
         status: false,
       });
     }
@@ -199,7 +199,6 @@ exports.BookingStatus = catchAsync(async (req, res) => {
     bookingstatus.status = status;
     // Update the attendees
     bookingstatus.attendees = attendees;
-    bookingstatus.CurrencyCode = CurrencyCode;
     // Save the updated document
     await bookingstatus.save();
 
