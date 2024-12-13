@@ -58,14 +58,37 @@ module.exports = ({name , package}) => {
   <tr>
     <td style="padding: 20px; font-size: 14px; color: #CCCCCC;"> Our team will review your request and get back to you shortly. If you need to modify any details or view your booking request, please reach out to us. </td>
   </tr>
-  <tr bgcolor="#141414">
-    <td style="padding: 20px; text-align: center;">
+  <tr>
+    <td style="padding: 20px; text-align: left;">
       <p style="margin: 1px; font-size: 14px; color: #CCCCCC;"> Best regards, <br> Itsinvite Team </p>
     </td>
   </tr>
+ <tr bgcolor="#141414">
+    <td style="padding: 15px 0 15px 0; text-align: center;">
+      <table cellpadding="0" cellspacing="0" align="center">
+        <tr>
+          <td style="padding: 0 5px;">
+            <a href="#">
+              <img src="https://f003.backblazeb2.com/file/Event-management/linkedicon.png" alt="">
+            </a>
+          </td>
+          <td style="padding: 0 5px;">
+            <a href="#">
+              <img src="https://f003.backblazeb2.com/file/Event-management/instagram.png" alt="">
+            </a>
+          </td>
+          <td style="padding: 0 5px;">
+            <a href="#">
+              <img src="https://f003.backblazeb2.com/file/Event-management/facebook.png" alt="">
+            </a>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
   <tr bgcolor="#141414">
-    <td style="padding: 15px 0 15px 0; text-align: center; border-top: 1px solid #444444;">
-      <p style="margin: 1px; font-size: 14px; color: #CCCCCC;">Thank you for choosing us to make your event special!</p>
+    <td style="padding: 15px 0 10px 0;border-top:1px solid #444444">
+      <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#CCCCCC; text-align: center;"> Thank you for choosing us to make your event special! </p>
     </td>
   </tr>
 </table>

@@ -157,15 +157,8 @@ module.exports = ({ name, package ,payment_id  }) => {
     </td>
   </tr>
   <tr bgcolor="#141414">
-    <td style="padding: 15px 0 5px 0;border-top:1px solid #444444">
+    <td style="padding: 15px 0 10px 0;border-top:1px solid #444444">
       <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#CCCCCC; text-align: center;"> Thank you for choosing us to make your event special! </p>
-    </td>
-  </tr>
-  <tr bgcolor="#141414">
-    <td style="padding: 0 0 5px 0;">
-      <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#CCCCCC; text-align: center;">
-        <a href="#" style="color:#CCCCCC;">Unsubscribe</a>
-      </p>
     </td>
   </tr>
 </table>
