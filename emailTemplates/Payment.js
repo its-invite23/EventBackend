@@ -1,6 +1,6 @@
 
 const formatDate = (dateString) => { const options = { year: 'numeric', month: 'short', day: 'numeric' }; const date = new Date(dateString); return date.toLocaleDateString('en-GB', options); };
-
+const moment = require("moment");
 
 module.exports = ({ name, package, payment_id }) => {
   return `
@@ -66,11 +66,7 @@ module.exports = ({ name, package, payment_id }) => {
          <td style="padding: 0 15px 10px 0;">
   <p style="margin: 1px; font-size: 14px; font-weight: normal; color: #fff;">
     <strong>
-      ${new Date(package?.booking_id?.bookingDate).toLocaleDateString('en-GB', {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric'
-  })}
+      ${moment(package?.booking_id?.bookingDate, "DD-MM-YYYY").format("DD MMM YYYY")}
     </strong>
   </p>
 </td>

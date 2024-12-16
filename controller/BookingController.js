@@ -416,11 +416,6 @@ exports.BookingPrice = catchAsync(async (req, res) => {
 
 
 
-
-
-
-
-
 exports.BookingGetByID = catchAsync(async (req, res) => {
   try {
     const { id } = req.params;
@@ -442,6 +437,7 @@ exports.BookingGetByID = catchAsync(async (req, res) => {
         status: false,
       });
     }
+    const paymentdata = await payment.findOne({ booking_id: id });
 
     const fetchPlaceDetails = async (placeId) => {
       try {
@@ -481,6 +477,7 @@ exports.BookingGetByID = catchAsync(async (req, res) => {
       message: "Data retrieved successfully",
       status: true,
       data: booking,
+      paymentdata:paymentdata,
     });
   } catch (error) {
     console.error("Error updating booking status:", error);
