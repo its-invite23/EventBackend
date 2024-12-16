@@ -1,4 +1,4 @@
-const CurrencyRoute =  require("express").Router();
+const CurrencyRoute = require("express").Router();
 
 const { UpdateCurrencyRates, GetRate } = require("../controller/CurrencyController");
 

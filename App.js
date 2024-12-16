@@ -20,7 +20,7 @@ const bookingroute = require("./route/Booking")
 const Contactroute = require("./route/Contact")
 const placeRoutes = require("./route/placeRoute")
 const currencyRoutes = require("./route/CurrencyRoute")
-const commonRoutes = require("./route/Dashboard"); 
+const commonRoutes = require("./route/Dashboard");
 const { UpdateCurrencyRates } = require("./controller/CurrencyController");
 const corsOptions = {
   origin: "*", // Allowed origins

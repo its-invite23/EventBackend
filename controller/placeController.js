@@ -1,6 +1,5 @@
 const axios = require('axios');
 
-// Controller to handle the POST request
 exports.getPlaceDetails = async (req, res) => {
     const { placeId } = req.params;
     if (!placeId) {

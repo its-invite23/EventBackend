@@ -5,10 +5,10 @@ const sendEmail = require("../utils/EmailMailler");
 const { validationErrorResponse, errorResponse, successResponse } = require("../utils/ErrorHandling");
 
 exports.EnquiryPost = catchAsync(async (req, res) => {
-    const { email, name, message, eventname, event_type, attendees,phone_code, phone_number } = req.body;
+    const { email, name, message, eventname, event_type, attendees, phone_code, phone_number } = req.body;
 
     const record = new EnquireModal({
-        email, name, message,phone_code , phone_number, eventname, event_type, attendees, enquire_status: "pending"
+        email, name, message, phone_code, phone_number, eventname, event_type, attendees, enquire_status: "pending"
     });
 
     const result = await record.save();
@@ -84,7 +84,6 @@ exports.EnquiryGetUser = catchAsync(async (req, res, next) => {
 });
 
 
-
 exports.EnquiryUpdateStatus = catchAsync(async (req, res) => {
     try {
         const { _id, enquire_status } = req.body;
@@ -121,8 +120,6 @@ exports.EnquiryUpdateStatus = catchAsync(async (req, res) => {
 });
 
 
-
-
 exports.EnquiryReply = async (req, res) => {
     const { _id, reply_message, enquire_status } = req.body;
     if (!_id || !reply_message || !enquire_status) {
@@ -153,11 +150,11 @@ exports.EnquiryReply = async (req, res) => {
         if (updatedEnquiry) {
             try {
                 await sendEmail({
-                   email : updatedEnquiry.email, 
-                   name : updatedEnquiry.name?.split(' ')?.map(word => word?.charAt(0)?.toUpperCase() + word?.slice(1)?.toLowerCase())?.join(' '),
-                   message : reply_message, 
-                   subject : subject, 
-                   emailTemplate :emailTemplate
+                    email: updatedEnquiry.email,
+                    name: updatedEnquiry.name?.split(' ')?.map(word => word?.charAt(0)?.toUpperCase() + word?.slice(1)?.toLowerCase())?.join(' '),
+                    message: reply_message,
+                    subject: subject,
+                    emailTemplate: emailTemplate
                 }
 
                 );

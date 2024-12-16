@@ -13,7 +13,7 @@ bookingroute.post("/booking-status", BookingStatus)
 
 bookingroute.post("/update-price", BookingPrice)
 
-bookingroute.post("/booking-payment",getRateMiddleware, BookingPayment)
+bookingroute.post("/booking-payment", getRateMiddleware, BookingPayment)
 
 bookingroute.get("/getByID/:id", BookingGetByID)
 

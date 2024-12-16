@@ -39,7 +39,7 @@ const bookingSchema = mongoose.Schema({
         type: String,
     },
     attendees: {
-        type:Number,
+        type: Number,
         default: 0,
     },
     totalPrice: {

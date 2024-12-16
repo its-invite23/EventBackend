@@ -7,7 +7,6 @@ const emailTemplate = require("../emailTemplates/Payment.js");
 const Booking = require("../model/Booking");
 const User = require("../model/User");
 
-
 const fetchPaymentId = async (sessionId, srNo) => {
   try {
     const session = await stripe.checkout.sessions.retrieve(sessionId);
@@ -23,7 +22,7 @@ const fetchPaymentId = async (sessionId, srNo) => {
     // datas.payment_type = data.paymentMethod;
     await data.save();
     return paymentId;
-  } catch (error) { 
+  } catch (error) {
     console.error("Error fetching payment ID:", error);
     return null;
   }
@@ -119,26 +118,27 @@ exports.PaymentGet = catchAsync(async (req, res, next) => {
     const search = req.query.search || "";
     let paymentget, totalpaymenttmodal, totalPages;
     if (search === "") {
-      
-    const skip = (page - 1) * limit;
-     totalpaymenttmodal = await Payment.countDocuments();
-     paymentget = await Payment.find({})
-      .populate({
-        path: "userId",
-        select: "username",
-      }) .populate({
-        path: "booking_id",
-        select: "package_name , booking_id",
-      })
-      .sort({ created_at: -1 })
-      .skip(skip)
-      .limit(limit);
-     totalPages = Math.ceil(totalpaymenttmodal / limit);}
-     else{
+
+      const skip = (page - 1) * limit;
+      totalpaymenttmodal = await Payment.countDocuments();
+      paymentget = await Payment.find({})
+        .populate({
+          path: "userId",
+          select: "username",
+        }).populate({
+          path: "booking_id",
+          select: "package_name , booking_id",
+        })
+        .sort({ created_at: -1 })
+        .skip(skip)
+        .limit(limit);
+      totalPages = Math.ceil(totalpaymenttmodal / limit);
+    }
+    else {
       paymentget = await PaymentFilter(search);
       totalPages = 1;
       totalpaymenttmodal = paymentget;
-     }
+    }
     res.status(200).json({
       data: {
         payment: paymentget,
@@ -170,7 +170,7 @@ exports.PaymentSuccess = catchAsync(async (req, res) => {
     }
     const data = await Payment.findOne({ srNo: srNo }).populate({
       path: "booking_id",
-       model: 'Booking'
+      model: 'Booking'
     });
     const userDetail = await User.findById(data?.userId);
     if (!userDetail) {
@@ -187,14 +187,14 @@ exports.PaymentSuccess = catchAsync(async (req, res) => {
     }
     data.payment_status = "success";
     await data.save();
-  const Payment_ID =   await fetchPaymentId(data?.session_id, srNo ,"success");
+    const Payment_ID = await fetchPaymentId(data?.session_id, srNo, "success");
 
     const subject = "Booking confirmed Successfully!";
     await sendEmail({
       email: userDetail.email,
       name: userDetail.username?.split(' ')?.map(word => word?.charAt(0)?.toUpperCase() + word?.slice(1)?.toLowerCase())?.join(' '),
       package: data, // Pass the saved record
-      payment_id :Payment_ID,
+      payment_id: Payment_ID,
       message: "Your booking request was successful!",
       subject: subject,
       emailTemplate: emailTemplate,
@@ -231,7 +231,7 @@ exports.PaymentCancel = catchAsync(async (req, res) => {
     }
     data.payment_status = "failed";
     await data.save();
-    fetchPaymentId(data?.session_id, srNo ,"cancel");
+    fetchPaymentId(data?.session_id, srNo, "cancel");
     res.status(200).json({
       message: `Payment status updated`,
       status: true,
@@ -256,7 +256,7 @@ exports.PaymentGetByID = catchAsync(async (req, res) => {
       });
     }
 
-    const data = await Payment.findOne({booking_id:booking_id});
+    const data = await Payment.findOne({ booking_id: booking_id });
 
     if (!data) {
       return res.status(202).json({
@@ -265,7 +265,7 @@ exports.PaymentGetByID = catchAsync(async (req, res) => {
         payment: false,
       });
     }
-    if(data?.payment_status === "success"){
+    if (data?.payment_status === "success") {
       return res.status(202).json({
         message: "Payment not done successfully",
         status: true,
@@ -273,7 +273,7 @@ exports.PaymentGetByID = catchAsync(async (req, res) => {
       });
     }
 
-   return res.status(202).json({
+    return res.status(202).json({
       message: "Data Found",
       status: true,
       payment: false,
@@ -288,54 +288,40 @@ exports.PaymentGetByID = catchAsync(async (req, res) => {
   }
 });
 
-// exports.PaymentId = catchAsync(async (req, res, next) => {
-//   const { sessionId } = req.params;
-
-//   try {
-//     const session = await stripe.checkout.sessions.retrieve(sessionId);
-//     const paymentId = session.payment_intent; // This is your payment ID
-//     res.json({ paymentId });
-//   } catch (error) {
-//     res.status(500).send({ error: error.message });
-//   }
-// });
-
-
-
 exports.PackagegetByBookingId = catchAsync(async (req, res, next) => {
   try {
-      // Extract `booking_id` from query parameters
-      const { booking_id } = req.query;
+    // Extract `booking_id` from query parameters
+    const { booking_id } = req.query;
 
-      if (!booking_id) {
-          return res.status(400).json({
-              status: false,
-              message: "Booking ID is required.",
-          });
-      }
-
-      // Fetch the package record associated with the booking ID
-      const packageRecord = await Payment.findOne({ booking_id }); // Ensure the `booking_id` field exists in your schema
-
-      if (!packageRecord) {
-          return res.status(404).json({
-              status: false,
-              message: "Package not found for the provided booking ID.",
-          });
-      }
-
-      res.status(200).json({
-          status: true,
-          data: packageRecord,
-          message: `Package data retrieved successfully.`,
+    if (!booking_id) {
+      return res.status(400).json({
+        status: false,
+        message: "Booking ID is required.",
       });
+    }
+
+    // Fetch the package record associated with the booking ID
+    const packageRecord = await Payment.findOne({ booking_id }); // Ensure the `booking_id` field exists in your schema
+
+    if (!packageRecord) {
+      return res.status(404).json({
+        status: false,
+        message: "Package not found for the provided booking ID.",
+      });
+    }
+
+    res.status(200).json({
+      status: true,
+      data: packageRecord,
+      message: `Package data retrieved successfully.`,
+    });
   } catch (error) {
-      console.error("Error retrieving package record:", error);
+    console.error("Error retrieving package record:", error);
 
-      res.status(500).json({
-          status: false,
-          message: "An error occurred while retrieving the package data. Please try again later.",
-          error: error.message,
-      });
+    res.status(500).json({
+      status: false,
+      message: "An error occurred while retrieving the package data. Please try again later.",
+      error: error.message,
+    });
   }
 });

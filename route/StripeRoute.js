@@ -15,7 +15,7 @@ StripeRoute.get("/payment-cancel/:srNo", PaymentCancel)
 
 StripeRoute.get("/getByID/:booking_id", PaymentGetByID)
 
-StripeRoute.get("/payment/:booking_id", PackagegetByBookingId )
+StripeRoute.get("/payment/:booking_id", PackagegetByBookingId)
 
 
 // StripeRoute.post("/payment-filter", PaymentFilter);
