@@ -90,9 +90,9 @@ exports.bookingpost = catchAsync(async (req, res) => {
     const data = await record.save();
     const subject = "Thank You! Your Booking Request Is Successful";
     await sendEmail({
-      email: process.env.Admin_Email ,
+      email: process.env.Admin_Email,
       name: userDetail.username?.split(' ')?.map(word => word?.charAt(0)?.toUpperCase() + word?.slice(1)?.toLowerCase())?.join(' '),
-      package: data, 
+      package: data,
       message: "Your booking request was successful!",
       subject: subject,
       emailTemplate: emailTemplate,
@@ -105,7 +105,7 @@ exports.bookingpost = catchAsync(async (req, res) => {
       subject: subject,
       emailTemplate: emailTemplate,
     });
-   
+
     // Saving data only if email is sent successfully 
 
     return res.status(201).json({
@@ -174,10 +174,10 @@ exports.BookingGet = catchAsync(async (req, res, next) => {
 exports.BookingStatus = catchAsync(async (req, res) => {
   try {
 
-    const { _id, status, attendees} = req.body;
+    const { _id, status, attendees } = req.body;
 
     // Check if all required fields are provided
-    if (!_id || !status || !attendees ) {
+    if (!_id || !status || !attendees) {
       return res.status(400).json({
         message: "Booking ID, status, attendees are required.",
         status: false,
@@ -285,7 +285,7 @@ const currencySymbol = {
 
 exports.BookingPayment = catchAsync(async (req, res) => {
   try {
-    const { _id, payment_genrator_link , totalPrice, payment_genrator_date} = req.body;
+    const { _id, payment_genrator_link, totalPrice, payment_genrator_date } = req.body;
     if (!_id) {
       return res.status(400).json({
         message: "Booking ID is required.",
@@ -297,7 +297,7 @@ exports.BookingPayment = catchAsync(async (req, res) => {
 
     const updatedRecord = await Booking.findByIdAndUpdate(
       _id,
-      { payment_genrator_link ,totalPrice ,payment_genrator_date ,user_currency_rate},
+      { payment_genrator_link, totalPrice, payment_genrator_date, user_currency_rate },
       { new: true, runValidators: true }
     );
 
@@ -309,7 +309,7 @@ exports.BookingPayment = catchAsync(async (req, res) => {
     const paymentdata = await payment.findOne({ booking_id: _id });
     const paymentLink = `https://user-event.vercel.app/payment/${bookingstatus?._id}`;
     const currencyCode = bookingstatus?.CurrencyCode || 'USD';
-    const emailHtml = PaymentLink(paymentLink, bookingstatus?.userId?.username, bookingstatus?.totalPrice*user_currency_rate, currencyCode);
+    const emailHtml = PaymentLink(paymentLink, bookingstatus?.userId?.username, bookingstatus?.totalPrice * user_currency_rate, currencyCode);
     let transporter = nodemailer.createTransport({
       host: "smtp.gmail.com",
       port: 587,
@@ -341,7 +341,7 @@ exports.BookingPayment = catchAsync(async (req, res) => {
 
 exports.BookingPrice = catchAsync(async (req, res) => {
   try {
-    const { _id, place_id, price, totalPrice, currency, attendens,User_totalprice } = req.body;
+    const { _id, place_id, price, totalPrice, currency, attendens, User_totalprice } = req.body;
 
     // Validate input data
     if (!_id || !place_id || !price) {
@@ -363,7 +363,7 @@ exports.BookingPrice = catchAsync(async (req, res) => {
 
     packageData.totalPrice = totalPrice;
     packageData.User_totalprice = User_totalprice,
-    packageData.CurrencyCode = currency;
+      packageData.CurrencyCode = currency;
     packageData.attendees = attendens;
     const serviceIndex = packageData.package.findIndex(
       (service) => service.place_id === place_id || service.place_id === place_id.toString()
@@ -460,24 +460,24 @@ exports.BookingGetByID = catchAsync(async (req, res) => {
         return null;
       }
     };
-    const updatedPackage = await Promise.all(booking.package.map(async (pkg) => {
+    const updatedPackage = await Promise.all(booking?.package?.map(async (pkg) => {
       if (pkg.place_id) {
         const placeDetails = await fetchPlaceDetails(pkg.place_id);
         if (placeDetails) {
-          return { ...pkg, placeDetails }; 
+          return { ...pkg, placeDetails };
         }
       }
-      return pkg; 
+      return pkg;
     }));
 
     booking.package = updatedPackage;
-    
-    
+
+
     res.status(200).json({
       message: "Data retrieved successfully",
       status: true,
       data: booking,
-      paymentdata:paymentdata,
+      paymentdata: paymentdata,
     });
   } catch (error) {
     console.error("Error updating booking status:", error);
@@ -501,7 +501,7 @@ exports.BookingDataId = catchAsync(async (req, res, next) => {
     // Fetch the current package record by ID
     const packageRecord = await Booking.findById(id)
     const paymentRecord = await payment.findOne({ booking_id: packageRecord._id })
-   
+
     const fetchPlaceDetails = async (placeId) => {
       try {
         const API_KEY = process.env.GOOGLE_MAPS_API_KEY; // Google API key
@@ -527,14 +527,14 @@ exports.BookingDataId = catchAsync(async (req, res, next) => {
       if (pkg?.place_id) {
         const placeDetails = await fetchPlaceDetails(pkg.place_id);
         if (placeDetails) {
-          return { ...pkg, placeDetails }; 
+          return { ...pkg, placeDetails };
         }
       }
-      return pkg; 
+      return pkg;
     }));
 
     packageRecord.package = updatedPackage;
-    
+
     if (!packageRecord) {
       return res.status(404).json({
         status: false,

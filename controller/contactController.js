@@ -76,7 +76,7 @@ exports.ContactReply = async (req, res) => {
             },
             { new: true }
         );
-        
+
         const subject = "Thank You For Contacting Us!";
         if (result) {
             await sendEmail(

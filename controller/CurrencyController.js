@@ -59,7 +59,7 @@ exports.GetRate = catchAsync(async (req, res) => {
         return res.status(404).json({
           status: false,
           message: "Invalid currency name!",
-          data:null,
+          data: null,
         });
       }
     }
