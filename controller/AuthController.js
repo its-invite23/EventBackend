@@ -9,8 +9,6 @@ const Booking = require("../model/Booking");
 const { validationErrorResponse, errorResponse, successResponse } = require("../utils/ErrorHandling");
 const VerifyAccount = require("../emailTemplates/VerifyAccount");
 
-
-
 exports.verifyToken = async (req, res, next) => {
   try {
     // Fetch the Authorization header
