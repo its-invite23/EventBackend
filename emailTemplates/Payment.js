@@ -63,11 +63,17 @@ module.exports = ({ name, package ,payment_id  }) => {
           <td style="padding: 0 15px 10px 0;">
             <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#CCCCCC"> Booking Date: </p>
           </td>
-          <td style="padding: 0 15px 10px 0;">
-            <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#fff">
-              <strong> ${package?.booking_id?.bookingDate } </strong>
-            </p>
-          </td>
+         <td style="padding: 0 15px 10px 0;">
+  <p style="margin: 1px; font-size: 14px; font-weight: normal; color: #fff;">
+    <strong>
+      ${new Date(package?.booking_id?.bookingDate).toLocaleDateString('en-GB', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric'
+      })}
+    </strong>
+  </p>
+</td>
         </tr>
         <tr>
           <td style="padding: 0 15px 10px 0;">
