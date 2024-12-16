@@ -2,8 +2,8 @@
 const formatDate = (dateString) => { const options = { year: 'numeric', month: 'short', day: 'numeric' }; const date = new Date(dateString); return date.toLocaleDateString('en-GB', options); };
 
 
-module.exports = ({ name, package ,payment_id  }) => {
-    return `
+module.exports = ({ name, package, payment_id }) => {
+  return `
 <table align="center" style="max-width: 600px; font-family: arial;" width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#000">
   <tr bgcolor="#141414">
     <td style="padding: 20px 2px 0 2px; text-align: center;">
@@ -67,10 +67,10 @@ module.exports = ({ name, package ,payment_id  }) => {
   <p style="margin: 1px; font-size: 14px; font-weight: normal; color: #fff;">
     <strong>
       ${new Date(package?.booking_id?.bookingDate).toLocaleDateString('en-GB', {
-        day: '2-digit',
-        month: 'short',
-        year: 'numeric'
-      })}
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric'
+  })}
     </strong>
   </p>
 </td>
