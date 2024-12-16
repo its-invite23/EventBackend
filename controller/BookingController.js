@@ -88,7 +88,6 @@ exports.bookingpost = catchAsync(async (req, res) => {
       });
     }
     const data = await record.save();
-    // console.log(data)
     const subject = "Thank You! Your Booking Request Is Successful";
     await sendEmail({
       email: process.env.EMAIL_USER,
@@ -241,7 +240,6 @@ const currencySymbol = {
 //       { payment_genrator_link   },
 //       { new: true, runValidators: true }
 //     );
-//     console.log("updatedRecord",updatedRecord);
 
 //     const  currency = updatedRecord?.currencyCode;
 
@@ -308,7 +306,6 @@ exports.BookingPayment = catchAsync(async (req, res) => {
       path: "userId",
       select: "username email",
     });
-    console.log("bookingstatus",bookingstatus)
     const paymentdata = await payment.findOne({ booking_id: _id });
     const paymentLink = `https://user-event.vercel.app/payment/${bookingstatus?._id}`;
     const currencyCode = bookingstatus?.CurrencyCode || 'USD';
