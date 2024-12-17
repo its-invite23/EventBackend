@@ -7,7 +7,7 @@ const nodemailer = require("nodemailer");
 const ForgetPassword = require("../emailTemplates/ForgetPassword");
 const Booking = require("../model/Booking");
 const { validationErrorResponse, errorResponse, successResponse } = require("../utils/ErrorHandling");
-const VerifyAccount = require("../emailTemplates/VerifyAccount");
+const VerifyAccount = require("../emailTemplates/Otp");
 
 exports.verifyToken = async (req, res, next) => {
   try {
@@ -111,6 +111,9 @@ exports.verifyToken = async (req, res, next) => {
 //   }
 // };
 
+function generateOTP() {
+  return Math.floor(100000 + Math.random() * 900000); // Generates a 6-digit OTP
+}
 const signToken = async (id) => {
   const token = jwt.sign({ id }, process.env.JWT_SECRET_KEY, {
     expiresIn: "14400m",
@@ -222,6 +225,97 @@ exports.signup = catchAsync(async (req, res) => {
   }
 });
 
+exports.OTP = catchAsync(async (req, res) => {
+  try {
+    const {
+      email,
+      password,
+      username,
+      address,
+      phone_number,
+      country_code,
+      phone_code,
+      country,
+      state,
+      DOB,
+      city,
+    } = req.body;
+
+    // Check if required fields are provided
+    if (!password || !phone_number || !username || !email || !address || !country || !city) {
+      return res.status(401).json({
+        status: false,
+        message: 'All fields are required',
+      });
+    }
+
+    // Check if user already exists
+    const existingUser = await User.findOne({ $or: [{ email }, { phone_number }] });
+    if (existingUser) {
+      const errors = {};
+      if (existingUser.email === email) {
+        errors.email = 'Email is already in use!';
+      }
+      if (existingUser.phone_number === phone_number) {
+        errors.phone_number = 'Phone number is already in use!';
+      }
+      return res.status(400).json({
+        status: false,
+        message: 'Email or phone number already exists',
+        errors,
+      });
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 12);
+
+    const otp = generateOTP();
+
+    const record = new User({
+      email,
+      country,
+      state,
+      phone_code,
+      country_code,
+      city,
+      password: hashedPassword,
+      username,
+      DOB,
+      address,
+      phone_number,
+      otp,
+    });
+
+    const result = await record.save();
+
+    if (result) {
+      const customerUser = record.username;
+
+      let transporter = nodemailer.createTransport({
+        host: "smtp.gmail.com",
+        port: 587,
+        secure: false,
+        auth: {
+          user: process.env.EMAIL_USER,
+          pass: process.env.EMAIL_PASS,
+        },
+      });
+
+      const emailHtml = VerifyAccount(otp, customerUser);
+      await transporter.sendMail({
+        from: process.env.EMAIL_USER,
+        to: result.email,
+        subject: "Verify your Account",
+        html: emailHtml,
+      });
+
+      return successResponse(res, "You have been registered successfully !!", 201);
+    } else {
+      return errorResponse(res, "Failed to create user.", 500);
+    }
+  } catch (error) {
+    return errorResponse(res, error.message || "Internal Server Error", 500);
+  }
+});
 
 
 exports.adminlogin = catchAsync(async (req, res, next) => {
