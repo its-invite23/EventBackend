@@ -307,7 +307,7 @@ exports.OTP = catchAsync(async (req, res) => {
         html: emailHtml,
       });
 
-      return successResponse(res, "You have been registered successfully !!", 201);
+      return successResponse(res, "OTP has been sent to your email!", 201);
     } else {
       return errorResponse(res, "Failed to create user.", 500);
     }
@@ -356,7 +356,7 @@ exports.VerifyOtp = catchAsync(async (req, res, next) => {
     const token = await signToken(user._id);
     res.json({
       status: true,
-      message: "Login Successfully!",
+      message: "Your account has been verified.",
       token,
     });
   } catch (error) {
