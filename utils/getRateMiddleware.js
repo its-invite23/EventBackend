@@ -2,9 +2,11 @@ const catchAsync = require("./catchAsync");
 const Currency = require("../model/Currency")
 const getRateMiddleware = catchAsync(async (req, res, next) => {
   try {
-    const { currency } = req.body;
+    const { currency , AdminCurrencyCode } = req.body;
 
-    const data = await Currency.findOne({ currency: currency });
+    const data = await Currency.findOne({ currency: currency  });
+    const admincurrency = await Currency.findOne({  currency : AdminCurrencyCode});
+console.log("admincurrency",admincurrency)
 
     if (!data) {
       return res.status(404).json({
@@ -14,6 +16,7 @@ const getRateMiddleware = catchAsync(async (req, res, next) => {
       });
     }
     req.user_currency_rate = data.rate;
+    req.adminCurrencyRate = admincurrency.rate;
     next();
   } catch (error) {
     console.error("Error retrieving currency rate:", error);

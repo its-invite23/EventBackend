@@ -285,7 +285,8 @@ const currencySymbol = {
 
 exports.BookingPayment = catchAsync(async (req, res) => {
   try {
-    const { _id, payment_genrator_link, totalPrice, payment_genrator_date } = req.body;
+    console.log("AdminCurrencyCode",req.body)
+    const { _id, payment_genrator_link, totalPrice, payment_genrator_date,AdminCurrencyCode  } = req.body;
     if (!_id) {
       return res.status(400).json({
         message: "Booking ID is required.",
@@ -293,14 +294,12 @@ exports.BookingPayment = catchAsync(async (req, res) => {
       });
     }
     const user_currency_rate = req.user_currency_rate;
-
-
+const adminCurrencyRate = req.adminCurrencyRate;
     const updatedRecord = await Booking.findByIdAndUpdate(
       _id,
-      { payment_genrator_link, totalPrice, payment_genrator_date, user_currency_rate },
+      { payment_genrator_link, totalPrice, payment_genrator_date, user_currency_rate  ,adminCurrencyRate ,AdminCurrencyCode},
       { new: true, runValidators: true }
     );
-
 
     const bookingstatus = await Booking.findById(_id).populate({
       path: "userId",
@@ -308,8 +307,8 @@ exports.BookingPayment = catchAsync(async (req, res) => {
     });
     const paymentdata = await payment.findOne({ booking_id: _id });
     const paymentLink = `https://user-event.vercel.app/payment/${bookingstatus?._id}`;
-    const currencyCode = bookingstatus?.CurrencyCode || 'USD';
-    const emailHtml = PaymentLink(paymentLink, bookingstatus?.userId?.username, bookingstatus?.totalPrice * user_currency_rate, currencyCode);
+    const currencyCode = bookingstatus?.AdminCurrencyCode || 'USD';
+    const emailHtml = PaymentLink(paymentLink, bookingstatus?.userId?.username, bookingstatus?.totalPrice * adminCurrencyRate, currencyCode);
     let transporter = nodemailer.createTransport({
       host: "smtp.gmail.com",
       port: 587,
@@ -320,7 +319,8 @@ exports.BookingPayment = catchAsync(async (req, res) => {
       },
     });
 
-    // Send the email with the generated payment link
+
+
     await transporter.sendMail({
       from: process.env.EMAIL_USER,
       to: bookingstatus.userId?.email,

@@ -11,6 +11,7 @@ const bookingSchema = mongoose.Schema({
     },
     package_name: String,
     CurrencyCode: String,
+    AdminCurrencyCode: String,
     bookingDate: {
         type: String,
         required: true
@@ -50,6 +51,11 @@ const bookingSchema = mongoose.Schema({
         type: Number,
         default: 1,
     },
+    adminCurrencyRate: {
+        type: Number,
+        default: 1,
+    },
+
 });
 const Booking = mongoose.model('Booking', bookingSchema);
 module.exports = Booking;
