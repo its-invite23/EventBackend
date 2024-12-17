@@ -282,7 +282,7 @@ exports.OTP = catchAsync(async (req, res) => {
       DOB,
       address,
       phone_number,
-      otp,
+      OTP : otp,
     });
 
     const result = await record.save();
@@ -313,6 +313,57 @@ exports.OTP = catchAsync(async (req, res) => {
     }
   } catch (error) {
     return errorResponse(res, error.message || "Internal Server Error", 500);
+  }
+});
+
+
+exports.VerifyOtp = catchAsync(async (req, res, next) => {
+  try {
+    const { email, OTP } = req.body;
+
+    if (!email || !OTP) {
+      return res.status(401).json({
+        status: false,
+        message: "Email and OTP are required!",
+      });
+    }
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(401).json({
+        status: false,
+        message: "Invalid Email or OTP",
+      });
+    }
+
+    if (user.user_status === "inactive") {
+      return res.status(403).json({
+        status: false,
+        message: "Your account is inactive. Please contact support.",
+      });
+    }
+
+    if (user.OTP !== OTP) {
+      return res.status(401).json({
+        status: false,
+        message: "Invalid OTP",
+      });
+    }
+
+    user.verified = true;
+    await user.save();
+
+    const token = await signToken(user._id);
+    res.json({
+      status: true,
+      message: "Login Successfully!",
+      token,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      error,
+      message: "An unknown error occurred. Please try later.",
+    });
   }
 });
 
