@@ -2,11 +2,10 @@ const catchAsync = require("./catchAsync");
 const Currency = require("../model/Currency")
 const getRateMiddleware = catchAsync(async (req, res, next) => {
   try {
-    const { currency , AdminCurrencyCode } = req.body;
+    const { currency, AdminCurrencyCode } = req.body;
 
-    const data = await Currency.findOne({ currency: currency  });
-    const admincurrency = await Currency.findOne({  currency : AdminCurrencyCode});
-console.log("admincurrency",admincurrency)
+    const data = await Currency.findOne({ currency: currency });
+    const admincurrency = await Currency.findOne({ currency: AdminCurrencyCode });
 
     if (!data) {
       return res.status(404).json({

@@ -285,7 +285,6 @@ const currencySymbol = {
 
 exports.BookingPayment = catchAsync(async (req, res) => {
   try {
-    console.log("AdminCurrencyCode",req.body)
     const { _id, payment_genrator_link, totalPrice, payment_genrator_date,AdminCurrencyCode  } = req.body;
     if (!_id) {
       return res.status(400).json({

@@ -289,7 +289,6 @@ exports.OTP = catchAsync(async (req, res) => {
 
     if (result) {
       const customerUser = record.username;
-
       let transporter = nodemailer.createTransport({
         host: "smtp.gmail.com",
         port: 587,
