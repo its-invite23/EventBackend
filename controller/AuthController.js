@@ -336,14 +336,7 @@ exports.VerifyOtp = catchAsync(async (req, res, next) => {
       });
     }
 
-    if (user.user_status === "inactive") {
-      return res.status(403).json({
-        status: false,
-        message: "Your account is inactive. Please contact support.",
-      });
-    }
-
-    if (user.OTP !== OTP) {
+    if (user.OTP != OTP) {
       return res.status(401).json({
         status: false,
         message: "Invalid OTP",
