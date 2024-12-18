@@ -22,7 +22,8 @@ const contactSchema = mongoose.Schema({
     phone_code: Number,
     contact_status: {
         type: String,
-        default: "unread"
+        default: "unread",
+        enum: ["unread", "read"]
     },
     created_at: {
         type: Date,

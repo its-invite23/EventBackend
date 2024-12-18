@@ -7,6 +7,26 @@ const bucket_id = process.env.BUCKET_ID;
 const APP_ID = process.env.CLOUD_APPLICATION_ID;
 const APP_KEY = process.env.CLOUD_APPLICATION_KEY;
 
+const b2 = new B2({
+    applicationKeyId: process.env.CLOUD_APPLICATION_ID, // Use environment variables for security
+    applicationKey: process.env.CLOUD_APPLICATION_KEY
+});
+
+async function deleteFile(fileName, fileId) {
+    try {
+        await b2.authorize();
+        const response = await b2.deleteFileVersion({
+            fileName: fileName,
+            fileId: fileId, // Ensure `fileId` is properly defined or passed
+        });
+        return true; // Indicate successful deletion
+    } catch (error) {
+        console.error('Error deleting file:', error);
+        return false; // Indicate failure
+    }
+}
+
+
 exports.packageadd = catchAsync(async (req, res) => {
     const {
         package_name,
@@ -269,24 +289,6 @@ exports.PackagegetId = catchAsync(async (req, res, next) => {
     }
 });
 
-const b2 = new B2({
-    applicationKeyId: process.env.CLOUD_APPLICATION_ID, // Use environment variables for security
-    applicationKey: process.env.CLOUD_APPLICATION_KEY
-});
-
-async function deleteFile(fileName, fileId) {
-    try {
-        await b2.authorize();
-        const response = await b2.deleteFileVersion({
-            fileName: fileName,
-            fileId: fileId, // Ensure `fileId` is properly defined or passed
-        });
-        return true; // Indicate successful deletion
-    } catch (error) {
-        console.error('Error deleting file:', error);
-        return false; // Indicate failure
-    }
-}
 
 exports.PackageIdDelete = catchAsync(async (req, res, next) => {
     try {

@@ -506,9 +506,6 @@ exports.profile = catchAsync(async (req, res, next) => {
   }
 });
 
-
-
-
 exports.updateUserStatus = catchAsync(async (req, res) => {
   try {
     const { _id, user_status } = req.body;
@@ -633,64 +630,68 @@ exports.UserUpdate = catchAsync(async (req, res, next) => {
   }
 });
 
-exports.forgotlinkrecord = async (req, res) => {
-  try {
-    const { email } = req.body;
-    if (!email) {
-      return validationErrorResponse(res, { email: 'Email is required' });
+exports.forgotlinkrecord = catchAsync(
+  async (req, res) => {
+    try {
+      const { email } = req.body;
+      if (!email) {
+        return validationErrorResponse(res, { email: 'Email is required' });
+      }
+      const record = await User.findOne({ email: email });
+      if (!record) {
+        return errorResponse(res, "No user found with this email", 404);
+      }
+      const token = await signEmail(record._id);
+      const resetLink = `https://user-event.vercel.app/forgotpassword/${token}`;
+      const customerUser = record.username;
+      let transporter = nodemailer.createTransport({
+        host: "smtp.gmail.com",
+        port: 587,
+        secure: false,
+        auth: {
+          user: process.env.EMAIL_USER,
+          pass: process.env.EMAIL_PASS,
+        },
+      });
+      const emailHtml = ForgetPassword(resetLink, customerUser);
+      await transporter.sendMail({
+        from: process.env.EMAIL_USER,
+        to: record.email,
+        subject: "Reset Your Password",
+        html: emailHtml,
+      });
+  
+  
+      return successResponse(res, "Email has been sent to your registered email");
+  
+    } catch (error) {
+      console.error("Error in forgot password process:", error);
+      return errorResponse(res, "Failed to send email");
     }
-    const record = await User.findOne({ email: email });
-    if (!record) {
-      return errorResponse(res, "No user found with this email", 404);
-    }
-    const token = await signEmail(record._id);
-    const resetLink = `https://user-event.vercel.app/forgotpassword/${token}`;
-    const customerUser = record.username;
-    let transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 587,
-      secure: false,
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-    });
-    const emailHtml = ForgetPassword(resetLink, customerUser);
-    await transporter.sendMail({
-      from: process.env.EMAIL_USER,
-      to: record.email,
-      subject: "Reset Your Password",
-      html: emailHtml,
-    });
-
-
-    return successResponse(res, "Email has been sent to your registered email");
-
-  } catch (error) {
-    console.error("Error in forgot password process:", error);
-    return errorResponse(res, "Failed to send email");
   }
-};
+);
 
-exports.forgotpassword = async (req, res) => {
-  try {
-    const { token, newPassword } = req.body;
-    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
-    const user = await User.findById(decoded.id);
-    if (!user) {
-      return errorResponse(res, "User not found", 404);
+exports.forgotpassword = catchAsync(
+  async (req, res) => {
+    try {
+      const { token, newPassword } = req.body;
+      const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+      const user = await User.findById(decoded.id);
+      if (!user) {
+        return errorResponse(res, "User not found", 404);
+      }
+      user.password = await bcrypt.hash(newPassword, 12);
+      await user.save();
+      return successResponse(res, "Password has been successfully reset");
+    } catch (error) {
+      if (error.name === 'TokenExpiredError') {
+        return errorResponse(res, "Token has expired. Please generate a new token.", 401);
+      }
+      console.error("Error in password reset process:", error);
+      return errorResponse(res, "Failed to reset password");
     }
-    user.password = await bcrypt.hash(newPassword, 12);
-    await user.save();
-    return successResponse(res, "Password has been successfully reset");
-  } catch (error) {
-    if (error.name === 'TokenExpiredError') {
-      return errorResponse(res, "Token has expired. Please generate a new token.", 401);
-    }
-    console.error("Error in password reset process:", error);
-    return errorResponse(res, "Failed to reset password");
   }
-};
+);
 
 
 exports.profilegettoken = catchAsync(async (req, res, next) => {
@@ -725,9 +726,6 @@ exports.profilegettoken = catchAsync(async (req, res, next) => {
     });
   }
 });
-
-
-
 
 exports.userfilter = catchAsync(async (req, res, next) => {
   try {
@@ -773,25 +771,27 @@ exports.userfilter = catchAsync(async (req, res, next) => {
 });
 
 
-exports.VerifyUser = async (req, res) => {
-  try {
-    const { token } = req.body;
-    const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
-    const user = await User.findById(decoded.id);
-    if (!user) {
-      return errorResponse(res, "User not found", 404);
+exports.VerifyUser =catchAsync(
+  async (req, res) => {
+    try {
+      const { token } = req.body;
+      const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+      const user = await User.findById(decoded.id);
+      if (!user) {
+        return errorResponse(res, "User not found", 404);
+      }
+      user.verified = true;
+      await user.save();
+      return successResponse(res, "Password has been successfully reset");
+    } catch (error) {
+      if (error.name === 'TokenExpiredError') {
+        return errorResponse(res, "Token has expired. Please contact support.", 401);
+      }
+      console.error("Error in verifying account:", error);
+      return errorResponse(res, "Failed to verify account");
     }
-    user.verified = true;
-    await user.save();
-    return successResponse(res, "Password has been successfully reset");
-  } catch (error) {
-    if (error.name === 'TokenExpiredError') {
-      return errorResponse(res, "Token has expired. Please contact support.", 401);
-    }
-    console.error("Error in verifying account:", error);
-    return errorResponse(res, "Failed to verify account");
   }
-};
+);
 
 
 

@@ -54,7 +54,8 @@ const userSchema = mongoose.Schema({
     },
     user_status: {
         type: String,
-        default: "active"
+        default: "active",
+        enum: ["active", "inactive"]
     },
     verified: {
         type: Boolean,

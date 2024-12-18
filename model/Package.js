@@ -34,7 +34,7 @@ const PackageSchema = new mongoose.Schema({
     },
     fileId: {
         type: String,
-        default: ""
+        default: null
     },
     package_duration: {
         type: Number,

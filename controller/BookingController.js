@@ -424,7 +424,7 @@ exports.BookingGetByID = catchAsync(async (req, res) => {
 });
 
 
-exports.BookingDataId = catchAsync(async (req, res, next) => {
+exports.BookingPaymentId = catchAsync(async (req, res, next) => {
   try {
     const { id } = req.params;
     if (!id) {

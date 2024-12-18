@@ -120,55 +120,57 @@ exports.EnquiryUpdateStatus = catchAsync(async (req, res) => {
 });
 
 
-exports.EnquiryReply = async (req, res) => {
-    const { _id, reply_message, enquire_status } = req.body;
-    if (!_id || !reply_message || !enquire_status) {
-        return validationErrorResponse(res, "All fields (Id, reply_message, enquire_status) are required.");
-    }
-    try {
-        const enquiry = await EnquireModal.findById(_id);
-        if (!enquiry) {
-            return errorResponse(res, 404, "Enquiry not found.");
+exports.EnquiryReply = catchAsync(
+    async (req, res) => {
+        const { _id, reply_message, enquire_status } = req.body;
+        if (!_id || !reply_message || !enquire_status) {
+            return validationErrorResponse(res, "All fields (Id, reply_message, enquire_status) are required.");
         }
-        const updatedEnquiry = await EnquireModal.findByIdAndUpdate(
-            _id,
-            {
-                reply_message,
-                enquire_status,
-            },
-            { new: true }
-        );
-
-        const subject = "Thank you for your Enquiry";
-        // email: 'ankit.jain@futureprofilez.com',
-        // message: 'hello  sir ',
-        // reply_message: 'Hello',
-        // eventname: 'Birthday party',
-        // event_type: 'cack food dj',
-        // attendees: 100,
-        // // enquire_status: 'active',
-        if (updatedEnquiry) {
-            try {
-                await sendEmail({
-                    email: updatedEnquiry.email,
-                    name: updatedEnquiry.name?.split(' ')?.map(word => word?.charAt(0)?.toUpperCase() + word?.slice(1)?.toLowerCase())?.join(' '),
-                    message: reply_message,
-                    subject: subject,
-                    emailTemplate: emailTemplate
-                }
-
-                );
-            } catch (emailError) {
-                console.error("Email sending failed:", emailError);
-                return errorResponse(res, 500, "Failed to send email notification.");
+        try {
+            const enquiry = await EnquireModal.findById(_id);
+            if (!enquiry) {
+                return errorResponse(res, 404, "Enquiry not found.");
             }
-
-            return successResponse(res, "You have successfully replied to the enquiry!");
-        } else {
-            return errorResponse(res, 400, "No changes were made to the enquiry.");
+            const updatedEnquiry = await EnquireModal.findByIdAndUpdate(
+                _id,
+                {
+                    reply_message,
+                    enquire_status,
+                },
+                { new: true }
+            );
+    
+            const subject = "Thank you for your Enquiry";
+            // email: 'ankit.jain@futureprofilez.com',
+            // message: 'hello  sir ',
+            // reply_message: 'Hello',
+            // eventname: 'Birthday party',
+            // event_type: 'cack food dj',
+            // attendees: 100,
+            // // enquire_status: 'active',
+            if (updatedEnquiry) {
+                try {
+                    await sendEmail({
+                        email: updatedEnquiry.email,
+                        name: updatedEnquiry.name?.split(' ')?.map(word => word?.charAt(0)?.toUpperCase() + word?.slice(1)?.toLowerCase())?.join(' '),
+                        message: reply_message,
+                        subject: subject,
+                        emailTemplate: emailTemplate
+                    }
+    
+                    );
+                } catch (emailError) {
+                    console.error("Email sending failed:", emailError);
+                    return errorResponse(res, 500, "Failed to send email notification.");
+                }
+    
+                return successResponse(res, "You have successfully replied to the enquiry!");
+            } else {
+                return errorResponse(res, 400, "No changes were made to the enquiry.");
+            }
+        } catch (error) {
+            console.error("Error during enquiry reply:", error);
+            return errorResponse(res, 500, "Failed to update the enquiry.");
         }
-    } catch (error) {
-        console.error("Error during enquiry reply:", error);
-        return errorResponse(res, 500, "Failed to update the enquiry.");
     }
-};
+);

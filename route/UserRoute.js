@@ -7,7 +7,6 @@ userRoute.post("/otp", OTP)
 
 userRoute.post("/otp_verifiy", VerifyOtp)
 
-
 userRoute.post("/login", login)
 
 userRoute.post("/admin/login", adminlogin)
