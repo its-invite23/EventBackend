@@ -18,37 +18,37 @@ module.exports = (otp, userName) => {
   </td>
 </tr>
 <tr>
-  <td style="padding:40px 0 20px 20px; text-align: center">
+  <td style="padding:40px 0 20px 20px; text-align: left">
     <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#CCCCCC;  text-transform: capitalize;"> Hi ${userName}, </p>
   </td>
 </tr>
 <tr>
   <td style="padding: 0 0 20px 20px;">
-    <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#CCCCCC; text-align: center;"> Thank you for signing up with us. Please use the OTP below to verify your account. </p>
+    <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#CCCCCC; text-align: left;"> Thank you for signing up with us. Please use the OTP below to verify your account. </p>
   </td>
 </tr>
 <tr>
   <td style="padding: 0 0 30px 20px;">
-    <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#CCCCCC; text-align: center;"> Your OTP is: <strong>${otp}</strong> </p>
+    <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#CCCCCC; text-align: left;"> Your OTP is: <strong>${otp}</strong> </p>
   </td>
 </tr>
 <tr>
-  <td style="padding: 0 20px 20px 20px; text-align: center">
+  <td style="padding: 0 20px 20px 20px; text-align: left">
     <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#CCCCCC"> For security purposes, this OTP will expire in 24 hours. If you need further assistance or didn’t sign up with us, please reach out to our support team immediately. </p>
   </td>
 </tr>
 <tr>
-  <td style="padding: 0 0 20px 20px; text-align: center">
+  <td style="padding: 0 0 20px 20px; text-align: left">
     <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#CCCCCC"> Thank you for using Itsinvite ! </p>
   </td>
 </tr>
 <tr>
-  <td style="padding: 0 0 45px 20px; text-align: center">
+  <td style="padding: 0 0 45px 20px; text-align: left">
     <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#CCCCCC"> Best regards, <br> Itsinvite Support Team </p>
   </td>
 </tr>
 <tr bgcolor="#141414">
-  <td style="padding: 15px 0 15px 0; text-align: center;">
+  <td style="padding: 15px 0 15px 0; text-align: left;">
     <table cellpadding="0" cellspacing="0" align="center">
       <tr>
         <td style="padding: 0 5px;">

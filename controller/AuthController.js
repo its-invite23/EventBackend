@@ -63,53 +63,6 @@ exports.verifyToken = async (req, res, next) => {
     });
   }
 };
-// exports.verifyToken = async (req, res, next) => {
-//   let authHeader = req.headers.Authorization || req.headers.authorization;
-//   if (authHeader && authHeader.startsWith("Bearer")) {
-//     let token = authHeader.split(" ")[1];
-//     if (!token) {
-//       return res.status(400).json({
-//         status: false,
-//         message: "User is not authorized",
-//       });
-//     } else {
-//       try {
-//         const decode = await promisify(jwt.verify)(
-//           token,
-//           process.env.JWT_SECRET_KEY
-//         );
-//         if (decode) {
-//           let result = await User.findById({ _id: decode.id });
-//           if (result) {
-//             req.User = result;
-//             next();
-//           } else {
-//             return res.status(404).json({
-//               status: false,
-//               message: "User not found",
-//             });
-//           }
-//         } else {
-//           return res.status(401).json({
-//             status: false,
-//             message: "Unauthorized",
-//           });
-//         }
-//       } catch (err) {
-//         return res.status(401).json({
-//           status: false,
-//           message: "Invalid or expired token",
-//           error: err,
-//         });
-//       }
-//     }
-//   } else {
-//     return res.status(400).json({
-//       status: false,
-//       message: "User is not authorized or Token is missing",
-//     });
-//   }
-// };
 
 function generateOTP() {
   return Math.floor(100000 + Math.random() * 900000); // Generates a 6-digit OTP
