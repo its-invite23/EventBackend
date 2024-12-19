@@ -32,7 +32,6 @@ userRoute.get("/profile-token", verifyToken, profilegettoken)
 
 userRoute.post("/verifyaccount", VerifyUser)
 
-userRoute.post("/user-filter", userfilter);
 
 
 

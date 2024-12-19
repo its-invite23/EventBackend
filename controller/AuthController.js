@@ -106,15 +106,15 @@ const filterUsers = async (username) => {
   }
 };
 
-exports.userfilter = catchAsync(async (req, res, next) => {
-  const { username, user_status } = req.body; // Use req.body for body params, or req.query for query params
+// exports.userfilter = catchAsync(async (req, res, next) => {
+//   const { username, user_status } = req.body; // Use req.body for body params, or req.query for query params
 
-  // Use the filterUsers function to get the filtered users
-  const result = await filterUsers(username, user_status);
+//   // Use the filterUsers function to get the filtered users
+//   const result = await filterUsers(username, user_status);
 
-  // Return the result as the response
-  res.status(result.status ? 200 : 500).json(result);
-});
+//   // Return the result as the response
+//   res.status(result.status ? 200 : 500).json(result);
+// });
 
 exports.signup = catchAsync(async (req, res) => {
   try {
@@ -487,71 +487,6 @@ exports.login = catchAsync(async (req, res, next) => {
   }
 });
 
-// exports. = catchAsync(async (req, res, next) => {
-//   try {
-//     const page = Math.max(parseInt(req.query.page) || 1, 1); // Ensure page is at least 1
-//     const limit = Math.max(parseInt(req.query.limit) || 50, 1); // Ensure limit is at least 1
-//     const search = req.query.search || "";
-
-//     let userData, totalPages, totaluser;
-
-//     // Fetch users based on the filter
-//     const filter = { role: "user", isDeleted: false };
-//     const skip = (page - 1) * limit; // Calculate skip value
-
-//     const users = await User.find(filter)
-//       .select("-password")
-//       .sort({ created_at: -1 })
-//       .skip(skip)
-//       .limit(limit);
-
-//     const updates = users.map(async (user) => {
-//       const enquiryCount = await Booking.countDocuments({ userId: user._id }); // Count bookings for the user
-//       return User.updateOne({ _id: user._id }, { $set: { enquiry_count: enquiryCount } }); // Update user
-//     });
-
-//     await Promise.all(updates);
-
-//     const updatedUsers = await User.find(filter)
-//       .select("-password")
-//       .sort({ created_at: -1 });
-
-//     if (search === "") {
-//       totaluser = await User.countDocuments(filter);
-//       userData = updatedUsers
-//         .sort({ created_at: -1 })
-//         .skip(skip)
-//         .limit(limit);
-//       totalPages = Math.ceil(totaluser / limit);
-//     } else {
-//       userData = await filterUsers(search);
-//       totalPages = 1;
-//       totaluser = userData.length;
-//     }
-
-//     // Return response
-//     return res.status(200).json({
-//       status: true,
-//       message: "Users retrieved successfully with enquiry counts updated",
-//       data: {
-//         users: userData,
-//         totalusers: totaluser,
-//         totalPages,
-//         currentPage: page,
-//         perPage: limit,
-//         nextPage: page < totalPages ? page + 1 : null,
-//         previousPage: page > 1 ? page - 1 : null,
-//       },
-//     });
-//   } catch (error) {
-//     console.error("Error fetching users and updating enquiry counts:", error); // Log full error for debugging
-//     return res.status(500).json({
-//       status: false,
-//       message: "An error occurred while fetching users and updating enquiry counts.",
-//       error: error.message || "Internal Server Error", // Provide a fallback error message
-//     });
-//   }
-// });
 
 exports.profile = catchAsync(async (req, res, next) => {
   try {
