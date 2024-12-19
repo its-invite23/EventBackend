@@ -81,6 +81,41 @@ const signEmail = async (id) => {
   return token;
 };
 
+
+const filterUsers = async (username) => {
+  try {
+    let filter = {};
+    // Add `username` to filter for partial match
+    if (username && username.trim() !== "") {
+      filter.username = { $regex: username, $options: "i" }; // Partial match with case-insensitive regex
+    }
+    // Fetch users based on the filter
+    const users = await User.find(filter).select("-password");
+
+    // Return the users found or an appropriate message if no users are found
+
+    // Return users if found
+    return users;
+  } catch (error) {
+    console.error("Error fetching booking:", error);
+    return res.status(500).json({
+      status: false,
+      message: "An error occurred while fetching bookings.",
+      error: error.message,
+    });
+  }
+};
+
+exports.userfilter = catchAsync(async (req, res, next) => {
+  const { username, user_status } = req.body; // Use req.body for body params, or req.query for query params
+
+  // Use the filterUsers function to get the filtered users
+  const result = await filterUsers(username, user_status);
+
+  // Return the result as the response
+  res.status(result.status ? 200 : 500).json(result);
+});
+
 exports.signup = catchAsync(async (req, res) => {
   try {
     const {
@@ -452,14 +487,84 @@ exports.login = catchAsync(async (req, res, next) => {
   }
 });
 
+// exports. = catchAsync(async (req, res, next) => {
+//   try {
+//     const page = Math.max(parseInt(req.query.page) || 1, 1); // Ensure page is at least 1
+//     const limit = Math.max(parseInt(req.query.limit) || 50, 1); // Ensure limit is at least 1
+//     const search = req.query.search || "";
+
+//     let userData, totalPages, totaluser;
+
+//     // Fetch users based on the filter
+//     const filter = { role: "user", isDeleted: false };
+//     const skip = (page - 1) * limit; // Calculate skip value
+
+//     const users = await User.find(filter)
+//       .select("-password")
+//       .sort({ created_at: -1 })
+//       .skip(skip)
+//       .limit(limit);
+
+//     const updates = users.map(async (user) => {
+//       const enquiryCount = await Booking.countDocuments({ userId: user._id }); // Count bookings for the user
+//       return User.updateOne({ _id: user._id }, { $set: { enquiry_count: enquiryCount } }); // Update user
+//     });
+
+//     await Promise.all(updates);
+
+//     const updatedUsers = await User.find(filter)
+//       .select("-password")
+//       .sort({ created_at: -1 });
+
+//     if (search === "") {
+//       totaluser = await User.countDocuments(filter);
+//       userData = updatedUsers
+//         .sort({ created_at: -1 })
+//         .skip(skip)
+//         .limit(limit);
+//       totalPages = Math.ceil(totaluser / limit);
+//     } else {
+//       userData = await filterUsers(search);
+//       totalPages = 1;
+//       totaluser = userData.length;
+//     }
+
+//     // Return response
+//     return res.status(200).json({
+//       status: true,
+//       message: "Users retrieved successfully with enquiry counts updated",
+//       data: {
+//         users: userData,
+//         totalusers: totaluser,
+//         totalPages,
+//         currentPage: page,
+//         perPage: limit,
+//         nextPage: page < totalPages ? page + 1 : null,
+//         previousPage: page > 1 ? page - 1 : null,
+//       },
+//     });
+//   } catch (error) {
+//     console.error("Error fetching users and updating enquiry counts:", error); // Log full error for debugging
+//     return res.status(500).json({
+//       status: false,
+//       message: "An error occurred while fetching users and updating enquiry counts.",
+//       error: error.message || "Internal Server Error", // Provide a fallback error message
+//     });
+//   }
+// });
 
 exports.profile = catchAsync(async (req, res, next) => {
   try {
-    const page = Math.max(parseInt(req.query.page) || 1, 1); // Ensure page is at least 1
-    const limit = Math.max(parseInt(req.query.limit) || 50, 1); // Ensure limit is at least 1
-    const skip = (page - 1) * limit;
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 25;
+    const search = req.query.search || "";
+    let userData, totalPages, totaluser;
 
-    const users = await User.find({ role: "user", isDeleted: false })
+    // Fetch users based on the filter
+    const filter = { role: "user", isDeleted: false };
+    const skip = (page - 1) * limit; // Calculate skip value
+
+    const users = await User.find(filter)
       .select("-password")
       .sort({ created_at: -1 })
       .skip(skip)
@@ -470,41 +575,40 @@ exports.profile = catchAsync(async (req, res, next) => {
       return User.updateOne({ _id: user._id }, { $set: { enquiry_count: enquiryCount } }); // Update user
     });
 
-    await Promise.all(updates);
-
-    const updatedUsers = await User.find({ role: "user", isDeleted: false })
-      .select("-password")
-      .sort({ created_at: -1 })
-      .skip(skip)
-      .limit(limit);
-
-    // Total users and pagination details
-    const totalUsers = await User.countDocuments({ role: "user", isDeleted: false });
-    const totalPages = Math.ceil(totalUsers / limit);
-
-    // Return response
-    return res.status(200).json({
-      status: true,
-      message: "Users retrieved successfully with enquiry counts updated",
+    if (search === "") {
+      const skip = (page - 1) * limit;
+      totaluser = await User.countDocuments();
+      userData = await User.find(filter)
+        .sort({ created_at: -1 })
+        .skip(skip)
+        .limit(limit)
+      totalPages = Math.ceil(totaluser / limit);
+    }
+    else {
+      userData = await filterUsers(search);
+      totalPages = 1;
+      totaluser = userData;
+    }
+    res.status(200).json({
       data: {
-        users: updatedUsers,
-        totalUsers,
-        totalPages,
+        userData: userData,
+        totaluser: totaluser,
+        totalPages: totalPages,
         currentPage: page,
         perPage: limit,
         nextPage: page < totalPages ? page + 1 : null,
         previousPage: page > 1 ? page - 1 : null,
       },
+      msg: "User Get",
     });
   } catch (error) {
-    console.error("Error fetching users and updating enquiry counts:", error); // Log full error for debugging
-    return res.status(500).json({
-      status: false,
-      message: "An error occurred while fetching users and updating enquiry counts.",
-      error: error.message || "Internal Server Error", // Provide a fallback error message
+    res.status(500).json({
+      msg: "Failed to fetch User get",
+      error: error.message,
     });
   }
 });
+
 
 exports.updateUserStatus = catchAsync(async (req, res) => {
   try {
@@ -769,49 +873,6 @@ exports.profilegettoken = catchAsync(async (req, res, next) => {
 //     });
 //   }
 // });
-
-exports.userfilter = catchAsync(async (req, res, next) => {
-  try {
-    const { username, user_status } = req.body; // Use req.body for body params, or req.query for query params
-    let filter = {};
-
-    // Add `user_status` to filter if it exists
-    if (user_status) {
-      filter.user_status = user_status;
-    }
-
-    // Add `username` to filter for partial match
-    if (username && username.trim() !== "") {
-      filter.username = { $regex: username, $options: "i" }; // Partial match with case-insensitive regex
-    }
-
-    // Fetch users based on the filter
-    const users = await User.find(filter).select("-password");
-
-    // If no users are found, return an appropriate message
-    if (!users.length) {
-      return res.status(200).json({
-        status: false,
-        message: "No users found for the given filter.",
-        users: [],
-      });
-    }
-
-    // Return users if found
-    return res.status(200).json({
-      status: true,
-      message: "Users retrieved successfully",
-      users: users,
-    });
-  } catch (error) {
-    console.error("Error fetching users:", error);
-    return res.status(500).json({
-      status: false,
-      message: "An error occurred while fetching users.",
-      error: error.message,
-    });
-  }
-});
 
 
 
