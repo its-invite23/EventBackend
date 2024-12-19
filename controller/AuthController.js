@@ -727,6 +727,49 @@ exports.profilegettoken = catchAsync(async (req, res, next) => {
   }
 });
 
+// exports.userfilter = catchAsync(async (req, res, next) => {
+//   try {
+//     const { username, user_status } = req.body; // Use req.body for body params, or req.query for query params
+//     let filter = {};
+
+//     // Add `user_status` to filter if it exists
+//     if (user_status) {
+//       filter.user_status = user_status;
+//     }
+
+//     // Add `username` to filter if it's not blank
+//     if (username && username.trim() !== "") {
+//       filter.username = { $regex: `^${username}$`, $options: "i" }; // Exact match with case-insensitive regex
+//     }
+
+//     // Fetch users based on the filter
+//     const users = await User.find(filter).select("-password");
+
+//     // If no users are found, return an appropriate message
+//     if (!users.length) {
+//       return res.status(200).json({
+//         status: false,
+//         message: "No users found for the given filter.",
+//         users: [],
+//       });
+//     }
+
+//     // Return users if found
+//     return res.status(200).json({
+//       status: true,
+//       message: "Users retrieved successfully",
+//       users: users,
+//     });
+//   } catch (error) {
+//     console.error("Error fetching users:", error);
+//     return res.status(500).json({
+//       status: false,
+//       message: "An error occurred while fetching users.",
+//       error: error.message,
+//     });
+//   }
+// });
+
 exports.userfilter = catchAsync(async (req, res, next) => {
   try {
     const { username, user_status } = req.body; // Use req.body for body params, or req.query for query params
@@ -737,9 +780,9 @@ exports.userfilter = catchAsync(async (req, res, next) => {
       filter.user_status = user_status;
     }
 
-    // Add `username` to filter if it's not blank
+    // Add `username` to filter for partial match
     if (username && username.trim() !== "") {
-      filter.username = { $regex: `^${username}$`, $options: "i" }; // Exact match with case-insensitive regex
+      filter.username = { $regex: username, $options: "i" }; // Partial match with case-insensitive regex
     }
 
     // Fetch users based on the filter
@@ -748,7 +791,7 @@ exports.userfilter = catchAsync(async (req, res, next) => {
     // If no users are found, return an appropriate message
     if (!users.length) {
       return res.status(200).json({
-        status: true,
+        status: false,
         message: "No users found for the given filter.",
         users: [],
       });
@@ -769,6 +812,8 @@ exports.userfilter = catchAsync(async (req, res, next) => {
     });
   }
 });
+
+
 
 
 exports.VerifyUser =catchAsync(

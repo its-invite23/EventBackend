@@ -349,8 +349,6 @@ exports.BookingPrice = catchAsync(async (req, res) => {
   }
 });
 
-
-
 exports.BookingGetByID = catchAsync(async (req, res) => {
   try {
     const { id } = req.params;
@@ -422,7 +420,6 @@ exports.BookingGetByID = catchAsync(async (req, res) => {
     });
   }
 });
-
 
 exports.BookingPaymentId = catchAsync(async (req, res, next) => {
   try {
