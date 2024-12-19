@@ -7,17 +7,14 @@ exports.getPlaceDetails = catchAsync(
         if (!placeId) {
             return res.status(400).json({ error: 'Place ID is required' });
         }
-    
         try {
             // Fetch Google Place details from Google API
             const API_KEY = process.env.GOOGLE_MAPS_API_KEY; // Replace with your actual Google API key
             const placeUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&key=${API_KEY}`;
             const placeResponse = await axios.get(placeUrl);
-    
             if (placeResponse.data.status !== 'OK') {
                 throw new Error(placeResponse.data.error_message || 'Failed to fetch place details');
             }
-    
             // Extract place details from the Google API response
             const placeDetails = placeResponse.data.result;
     
