@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
+const logger = require("./utils/Logger");
 
 dotenv.config();
 
@@ -11,8 +12,10 @@ mongoose.connect(process.env.DB_URL, {
    family: 4
 })
    .then(() => {
-      console.log('MongoDB connected successfully');
+      // console.log('MongoDB connected successfully');
+      logger.info('MongoDB connected successfully');
    })
    .catch((err) => {
-      console.error('MongoDB CONNECTION ERROR =>>: ', err);
+      // console.error('MongoDB CONNECTION ERROR =>>: ', err);
+      logger.error('MongoDB CONNECTION ERROR =>>: ', err);
    });

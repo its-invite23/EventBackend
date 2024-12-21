@@ -3,6 +3,7 @@ const catchAsync = require("../utils/catchAsync");
 const emailTemplate = require("../emailTemplates/replyMessage");
 const sendEmail = require("../utils/EmailMailler");
 const { validationErrorResponse, errorResponse, successResponse } = require("../utils/ErrorHandling");
+const logger = require("../utils/Logger");
 
 exports.EnquiryPost = catchAsync(async (req, res) => {
     const { email, name, message, eventname, event_type, attendees, phone_code, phone_number } = req.body;
@@ -112,6 +113,7 @@ exports.EnquiryUpdateStatus = catchAsync(async (req, res) => {
         });
     } catch (error) {
         console.error(error);
+        logger.error(error);
         res.status(500).json({
             message: "Internal Server Error",
             status: false,
@@ -161,6 +163,7 @@ exports.EnquiryReply = catchAsync(
                     );
                 } catch (emailError) {
                     console.error("Email sending failed:", emailError);
+                    logger.error("Email sending failed:", emailError);
                     return errorResponse(res, 500, "Failed to send email notification.");
                 }
     
@@ -170,6 +173,7 @@ exports.EnquiryReply = catchAsync(
             }
         } catch (error) {
             console.error("Error during enquiry reply:", error);
+            logger.error("Error during enquiry reply:", error);
             return errorResponse(res, 500, "Failed to update the enquiry.");
         }
     }

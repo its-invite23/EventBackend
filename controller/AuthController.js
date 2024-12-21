@@ -8,6 +8,7 @@ const ForgetPassword = require("../emailTemplates/ForgetPassword");
 const Booking = require("../model/Booking");
 const { validationErrorResponse, errorResponse, successResponse } = require("../utils/ErrorHandling");
 const VerifyAccount = require("../emailTemplates/Otp");
+const logger = require("../utils/Logger");
 
 exports.verifyToken = async (req, res, next) => {
   try {
@@ -98,6 +99,7 @@ const filterUsers = async (username) => {
     return users;
   } catch (error) {
     console.error("Error fetching booking:", error);
+    logger.error("Error fetching booking:", error);
     return res.status(500).json({
       status: false,
       message: "An error occurred while fetching bookings.",
@@ -572,6 +574,7 @@ exports.updateUserStatus = catchAsync(async (req, res) => {
     });
   } catch (error) {
     console.error(error);
+    logger.error(error);
     res.status(500).json({
       message: "Internal Server Error",
       status: false,
@@ -624,6 +627,7 @@ exports.UserListIdDelete = catchAsync(async (req, res, next) => {
     });
   } catch (error) {
     console.error("Error deleting user record:", error);
+    logger.error("Error deleting user record:", error);
     res.status(500).json({
       status: false,
       message: "Internal Server Error. Please try again later.",
@@ -659,6 +663,7 @@ exports.UserUpdate = catchAsync(async (req, res, next) => {
     });
   } catch (error) {
     console.error("Error updating User record:", error);
+    logger.error("Error updating User record:", error);
 
     res.status(500).json({
       status: false,
@@ -705,6 +710,7 @@ exports.forgotlinkrecord = catchAsync(
   
     } catch (error) {
       console.error("Error in forgot password process:", error);
+      logger.error("Error in forgot password process:", error);
       return errorResponse(res, "Failed to send email");
     }
   }
@@ -727,6 +733,7 @@ exports.forgotpassword = catchAsync(
         return errorResponse(res, "Token has expired. Please generate a new token.", 401);
       }
       console.error("Error in password reset process:", error);
+      logger.error("Error in password reset process:", error);
       return errorResponse(res, "Failed to reset password");
     }
   }
@@ -829,6 +836,7 @@ exports.VerifyUser =catchAsync(
         return errorResponse(res, "Token has expired. Please contact support.", 401);
       }
       console.error("Error in verifying account:", error);
+      logger.error("Error in verifying account:", error);
       return errorResponse(res, "Failed to verify account");
     }
   }

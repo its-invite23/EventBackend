@@ -4,6 +4,7 @@ const Booking = require("../model/Booking");
 const Enquiry = require("../model/Enquiry");
 const Package = require("../model/Package");
 const payment = require("../model/payment");
+const logger = require("../utils/Logger");
 
 
 exports.getCount = catchAsync(async (req, res) => {
@@ -99,6 +100,7 @@ exports.GarphApi = catchAsync(async (req, res) => {
         res.status(200).json(formattedData);
     } catch (err) {
         console.error('Error fetching payment data:', err);
+        logger.error('Error fetching payment data:', err);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 }
@@ -145,6 +147,7 @@ exports.search = catchAsync(async (req, res, next) => {
         });
     } catch (error) {
         console.error("Error fetching data:", error);
+        logger.error("Error fetching data:", error);
         return res.status(500).json({
             status: false,
             message: "An error occurred while fetching data.",

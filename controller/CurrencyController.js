@@ -1,6 +1,7 @@
 const Currency = require("../model/Currency");
 const catchAsync = require("../utils/catchAsync");
 const { default: axios } = require("axios");
+const logger = require("../utils/Logger");
 
 const fetchExchangeRates = async () => {
   try {
@@ -10,6 +11,7 @@ const fetchExchangeRates = async () => {
     return response?.data?.conversion_rates;
   } catch (error) {
     console.error("Error fetching exchange rate data:", error.message);
+    logger.error("Error fetching exchange rate data:", error.message);
     return null;
   }
 };
@@ -42,6 +44,7 @@ exports.UpdateCurrencyRates = catchAsync(async (req, res) => {
     });
   } catch (error) {
     console.error("Error during booking creation:", error);
+    logger.error("Error during booking creation:", error);
     return res.status(500).json({
       status: false,
       message: "An error occurred while creating the booking.",
@@ -70,6 +73,7 @@ exports.GetRate = catchAsync(async (req, res) => {
     });
   } catch (error) {
     console.error("Error during booking creation:", error);
+    logger.error("Error during booking creation:", error);
     return res.status(500).json({
       status: false,
       message: "An error occurred while creating the booking.",

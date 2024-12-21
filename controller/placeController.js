@@ -1,5 +1,6 @@
 const axios = require('axios');
 const catchAsync = require('../utils/catchAsync');
+const logger = require('../utils/Logger');
 
 exports.getPlaceDetails = catchAsync(
     async (req, res) => {
@@ -34,6 +35,7 @@ exports.getPlaceDetails = catchAsync(
             return res.status(200).json(response);
         } catch (error) {
             console.error("Error:", error); // Log the error for debugging
+            logger.error("Error in place controller api:", error)
             return res.status(500).json({ success: false, error: error.message });
         }
     }

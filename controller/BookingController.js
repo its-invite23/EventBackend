@@ -8,6 +8,7 @@ const nodemailer = require("nodemailer");
 const { default: axios } = require("axios");
 const payment = require("../model/payment");
 const { errorResponse, successResponse } = require("../utils/ErrorHandling");
+const logger = require("../utils/Logger");
 
 
 
@@ -35,6 +36,7 @@ const BookingFilter = async (name) => {
     return bookings;
   } catch (error) {
     console.error("Error fetching booking:", error);
+    logger.error("Error fetching booking:", error);
     return res.status(500).json({
       status: false,
       message: "An error occurred while fetching bookings.",
@@ -117,6 +119,7 @@ exports.bookingpost = catchAsync(async (req, res) => {
 
   } catch (error) {
     console.error("Error during booking creation:", error);
+    logger.error("Error during booking creation:", error);
     return res.status(500).json({
       status: false,
       message: "An error occurred while creating the booking.",
@@ -210,6 +213,7 @@ exports.BookingStatus = catchAsync(async (req, res) => {
     });
   } catch (error) {
     console.error("Error updating booking status:", error);
+    logger.error("Error updating booking status:", error);
 
     // Respond with an error message
     res.status(500).json({
@@ -268,6 +272,7 @@ exports.BookingPayment = catchAsync(async (req, res) => {
     return successResponse(res, "Payment link sent successfully!");
   } catch (error) {
     console.error("Error updating booking status:", error);
+    logger.error("Error updating booking status:", error);
     res.status(500).json({
       message: "Internal Server Error",
       status: false,
@@ -343,6 +348,7 @@ exports.BookingPrice = catchAsync(async (req, res) => {
     }
   } catch (error) {
     console.error("Error updating service price:", error);
+    logger.error("Error updating service price:", error);
     res.status(500).json({
       message: "Internal Server Error",
       status: false,
@@ -391,6 +397,7 @@ exports.BookingGetByID = catchAsync(async (req, res) => {
         return placeDetails;
       } catch (error) {
         console.error("Error fetching place details:", error);
+        logger.error("Error fetching place details:", error);
         return null;
       }
     };
@@ -415,6 +422,7 @@ exports.BookingGetByID = catchAsync(async (req, res) => {
     });
   } catch (error) {
     console.error("Error updating booking status:", error);
+    logger.error("Error updating booking status:", error);
     res.status(500).json({
       message: "Internal Server Error",
       status: false,
@@ -453,6 +461,7 @@ exports.BookingPaymentId = catchAsync(async (req, res, next) => {
         return placeDetails;
       } catch (error) {
         console.error("Error fetching place details:", error);
+        logger.error("Error fetching place details:", error);
         return null;
       }
     };
@@ -484,6 +493,7 @@ exports.BookingPaymentId = catchAsync(async (req, res, next) => {
 
   } catch (error) {
     console.error("Error updating package record:", error);
+    logger.error("Error updating package record:", error);
     res.status(500).json({
       status: false,
       message: "An error occurred while updating the package. Please try again later.",

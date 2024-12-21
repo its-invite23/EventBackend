@@ -1,4 +1,5 @@
 const nodemailer = require('nodemailer');
+const logger = require('./Logger');
 
 const sendEmail = async (data) => {
     const { email, name, message, package, payment_id, subject, emailTemplate } = data;
@@ -24,6 +25,7 @@ const sendEmail = async (data) => {
         let info = await transporter.sendMail(mailOptions);
     } catch (error) {
         console.error('Error sending email:', error);
+        logger.error('Error sending email:', error);
         throw error; // Rethrow the error to be caught in the controller
     }
 };

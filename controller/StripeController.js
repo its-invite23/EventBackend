@@ -6,6 +6,7 @@ const sendEmail = require("../utils/EmailMailler");
 const emailTemplate = require("../emailTemplates/Payment.js");
 const Booking = require("../model/Booking");
 const User = require("../model/User");
+const logger = require("../utils/Logger.js");
 
 const fetchPaymentId = async (sessionId, srNo) => {
   try {
@@ -24,6 +25,7 @@ const fetchPaymentId = async (sessionId, srNo) => {
     return paymentId;
   } catch (error) {
     console.error("Error fetching payment ID:", error);
+    logger.error("Error fetching payment ID:", error);
     return null;
   }
 };
@@ -56,6 +58,7 @@ const PaymentFilter = async (name) => {
     return payments;
   } catch (error) {
     console.error("Error fetching payments:", error);
+    logger.error("Error fetching payments:", error);
     return res.status(500).json({
       status: false,
       message: "An error occurred while fetching payments.",
@@ -206,6 +209,7 @@ exports.PaymentSuccess = catchAsync(async (req, res) => {
     });
   } catch (error) {
     console.error("Error updating booking status:", error);
+    logger.error("Error updating booking status:", error);
     res.status(500).json({
       message: "Internal Server Error",
       status: false,
@@ -239,6 +243,7 @@ exports.PaymentCancel = catchAsync(async (req, res) => {
     });
   } catch (error) {
     console.error("Error updating booking status:", error);
+    logger.error("Error updating booking status:", error);
     res.status(500).json({
       message: "Internal Server Error",
       status: false,
@@ -281,6 +286,7 @@ exports.PaymentGetByID = catchAsync(async (req, res) => {
 
   } catch (error) {
     console.error("Error finding payment status:", error);
+    logger.error("Error finding payment status:", error);
     res.status(500).json({
       message: "Internal Server Error",
       status: false,
@@ -317,6 +323,7 @@ exports.PackagegetByBookingId = catchAsync(async (req, res, next) => {
     });
   } catch (error) {
     console.error("Error retrieving package record:", error);
+    logger.error("Error retrieving package record:", error);
 
     res.status(500).json({
       status: false,

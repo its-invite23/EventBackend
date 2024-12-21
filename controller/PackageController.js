@@ -2,6 +2,7 @@ const packages = require("../model/Package");
 const catchAsync = require("../utils/catchAsync");
 const { v4: uuidv4 } = require('uuid');
 const B2 = require('backblaze-b2');
+const logger = require("../utils/Logger");
 const bucket_name = process.env.BUCKET_NAME;
 const bucket_id = process.env.BUCKET_ID;
 const APP_ID = process.env.CLOUD_APPLICATION_ID;
@@ -22,6 +23,7 @@ async function deleteFile(fileName, fileId) {
         return true; // Indicate successful deletion
     } catch (error) {
         console.error('Error deleting file:', error);
+        logger.error('Error deleting file:', error);
         return false; // Indicate failure
     }
 }
@@ -193,6 +195,7 @@ exports.PackageUpdate = catchAsync(async (req, res, next) => {
 
     } catch (error) {
         console.error("Error updating packages record:", error);
+        logger.error("Error updating packages record:", error);
 
         res.status(500).json({
             status: false,
@@ -242,6 +245,7 @@ exports.PackageUpdateStatus = catchAsync(async (req, res, next) => {
 
     } catch (error) {
         console.error("Error updating package record:", error);
+        logger.error("Error updating package record:", error);
 
         res.status(500).json({
             status: false,
@@ -280,6 +284,7 @@ exports.PackagegetId = catchAsync(async (req, res, next) => {
 
     } catch (error) {
         console.error("Error updating package record:", error);
+        logger.error("Error updating package record:", error);
 
         res.status(500).json({
             status: false,
@@ -344,6 +349,7 @@ exports.PackageIdDelete = catchAsync(async (req, res, next) => {
         });
     } catch (error) {
         console.error('Error deleting package record:', error);
+        logger.error('Error deleting package record:', error);
         res.status(500).json({
             status: false,
             message: 'Internal Server Error. Please try again later.',

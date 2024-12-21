@@ -1,5 +1,6 @@
 const catchAsync = require("./catchAsync");
-const Currency = require("../model/Currency")
+const Currency = require("../model/Currency");
+const logger = require("./Logger");
 const getRateMiddleware = catchAsync(async (req, res, next) => {
   try {
     const { currency, AdminCurrencyCode } = req.body;
@@ -19,6 +20,7 @@ const getRateMiddleware = catchAsync(async (req, res, next) => {
     next();
   } catch (error) {
     console.error("Error retrieving currency rate:", error);
+    logger.error("Error retrieving currency rate:", error);
     return res.status(500).json({
       status: false,
       message: "An error occurred while retrieving the currency rate.",

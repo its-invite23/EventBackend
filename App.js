@@ -22,6 +22,7 @@ const placeRoutes = require("./route/placeRoute")
 const currencyRoutes = require("./route/CurrencyRoute")
 const commonRoutes = require("./route/Dashboard");
 const { UpdateCurrencyRates } = require("./controller/CurrencyController");
+const logger = require("./utils/Logger");
 const corsOptions = {
   origin: "*", // Allowed origins
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
@@ -57,9 +58,11 @@ const b2 = new B2({
 async function authorizeB2() {
   try {
     await b2.authorize();
-    console.log('B2 authorization successful');
+    // console.log('B2 authorization successful');
+    logger.info("B2 authorization successful");
   } catch (error) {
     console.error('Error authorizing B2:', error);
+    logger.error('Error authorizing B2:', error);
   }
 }
 const checkUploadLimit = (req, res, next) => {
@@ -124,7 +127,8 @@ app.post('/cloud/upload', cors(corsOptions), verifyToken, upload.single('file'),
       });
     }
   } catch (error) {
-    console.log("error", error)
+    logger.error("B2 authorization successful");
+    // console.log("error", error)
     res.status(500).json({
       status: false,
       message: "File failed to upload on cloud.",
