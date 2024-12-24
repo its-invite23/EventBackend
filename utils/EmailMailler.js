@@ -1,21 +1,23 @@
 const nodemailer = require('nodemailer');
-const logger = require('./Logger');
 
 const sendEmail = async (data) => {
     const { email, name, message, package, payment_id, subject, emailTemplate } = data;
 
-    let transporter = nodemailer.createTransport({
-        host: "smtp.gmail.com",
-        port: 587,
-        secure: false,
+    const transporter = nodemailer.createTransport({
+        host: process.env.MAIL_HOST,
+        port: process.env.MAIL_PORT,
+        secure: true,
         auth: {
             user: process.env.EMAIL_USER,
-            pass: process.env.EMAIL_PASS,
+            pass:  process.env.EMAIL_PASS, // Replace with the app-specific password
         },
+        debug: true, // Debug mode
     });
+
     const emailHtml = emailTemplate({ name, message, package, payment_id });
+
     const mailOptions = {
-        from: process.env.EMAIL_USER,
+        from: 'contact@its-invite.com', // Ensure this matches your Zoho email
         to: email,
         subject: subject,
         html: emailHtml,
@@ -23,9 +25,9 @@ const sendEmail = async (data) => {
 
     try {
         let info = await transporter.sendMail(mailOptions);
+        console.log('Email sent:', info.messageId);
     } catch (error) {
         console.error('Error sending email:', error);
-        logger.error('Error sending email:', error);
         throw error; // Rethrow the error to be caught in the controller
     }
 };

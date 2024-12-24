@@ -189,9 +189,7 @@ exports.signup = catchAsync(async (req, res) => {
       const customerUser = record.username;
 
       let transporter = nodemailer.createTransport({
-        host: "smtp.gmail.com",
-        port: 587,
-        secure: false,
+        host: process.env.MAIL_HOST, port: process.env.MAIL_PORT, secure: true,
         auth: {
           user: process.env.EMAIL_USER,
           pass: process.env.EMAIL_PASS,
@@ -280,9 +278,7 @@ exports.OTP = catchAsync(async (req, res) => {
     if (result) {
       const customerUser = record.username;
       let transporter = nodemailer.createTransport({
-        host: "smtp.gmail.com",
-        port: 587,
-        secure: false,
+        host: process.env.MAIL_HOST, port: process.env.MAIL_PORT, secure: true,
         auth: {
           user: process.env.EMAIL_USER,
           pass: process.env.EMAIL_PASS,
@@ -689,9 +685,7 @@ exports.forgotlinkrecord = catchAsync(
       const resetLink = `https://user-event.vercel.app/forgotpassword/${token}`;
       const customerUser = record.username;
       let transporter = nodemailer.createTransport({
-        host: "smtp.gmail.com",
-        port: 587,
-        secure: false,
+        host: process.env.MAIL_HOST, port: process.env.MAIL_PORT, secure: true,
         auth: {
           user: process.env.EMAIL_USER,
           pass: process.env.EMAIL_PASS,

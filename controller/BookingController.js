@@ -250,16 +250,12 @@ exports.BookingPayment = catchAsync(async (req, res) => {
     const currencyCode = bookingstatus?.AdminCurrencyCode || 'USD';
     const emailHtml = PaymentLink(paymentLink, bookingstatus?.userId?.username, bookingstatus?.totalPrice * adminCurrencyRate, currencyCode);
     let transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 587,
-      secure: false,
+      host: process.env.MAIL_HOST, port: process.env.MAIL_PORT, secure: true,
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
       },
     });
-
-
 
     await transporter.sendMail({
       from: process.env.EMAIL_USER,
