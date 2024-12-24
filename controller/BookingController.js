@@ -257,7 +257,7 @@ exports.BookingPayment = catchAsync(async (req, res) => {
       },
     });
 
-    await transporter.sendMail({
+    await transporter.jsonMail({
       from: process.env.EMAIL_USER,
       to: bookingstatus.userId?.email,
       subject: "Payment Link to confirm your Booking",
@@ -497,3 +497,28 @@ exports.BookingPaymentId = catchAsync(async (req, res, next) => {
     });
   }
 });
+
+
+exports.deleteServiceProvider = catchAsync(
+  async (req, res) => {
+    const Id = req.params.Id;
+    const placeId = req.params.placeId;
+    try {
+      const serviceProvider = await Booking.findOne({ _id: Id });
+      if (!serviceProvider) {
+        return res.status(404).json('Service provider not found');
+      }
+      const packageExists = serviceProvider.package.some(pkg => pkg.place_id === placeId);
+      if (!packageExists) {
+        return res.status(404).json('Place ID not found in the user\'s package');
+      }
+      const updatedPackage = serviceProvider.package.filter(pkg => pkg.place_id !== placeId);
+      serviceProvider.package = updatedPackage;
+      await serviceProvider.save();
+
+      res.status(200).json('Service provider deleted successfully');
+    } catch (error) {
+      res.status(500).json('An error occurred while deleting the service provider');
+    }
+  }
+);

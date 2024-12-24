@@ -2,7 +2,7 @@ const bookingroute = require("express").Router();
 
 const { verifyToken } = require("../controller/AuthController");
 
-const { bookingpost, BookingGet, BookingStatus, BookingPayment, BookingPrice, BookingGetByID, BookingPaymentId } = require("../controller/BookingController");
+const { bookingpost, BookingGet, BookingStatus, BookingPayment, BookingPrice, BookingGetByID, BookingPaymentId, deleteServiceProvider } = require("../controller/BookingController");
 const getRateMiddleware = require("../utils/getRateMiddleware");
 
 bookingroute.post("/booking-add", verifyToken, bookingpost)
@@ -20,6 +20,7 @@ bookingroute.get("/getByID/:id", BookingGetByID)
 bookingroute.get("/payment/:id", BookingPaymentId)
 
 // bookingroute.post("/booking-filter", BookingFilter);
+bookingroute.get("/delete-booking/:Id/:placeId" , deleteServiceProvider)
 
 
 

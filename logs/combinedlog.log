@@ -166,3 +166,31 @@
 {"level":"error","message":"Error fetching place details: Invalid request. Invalid 'placeid' parameter.","stack":"Error: Invalid request. Invalid 'placeid' parameter.\n    at fetchPlaceDetails (C:\\EventBackend\\controller\\BookingController.js:385:17)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async C:\\EventBackend\\controller\\BookingController.js:402:30\n    at async Promise.all (index 0)\n    at async C:\\EventBackend\\controller\\BookingController.js:400:28","timestamp":"2024-12-24T05:20:47.705Z"}
 {"level":"error","message":"Error fetching place details: Invalid request. Invalid 'placeid' parameter.","stack":"Error: Invalid request. Invalid 'placeid' parameter.\n    at fetchPlaceDetails (C:\\EventBackend\\controller\\BookingController.js:449:17)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async C:\\EventBackend\\controller\\BookingController.js:466:30\n    at async Promise.all (index 0)\n    at async C:\\EventBackend\\controller\\BookingController.js:464:28","timestamp":"2024-12-24T05:20:47.775Z"}
 {"level":"error","message":"Error fetching place details: Invalid request. Invalid 'placeid' parameter.","stack":"Error: Invalid request. Invalid 'placeid' parameter.\n    at fetchPlaceDetails (C:\\EventBackend\\controller\\BookingController.js:385:17)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async C:\\EventBackend\\controller\\BookingController.js:402:30\n    at async Promise.all (index 0)\n    at async C:\\EventBackend\\controller\\BookingController.js:400:28","timestamp":"2024-12-24T05:20:47.963Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2024-12-24T05:25:13.598Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2024-12-24T12:31:58.368Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2024-12-24T12:34:13.544Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2024-12-24T12:34:28.740Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2024-12-24T12:34:32.061Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2024-12-24T12:34:45.872Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2024-12-24T12:34:50.446Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2024-12-24T12:34:59.363Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2024-12-24T12:35:09.107Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2024-12-24T12:35:14.393Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2024-12-24T12:35:20.789Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2024-12-24T12:37:25.766Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2024-12-24T12:37:56.080Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2024-12-24T12:37:59.534Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2024-12-24T12:38:03.370Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2024-12-24T12:38:11.087Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2024-12-24T12:38:27.806Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2024-12-24T12:38:54.371Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2024-12-24T12:39:00.226Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2024-12-24T12:39:44.345Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2024-12-24T12:39:54.574Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2024-12-24T12:40:08.710Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2024-12-24T12:42:05.370Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2024-12-24T12:42:11.948Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2024-12-24T12:42:25.594Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2024-12-24T12:42:40.994Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2024-12-24T12:46:10.256Z"}
+{"level":"info","message":"MongoDB connected successfully","timestamp":"2024-12-24T12:46:16.862Z"}
