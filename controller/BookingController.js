@@ -499,8 +499,7 @@ exports.BookingPaymentId = catchAsync(async (req, res, next) => {
 });
 
 
-exports.deleteServiceProvider = catchAsync(
-  async (req, res) => {
+exports.deleteServiceProvider = catchAsync( async (req, res) => {
     const Id = req.params.Id;
     const placeId = req.params.placeId;
     try {
