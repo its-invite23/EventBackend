@@ -18,20 +18,20 @@ exports.getPlaceDetails = catchAsync(
             }
             // Extract place details from the Google API response
             const placeDetails = placeResponse.data.result;
-    
+
             // Extract image URLs from photo references
             const photoUrls = placeDetails.photos ? placeDetails.photos.map(photo => {
                 return `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${photo.photo_reference}&key=${API_KEY}`;
             }) : [];
-    
+
             // Add photo URLs to the place details
             placeDetails.photoUrls = photoUrls;
-    
+
             const response = {
                 success: true,
                 data: placeDetails,
             };
-    
+
             return res.status(200).json(response);
         } catch (error) {
             console.error("Error:", error); // Log the error for debugging
@@ -40,3 +40,31 @@ exports.getPlaceDetails = catchAsync(
         }
     }
 );
+
+
+exports.searchPlaces = catchAsync(
+    async (req, res) => {
+        const { query } = req.query;
+        const apiKey = process.env.GOOGLE_MAPS_API_KEY; // Replace with your actual API key
+        const url = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${encodeURIComponent(query)}&key=${apiKey}`;
+
+        try {
+            const response = await axios.get(url);
+            let results = response.data.results;
+            // Filter results to include only those with photos
+            results = results.filter(place => place.photos && place.photos.length > 0);
+            if (results.length === 0) { return res.status(200).json({ status: false, query: query, data: [], totalResults: 0, message: "No places found with photos" }); }
+            res.json({
+                status: true,
+                query: query,
+                data: results,
+                totalResults: results.length,
+                message: "Find Place "
+            });
+        } catch (error) {
+            res.status(500).send('An error occurred while fetching data');
+        }
+    }
+);
+
+

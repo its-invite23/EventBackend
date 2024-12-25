@@ -64,6 +64,7 @@ exports.bookingpost = catchAsync(async (req, res) => {
     location,
     status,
     attendees,
+    package_data,
     totalPrice,
     formData,
   } = req.body;
@@ -78,6 +79,7 @@ exports.bookingpost = catchAsync(async (req, res) => {
       location,
       status,
       CurrencyCode,
+      package_data,
       userId,
       attendees,
       totalPrice,
@@ -499,25 +501,60 @@ exports.BookingPaymentId = catchAsync(async (req, res, next) => {
 });
 
 
-exports.deleteServiceProvider = catchAsync( async (req, res) => {
-    const Id = req.params.Id;
-    const placeId = req.params.placeId;
-    try {
-      const serviceProvider = await Booking.findOne({ _id: Id });
-      if (!serviceProvider) {
-        return res.status(404).json('Service provider not found');
-      }
-      const packageExists = serviceProvider.package.some(pkg => pkg.place_id === placeId);
-      if (!packageExists) {
-        return res.status(404).json('Place ID not found in the user\'s package');
-      }
-      const updatedPackage = serviceProvider.package.filter(pkg => pkg.place_id !== placeId);
-      serviceProvider.package = updatedPackage;
-      await serviceProvider.save();
-
-      res.status(200).json('Service provider deleted successfully');
-    } catch (error) {
-      res.status(500).json('An error occurred while deleting the service provider');
+exports.deleteServiceProvider = catchAsync(async (req, res) => {
+  const Id = req.params.Id;
+  const placeId = req.params.placeId;
+  try {
+    const serviceProvider = await Booking.findOne({ _id: Id });
+    if (!serviceProvider) {
+      return res.status(404).json('Service provider not found');
     }
+    const packageExists = serviceProvider.package.some(pkg => pkg.place_id === placeId);
+    if (!packageExists) {
+      return res.status(404).json('Place ID not found in the user\'s package');
+    }
+    const updatedPackage = serviceProvider.package.filter(pkg => pkg.place_id !== placeId);
+    serviceProvider.package = updatedPackage;
+    await serviceProvider.save();
+
+    res.status(200).json(
+      {
+        message: 'Service provider deleted successfully',
+        data: serviceProvider,
+        status: true
+      }
+    );
+  } catch (error) {
+    res.status(500).json({
+      message: 'An error occurred while deleting the service provider',
+      error: error.message,
+    });
   }
+}
 );
+
+
+exports.updateServiceProviderPackage = catchAsync(async (req, res) => {
+  const { newPackageData, Id } = req.body;
+  try {
+    const serviceProvider = await Booking.findOne({ _id: Id });
+    if (!serviceProvider) {
+      return res.status(404).json('Service provider not found');
+    }
+    serviceProvider.package.push(newPackageData);
+    await serviceProvider.save();
+    res.status(200).json(
+      {
+
+        message: 'Service provider package updated successfully',
+        data: serviceProvider.package,
+        status: true,
+      }
+    );
+  } catch (error) {
+    res.status(500).json({
+      message: 'An error occurred while updating the service provider package',
+      error: error.message,
+    });
+  }
+});

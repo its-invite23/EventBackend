@@ -12,6 +12,7 @@ const bookingSchema = mongoose.Schema({
     package_name: String,
     CurrencyCode: String,
     AdminCurrencyCode: String,
+    package_data :String,
     bookingDate: {
         type: String,
         required: true
