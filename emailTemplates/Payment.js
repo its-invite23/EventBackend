@@ -76,7 +76,7 @@ module.exports = ({ name, package, payment_id }) => {
             <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#CCCCCC"> Payment Type: </p>
           </td>
           <td style="padding: 0 15px 10px 0;">
-            <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#fff">
+            <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#fff ; text-transform: capitalize;">
               <strong> ${package?.payment_type} </strong>
             </p>
           </td>
