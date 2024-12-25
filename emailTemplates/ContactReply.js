@@ -13,7 +13,7 @@ module.exports = ({name , message}) => {
   <tr bgcolor="#141414">
     <td style="padding: 40px 2px 10px 2px; text-align: center;">
       <p style="margin: 1px;">
-        <img src="https://i.ibb.co/CV8frHp/emailbanner.png" alt="">
+        <img src="https://f003.backblazeb2.com/file/Event-management/emailbanner.png" alt="">
       </p>
     </td>
   </tr>

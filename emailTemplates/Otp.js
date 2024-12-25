@@ -13,7 +13,7 @@ module.exports = (otp, userName) => {
 <tr bgcolor="#141414">
   <td style="padding: 40px 2px 10px 2px; text-align: center;">
     <p style="margin: 1px;">
-      <img src="https://i.ibb.co/LkLjbrP/forgetpass.png" alt="Forgot Password">
+      <img src="https://f003.backblazeb2.com/file/Event-management/forgetpass.png" alt="Forgot Password">
     </p>
   </td>
 </tr>
