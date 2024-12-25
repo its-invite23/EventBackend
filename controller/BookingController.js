@@ -9,10 +9,6 @@ const { default: axios } = require("axios");
 const payment = require("../model/payment");
 const { errorResponse, successResponse } = require("../utils/ErrorHandling");
 const logger = require("../utils/Logger");
-
-
-
-
 const BookingFilter = async (name) => {
   try {
     if (!name) {
@@ -253,8 +249,8 @@ exports.BookingPayment = catchAsync(async (req, res) => {
     const emailHtml = PaymentLink(paymentLink, bookingstatus?.userId?.username, bookingstatus?.totalPrice * adminCurrencyRate, currencyCode);
     let transporter = nodemailer.createTransport({
       host: process.env.MAIL_HOST,
-       port: process.env.MAIL_PORT,
-        secure: true,
+      port: process.env.MAIL_PORT,
+      secure: true,
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
@@ -492,7 +488,6 @@ exports.BookingPaymentId = catchAsync(async (req, res, next) => {
     });
 
   } catch (error) {
-    console.error("Error updating package record:", error);
     logger.error("Error updating package record:", error);
     res.status(500).json({
       status: false,
@@ -509,16 +504,23 @@ exports.deleteServiceProvider = catchAsync(async (req, res) => {
   try {
     const serviceProvider = await Booking.findOne({ _id: Id });
     if (!serviceProvider) {
-      return res.status(404).json('Service provider not found');
+      return res.status(404).json(
+        {
+          message: 'Service provider not found',
+          status: false
+        }
+      );
     }
     const packageExists = serviceProvider.package.some(pkg => pkg.place_id === placeId);
     if (!packageExists) {
-      return res.status(404).json('Place ID not found in the user\'s package');
+      return res.status(404).json({
+        message: 'Package not found for the service provider',
+        status: false,
+      });
     }
     const updatedPackage = serviceProvider.package.filter(pkg => pkg.place_id !== placeId);
     serviceProvider.package = updatedPackage;
     await serviceProvider.save();
-
     res.status(200).json(
       {
         message: 'Service provider deleted successfully',
@@ -527,6 +529,8 @@ exports.deleteServiceProvider = catchAsync(async (req, res) => {
       }
     );
   } catch (error) {
+    logger.error("Error updating package record:", error);
+
     res.status(500).json({
       message: 'An error occurred while deleting the service provider',
       error: error.message,
@@ -541,19 +545,22 @@ exports.updateServiceProviderPackage = catchAsync(async (req, res) => {
   try {
     const serviceProvider = await Booking.findOne({ _id: Id });
     if (!serviceProvider) {
-      return res.status(404).json('Service provider not found');
+      return res.status(404).json({
+        message: 'Service provider not found',
+        status: false,
+      });
     }
     serviceProvider.package.push(newPackageData);
     await serviceProvider.save();
     res.status(200).json(
       {
-
         message: 'Service provider package updated successfully',
         data: serviceProvider.package,
         status: true,
       }
     );
   } catch (error) {
+    logger.error("Error updating package record:", error);
     res.status(500).json({
       message: 'An error occurred while updating the service provider package',
       error: error.message,
