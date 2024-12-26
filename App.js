@@ -23,6 +23,7 @@ const currencyRoutes = require("./route/CurrencyRoute")
 const commonRoutes = require("./route/Dashboard");
 const { UpdateCurrencyRates } = require("./controller/CurrencyController");
 const logger = require("./utils/Logger");
+const Loggers = require("./utils/Logger");
 const corsOptions = {
   origin: "*", // Allowed origins
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
@@ -150,4 +151,6 @@ app.get("/", (req, res) => {
   });
 });
 
-app.listen(PORT, () => console.log("Server is running at port : " + PORT));
+app.listen(PORT, () => 
+  Loggers.http("Server is running at port : " +PORT)
+  );
