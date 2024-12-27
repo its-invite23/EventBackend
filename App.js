@@ -68,14 +68,12 @@ async function authorizeB2() {
 }
 const checkUploadLimit = (req, res, next) => {
   const MAX_SIZE = 10 * 1024 * 1024; // 10 MB
-
   if (req.file && req.file.size > MAX_SIZE) {
     return res.status(400).json({
       status: false,
       message: 'File size exceeds limit',
     });
   }
-
   next(); // Proceed to the next middleware or route handler
 };
 
