@@ -66,7 +66,7 @@ exports.ContactReply = catchAsync(
                     status: false,
                 });
             }
-    
+
             const result = await contactmodal.findByIdAndUpdate(
                 EmailFind._id,
                 {
@@ -75,7 +75,7 @@ exports.ContactReply = catchAsync(
                 },
                 { new: true }
             );
-    
+
             const subject = "Thank You For Contacting Us!";
             if (result) {
                 await sendEmail(

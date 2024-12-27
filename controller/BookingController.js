@@ -17,7 +17,6 @@ const BookingFilter = async (name) => {
         message: "Name is required for filtering bookings.",
       });
     }
-    
     const matchingUserIds = await User.find({
       username: { $regex: name, $options: "i" }
     }).distinct("_id");

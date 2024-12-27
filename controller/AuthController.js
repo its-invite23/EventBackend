@@ -270,7 +270,7 @@ exports.OTP = catchAsync(async (req, res) => {
       DOB,
       address,
       phone_number,
-      OTP : otp,
+      OTP: otp,
     });
 
     const result = await record.save();
@@ -698,10 +698,10 @@ exports.forgotlinkrecord = catchAsync(
         subject: "Reset Your Password",
         html: emailHtml,
       });
-  
-  
+
+
       return successResponse(res, "Email has been sent to your registered email");
-  
+
     } catch (error) {
       console.error("Error in forgot password process:", error);
       logger.error("Error in forgot password process:", error);
@@ -813,7 +813,7 @@ exports.profilegettoken = catchAsync(async (req, res, next) => {
 
 
 
-exports.VerifyUser =catchAsync(
+exports.VerifyUser = catchAsync(
   async (req, res) => {
     try {
       const { token } = req.body;
