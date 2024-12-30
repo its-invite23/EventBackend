@@ -260,7 +260,7 @@ exports.BookingPayment = catchAsync(async (req, res) => {
     await transporter.sendMail({
       from: process.env.EMAIL_USER,
       to: bookingstatus.userId?.email,
-      subject: "Payment Link to confirm your Booking",
+      subject: "Let’s Get Your Event Rolling! 🎉",
       html: emailHtml,
     });
 
