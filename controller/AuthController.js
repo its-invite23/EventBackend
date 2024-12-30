@@ -8,6 +8,8 @@ const ForgetPassword = require("../emailTemplates/ForgetPassword");
 const Booking = require("../model/Booking");
 const { validationErrorResponse, errorResponse, successResponse } = require("../utils/ErrorHandling");
 const VerifyAccount = require("../emailTemplates/Otp");
+const VerifyAccounts = require("../emailTemplates/VerifyAccount");
+
 const logger = require("../utils/Logger");
 
 exports.verifyToken = async (req, res, next) => {
@@ -202,7 +204,7 @@ exports.signup = catchAsync(async (req, res) => {
         },
       });
 
-      const emailHtml = VerifyAccount(resetLink, customerUser);
+      const emailHtml = VerifyAccounts(resetLink, customerUser);
       await transporter.sendMail({
         from: process.env.EMAIL_USER,
         to: result.email,
