@@ -28,7 +28,7 @@ module.exports = ({ name, package, payment_id }) => {
   </tr>
   <tr>
     <td style="padding: 0 20px 25px 20px;">
-      <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#CCCCCC"> Thank you for your payment! You've successfully booked your upcoming event. </p>
+      <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#CCCCCC">Thank you for your payment! We’re thrilled to confirm that your upcoming event is now successfully booked. 🎊 </p>
     </td>
   </tr>
   <tr>
@@ -116,22 +116,30 @@ module.exports = ({ name, package, payment_id }) => {
   </tr>
   <tr>
     <td style="padding: 0 20px 30px 20px;">
-      <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#CCCCCC"> Our team will notify the service provider, and you can now relax knowing your event is in good hands. If you need to modify any details, view your booking, or get in touch with the service provider, please contact us. </p>
+      <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#CCCCCC">Our team will notify the service provider immediately, and you can now sit back and relax knowing your event is in expert hands. 💼✨ </p>
     </td>
   </tr>
   <tr>
     <td style="padding: 0 20px 30px 20px;">
-      <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#CCCCCC"> For any further questions, feel free to reach out to us anytime. </p>
+      <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#CCCCCC"> If you need to modify any details, view your booking, or connect with the service provider, simply contact us—we’re here to help! </p>
     </td>
   </tr>
   <tr>
     <td style="padding: 0 0 30px 20px;">
-      <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#CCCCCC"> Thank you for choosing us to make your event special! </p>
+      <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#CCCCCC"> For any other questions, don’t hesitate to reach out anytime. </p>
     </td>
   </tr>
+  
+    <tr>
+    <td style="padding: 0 0 30px 20px;">
+      <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#CCCCCC"> Thank you for trusting Invite to make your celebration truly special. We can’t wait to bring your event to life! </p>
+    </td>
+  </tr>
+    <tr>
+   
   <tr>
     <td style="padding: 0 0 45px 20px;">
-      <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#CCCCCC"> Best regards, <br> Itsinvite Team </p>
+      <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#CCCCCC"> Warm regards, <br> The Invite Team 🌟 </p>
     </td>
   </tr>
   <tr bgcolor="#141414">

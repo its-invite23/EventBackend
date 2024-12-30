@@ -192,7 +192,7 @@ exports.PaymentSuccess = catchAsync(async (req, res) => {
     await data.save();
     const Payment_ID = await fetchPaymentId(data?.session_id, srNo, "success");
 
-    const subject = "Booking confirmed Successfully!";
+    const subject = "Payment Confirmed! Your Event is Booked 🎉";
     await sendEmail({
       email: userDetail.email,
       name: userDetail.username?.split(' ')?.map(word => word?.charAt(0)?.toUpperCase() + word?.slice(1)?.toLowerCase())?.join(' '),
