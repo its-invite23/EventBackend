@@ -24,7 +24,9 @@ module.exports = (paymentLink, userName,  price ,CurrencyCode) => {
   </tr>
   <tr>
     <td style="padding: 0 10px 30px 10px; text-align: center;">
-      <p style="margin: 1px; font-size: 14px;line-height: 18px; font-weight: normal; color: #CCCCCC;"> Please click on the below button to pay - <span style="font-weight: bold; font-family: Arial, sans-serif;"> ${price.toFixed(2)} ${CurrencyCode}</span> and confirm your booking with us. </p>
+      <p style="margin: 1px; font-size: 14px;line-height: 18px; font-weight: normal; color: #CCCCCC;"> 
+      Your event is just a step away from being confirmed! To secure your booking, simply click the button below to complete your payment of  <span style="font-weight: bold; font-family: Arial, sans-serif;"> ${price.toFixed(2)} ${CurrencyCode}</span>
+ </p>
     </td>
   </tr>
   <tr>
@@ -32,19 +34,41 @@ module.exports = (paymentLink, userName,  price ,CurrencyCode) => {
       <a href=${paymentLink} target="_blank" style="padding: 15px 20px; background: #EB3465; font-size: 14px; color: #ffffff; text-decoration: none; border-radius: 60px; display: inline-block;">Pay Now</a>
     </td>
   </tr>
-  <tr>
+  
+
+<tr>
+  <td style="padding: 0 10px 20px 10px; text-align: center;">
+    <p style="margin: 1px; font-size: 14px; line-height: 18px; font-weight: bold; color: #CCCCCC;">
+      This link will expire in 24 hours, so don’t wait too long to confirm!
+    </p>
+  </td>
+</tr>
+
+  
+  
+    <tr>
     <td style="padding: 0 10px 20px 10px; text-align: center;">
-      <p style="margin: 1px; font-size: 14px; line-height: 18px; font-weight: normal; color: #CCCCCC;"> For security purposes, this link will expire in 24 hours. Please confirm your booking as we look forward to working with you. </p>
+      <p style="margin: 1px; font-size: 14px; line-height: 18px; font-weight: normal; color: #CCCCCC;">  Once your payment is confirmed, we’ll handle the rest and keep you updated every step of the way. We’re thrilled to help make your event unforgettable!
+ </p>
     </td>
   </tr>
+  
   <tr>
     <td style="padding: 0 0 30px 20px; text-align: center;">
-      <p style="margin: 1px; font-size: 14px; font-weight: normal; color: #CCCCCC;"> Thank you for using Event Management! </p>
+      <p style="margin: 1px; font-size: 14px; font-weight: normal; color: #CCCCCC;">Need assistance or have questions? Just reply to this email—we’re here to help.
+</p>
+    </td>
+  </tr>
+  
+    <tr>
+    <td style="padding: 0 0 30px 20px; text-align: center;">
+      <p style="margin: 1px; font-size: 14px; font-weight: normal; color: #CCCCCC;">Let’s make magic happen! ✨
+</p>
     </td>
   </tr>
   <tr>
     <td style="padding: 0 0 45px 10px; text-align: center;">
-      <p style="margin: 1px; font-size: 14px; line-height: 20px; font-weight: normal; color: #CCCCCC;"> Best regards, <br> Itsinvite Support Team </p>
+      <p style="margin: 1px; font-size: 14px; line-height: 20px; font-weight: normal; color: #CCCCCC;"> Warm regards, <br> The Invite Support Team 🌟 </p>
     </td>
   </tr>
   <tr bgcolor="#141414">

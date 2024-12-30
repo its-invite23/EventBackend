@@ -25,12 +25,12 @@ module.exports = ({name , package}) => {
   </tr>
   <tr>
     <td style="padding: 0px 20px 20px 20px">
-      <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#CCCCCC;"> Thank you for your booking request! Your booking request for the upcoming event has been successfully sent. </p>
+      <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#CCCCCC;"> Thank you for choosing Invite! Your booking request has been successfully submitted. 🎊 </p>
     </td>
   </tr>
   <tr>
     <td style="padding: 0px 20px 20px 20px">
-      <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#CCCCCC;"> Here are the details of your request: </p>
+      <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#CCCCCC;"> Here’s a summary of your request: </p>
     </td>
   </tr>
   <tr>
@@ -56,11 +56,16 @@ module.exports = ({name , package}) => {
     </td>
   </tr>
   <tr>
-    <td style="padding: 20px; font-size: 14px; color: #CCCCCC;"> Our team will review your request and get back to you shortly. If you need to modify any details or view your booking request, please reach out to us. </td>
+    <td style="padding: 20px; font-size: 14px; color: #CCCCCC;"> Our team is already reviewing your request and will get back to you shortly. If you need to make any changes or have questions, feel free to contact us anytime—we’re here to help! </td>
   </tr>
+  
+   <tr>
+    <td style="padding: 20px; font-size: 14px; color: #CCCCCC;"> Looking forward to helping you create an unforgettable celebration. </td>
+  </tr>
+  
   <tr>
     <td style="padding: 20px; text-align: left;">
-      <p style="margin: 1px; font-size: 14px; color: #CCCCCC;"> Best regards, <br> Itsinvite Team </p>
+      <p style="margin: 1px; font-size: 14px; color: #CCCCCC;">Warm regards, <br> The Invite Team 🌟 </p>
     </td>
   </tr>
  <tr bgcolor="#141414">
