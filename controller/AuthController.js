@@ -145,21 +145,26 @@ exports.signup = catchAsync(async (req, res) => {
     // Check if user already exists
     // Check if user already exists
     const existingUser = await User.find({ $or: [{ email }, { phone_number }] });
-    console.log("existingUser",existingUser)
-    if (existingUser) {
+    console.log("existingUser", existingUser);
+    
+    if (existingUser.length > 0) {
       const errors = {};
-      if (existingUser.email === email) {
-        errors.email = 'Email is already in use!';
-      }
-      if (existingUser.phone_number === phone_number) {
-        errors.phone_number = 'Phone number is already in use!';
-      }
+      existingUser.forEach(user => {
+        if (user.email === email) {
+          errors.email = 'Email is already in use!';
+        }
+        if (user.phone_number === phone_number) {
+          errors.phone_number = 'Phone number is already in use!';
+        }
+      });
+    
       return res.status(400).json({
         status: false,
         message: 'Email or phone number already exists',
         errors,
       });
     }
+    
 
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, 12);
