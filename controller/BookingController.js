@@ -436,7 +436,8 @@ exports.BookingPaymentId = catchAsync(async (req, res, next) => {
       });
     }
     // Fetch the current package record by ID
-    const packageRecord = await Booking.findById(id)
+    const packageRecord = await Booking.findById(id);
+    
     const paymentRecord = await payment.findOne({ booking_id: packageRecord._id })
 
     const fetchPlaceDetails = async (placeId) => {
