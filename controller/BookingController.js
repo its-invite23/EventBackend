@@ -414,7 +414,6 @@ exports.BookingGetByID = catchAsync(async (req, res) => {
 
     booking.package = updatedPackage;
 
-
     res.status(200).json({
       message: "Data retrieved successfully",
       status: true,
