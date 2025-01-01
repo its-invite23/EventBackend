@@ -6,7 +6,6 @@ const Package = require("../model/Package");
 const payment = require("../model/payment");
 const logger = require("../utils/Logger");
 
-
 exports.getCount = catchAsync(async (req, res) => {
     try {
         const userCount = await User.countDocuments();
@@ -113,7 +112,7 @@ exports.search = catchAsync(async (req, res, next) => {
         if (!type) {
             return res.status(400).json({
                 status: false,
-                message: "Both 'type'  are required.",
+                message: "Both type are required.",
             });
         }
         const models = {

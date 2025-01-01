@@ -25,7 +25,6 @@ exports.UpdateCurrencyRates = catchAsync(async (req, res) => {
         message: "Failed to fetch exchange rates.",
       });
     }
-
     const currencyPromises = Object.entries(data).map(
       async ([currency, rate]) => {
         await Currency.findOneAndUpdate(
@@ -37,7 +36,6 @@ exports.UpdateCurrencyRates = catchAsync(async (req, res) => {
     );
 
     await Promise.all(currencyPromises);
-
     res.status(200).json({
       status: true,
       message: "Currency data updated successfully.",

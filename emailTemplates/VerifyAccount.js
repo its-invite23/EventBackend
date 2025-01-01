@@ -1,5 +1,5 @@
 module.exports = (VerfiyLink, userName) => {
-    return `
+  return `
   <table align="center" style="max-width: 600px; font-family: arial;" width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#000">
   <tr bgcolor="#141414">
     <td style="padding: 20px 2px 0 2px; text-align: center;">

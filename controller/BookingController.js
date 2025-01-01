@@ -7,8 +7,9 @@ const PaymentLink = require("../emailTemplates/PaymentLink");
 const nodemailer = require("nodemailer");
 const { default: axios } = require("axios");
 const payment = require("../model/payment");
-const { errorResponse, successResponse } = require("../utils/ErrorHandling");
+const { successResponse } = require("../utils/ErrorHandling");
 const logger = require("../utils/Logger");
+
 const BookingFilter = async (name) => {
   try {
     if (!name) {
@@ -40,6 +41,7 @@ const BookingFilter = async (name) => {
     });
   }
 };
+
 
 exports.bookingpost = catchAsync(async (req, res) => {
   const userId = req?.User?._id;
@@ -173,6 +175,7 @@ exports.BookingGet = catchAsync(async (req, res, next) => {
   }
 });
 
+
 exports.BookingStatus = catchAsync(async (req, res) => {
   try {
 
@@ -276,6 +279,7 @@ exports.BookingPayment = catchAsync(async (req, res) => {
   }
 });
 
+
 exports.BookingPrice = catchAsync(async (req, res) => {
   try {
     const { _id, place_id, price, totalPrice, currency, attendens, User_totalprice } = req.body;
@@ -352,6 +356,7 @@ exports.BookingPrice = catchAsync(async (req, res) => {
   }
 });
 
+
 exports.BookingGetByID = catchAsync(async (req, res) => {
   try {
     const { id } = req.params;
@@ -426,6 +431,7 @@ exports.BookingGetByID = catchAsync(async (req, res) => {
   }
 });
 
+
 exports.BookingPaymentId = catchAsync(async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -437,7 +443,7 @@ exports.BookingPaymentId = catchAsync(async (req, res, next) => {
     }
     // Fetch the current package record by ID
     const packageRecord = await Booking.findById(id);
-    
+
     const paymentRecord = await payment.findOne({ booking_id: packageRecord._id })
 
     const fetchPlaceDetails = async (placeId) => {

@@ -9,14 +9,11 @@ const Booking = require("../model/Booking");
 const { validationErrorResponse, errorResponse, successResponse } = require("../utils/ErrorHandling");
 const VerifyAccount = require("../emailTemplates/Otp");
 const VerifyAccounts = require("../emailTemplates/VerifyAccount");
-
 const logger = require("../utils/Logger");
 
 exports.verifyToken = async (req, res, next) => {
   try {
-    // Fetch the Authorization header
     let authHeader = req.headers.authorization || req.headers.Authorization;
-    // Check if the header exists and starts with "Bearer"
     if (!authHeader || !authHeader.startsWith("Bearer")) {
       return res.status(400).json({
         status: false,
@@ -776,51 +773,6 @@ exports.profilegettoken = catchAsync(async (req, res, next) => {
   }
 });
 
-// exports.userfilter = catchAsync(async (req, res, next) => {
-//   try {
-//     const { username, user_status } = req.body; // Use req.body for body params, or req.query for query params
-//     let filter = {};
-
-//     // Add `user_status` to filter if it exists
-//     if (user_status) {
-//       filter.user_status = user_status;
-//     }
-
-//     // Add `username` to filter if it's not blank
-//     if (username && username.trim() !== "") {
-//       filter.username = { $regex: `^${username}$`, $options: "i" }; // Exact match with case-insensitive regex
-//     }
-
-//     // Fetch users based on the filter
-//     const users = await User.find(filter).select("-password");
-
-//     // If no users are found, return an appropriate message
-//     if (!users.length) {
-//       return res.status(200).json({
-//         status: false,
-//         message: "No users found for the given filter.",
-//         users: [],
-//       });
-//     }
-
-//     // Return users if found
-//     return res.status(200).json({
-//       status: true,
-//       message: "Users retrieved successfully",
-//       users: users,
-//     });
-//   } catch (error) {
-//     console.error("Error fetching users:", error);
-//     return res.status(500).json({
-//       status: false,
-//       message: "An error occurred while fetching users.",
-//       error: error.message,
-//     });
-//   }
-// });
-
-
-
 
 exports.VerifyUser = catchAsync(
   async (req, res) => {
@@ -844,16 +796,3 @@ exports.VerifyUser = catchAsync(
     }
   }
 );
-
-
-
-// dashboardApi
-
-
-
-// if (username) {
-//   // Perform an exact match instead of regex if required
-//   filter.username = username;  // Use exact match
-//   // Or if you want partial match, uncomment below and comment out above line
-//   // filter.username = { $regex: `^${username}$`, $options: 'i' };
-// }

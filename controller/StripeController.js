@@ -20,7 +20,6 @@ const fetchPaymentId = async (sessionId, srNo) => {
       return null;
     }
     data.payment_id = paymentId;
-    // datas.payment_type = data.paymentMethod;
     await data.save();
     return paymentId;
   } catch (error) {
@@ -114,6 +113,7 @@ exports.createCheckout = catchAsync(async (req, res) => {
   }
 });
 
+
 exports.PaymentGet = catchAsync(async (req, res, next) => {
   try {
     const page = parseInt(req.query.page) || 1;
@@ -121,7 +121,6 @@ exports.PaymentGet = catchAsync(async (req, res, next) => {
     const search = req.query.search || "";
     let paymentget, totalpaymenttmodal, totalPages;
     if (search === "") {
-
       const skip = (page - 1) * limit;
       totalpaymenttmodal = await Payment.countDocuments();
       paymentget = await Payment.find({})
@@ -161,6 +160,7 @@ exports.PaymentGet = catchAsync(async (req, res, next) => {
     });
   }
 });
+
 
 exports.PaymentSuccess = catchAsync(async (req, res) => {
   try {
@@ -217,6 +217,7 @@ exports.PaymentSuccess = catchAsync(async (req, res) => {
   }
 });
 
+
 exports.PaymentCancel = catchAsync(async (req, res) => {
   try {
     const { srNo } = req.params;
@@ -250,6 +251,8 @@ exports.PaymentCancel = catchAsync(async (req, res) => {
     });
   }
 });
+
+
 
 exports.PaymentGetByID = catchAsync(async (req, res) => {
   try {
@@ -293,6 +296,7 @@ exports.PaymentGetByID = catchAsync(async (req, res) => {
     });
   }
 });
+
 
 exports.PackagegetByBookingId = catchAsync(async (req, res, next) => {
   try {

@@ -9,7 +9,7 @@ const sendEmail = async (data) => {
         secure: true,
         auth: {
             user: process.env.EMAIL_USER,
-            pass:  process.env.EMAIL_PASS, // Replace with the app-specific password
+            pass: process.env.EMAIL_PASS, // Replace with the app-specific password
         },
         debug: true, // Debug mode
     });

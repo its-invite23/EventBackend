@@ -9,10 +9,22 @@ const bookingSchema = mongoose.Schema({
     package: {
         type: Array,
     },
-    package_name: String,
-    CurrencyCode: String,
-    AdminCurrencyCode: String,
-    package_data :String,
+    package_name: {
+        type: String,
+        
+    },
+    CurrencyCode: {
+        type: String,
+        default: null,
+    },
+    AdminCurrencyCode: {
+        type: String,
+        default: null,
+    },
+    package_data: {
+        type: String,
+        default :Null ,
+    },
     bookingDate: {
         type: String,
         required: true

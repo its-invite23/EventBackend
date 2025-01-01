@@ -12,7 +12,6 @@ const multer = require("multer");
 const { verifyToken } = require("./controller/AuthController");
 const Files = require("./model/Files");
 const cron = require('node-cron');
-
 const UserRoute = require("./route/UserRoute")
 const enauiryroute = require("./route/Enquiry")
 const packageroute = require("./route/Package")

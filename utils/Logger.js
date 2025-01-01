@@ -7,7 +7,7 @@ const levelFilter = (level) => {
 };
 
 const Loggers = winston.createLogger({
-  levels: winston.config.npm.levels, 
+  levels: winston.config.npm.levels,
   format: winston.format.combine(
     winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
     winston.format.printf(({ timestamp, level, message }) => {

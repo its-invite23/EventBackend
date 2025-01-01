@@ -3,10 +3,6 @@ const catchAsync = require("../utils/catchAsync");
 const { v4: uuidv4 } = require('uuid');
 const B2 = require('backblaze-b2');
 const logger = require("../utils/Logger");
-const bucket_name = process.env.BUCKET_NAME;
-const bucket_id = process.env.BUCKET_ID;
-const APP_ID = process.env.CLOUD_APPLICATION_ID;
-const APP_KEY = process.env.CLOUD_APPLICATION_KEY;
 
 const b2 = new B2({
     applicationKeyId: process.env.CLOUD_APPLICATION_ID, // Use environment variables for security

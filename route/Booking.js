@@ -19,7 +19,6 @@ bookingroute.get("/getByID/:id", BookingGetByID)
 
 bookingroute.get("/payment/:id", BookingPaymentId)
 
-// bookingroute.post("/booking-filter", BookingFilter);
 bookingroute.get("/delete-booking/:Id/:placeId" , deleteServiceProvider)
 
 bookingroute.post("/update-booking" , updateServiceProviderPackage)
