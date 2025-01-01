@@ -144,11 +144,11 @@ const PORT = process.env.REACT_APP_SERVER_DOMIN;
 
 app.get("/", (req, res) => {
   res.json({
-    msg: 'datat okay  ',
+    msg: 'Data Okay',
     status: 200,
   });
 });
 
-app.listen(PORT, () => 
-  Loggers.http("Server is running at port : " +PORT)
-  );
+app.listen(PORT, () =>
+  Loggers.http("Server is running at port : " + PORT)
+);
