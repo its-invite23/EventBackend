@@ -23,7 +23,7 @@ const bookingSchema = mongoose.Schema({
     },
     package_data: {
         type: String,
-        default :Null ,
+        default :null ,
     },
     bookingDate: {
         type: String,

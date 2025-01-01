@@ -31,11 +31,9 @@ const corsOptions = {
   optionsSuccessStatus: 200, // for legacy browsers
 }
 const upload = multer({ dest: 'uploads/' });
-
 app.use(cors(corsOptions));
 app.use(express.json({ limit: '2000mb' }));
 app.use(express.urlencoded({ extended: true }));
-
 app.use("/user", UserRoute)
 app.use("/common", commonRoutes)
 app.use("/stripe", StripeRoute)
