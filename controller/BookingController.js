@@ -402,15 +402,18 @@ exports.BookingGetByID = catchAsync(async (req, res) => {
         return null;
       }
     };
-    const updatedPackage = await Promise.all(booking?.package?.map(async (pkg) => {
-      if (pkg.place_id) {
-        const placeDetails = await fetchPlaceDetails(pkg.place_id);
-        if (placeDetails) {
-          return { ...pkg, placeDetails };
+    const updatedPackage = await Promise.all(
+      booking?.package?.map(async (pkg) => {
+        if (pkg.package_data === "google") {
+          const placeDetails = await fetchPlaceDetails(pkg.place_id);
+          if (placeDetails) {
+            return { ...pkg, placeDetails };
+          }
         }
-      }
-      return pkg;
-    }));
+        return pkg;
+      })
+    );
+
 
     booking.package = updatedPackage;
 
@@ -467,15 +470,17 @@ exports.BookingPaymentId = catchAsync(async (req, res, next) => {
         return null;
       }
     };
-    const updatedPackage = await Promise.all(packageRecord.package.map(async (pkg) => {
-      if (pkg?.place_id) {
-        const placeDetails = await fetchPlaceDetails(pkg.place_id);
-        if (placeDetails) {
-          return { ...pkg, placeDetails };
+    const updatedPackage = await Promise.all(
+      packageRecord?.package?.map(async (pkg) => {
+        if (pkg.package_data === "google") {
+          const placeDetails = await fetchPlaceDetails(pkg.place_id);
+          if (placeDetails) {
+            return { ...pkg, placeDetails };
+          }
         }
-      }
-      return pkg;
-    }));
+        return pkg;
+      })
+    );
 
     packageRecord.package = updatedPackage;
 
