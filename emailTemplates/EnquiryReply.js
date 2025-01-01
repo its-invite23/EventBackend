@@ -34,7 +34,8 @@ module.exports = ({ name, message }) => {
   </tr>
   <tr>
     <td style="padding: 0 0 45px 10px;">
-      <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#CCCCCC; text-align: left;"> Best regards, <br> Itsinvite Support Team </p>
+       <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#CCCCCC"> Warm regards,
+, <br> The Invite Team 🌟</p>
     </td>
   </tr>
   <tr bgcolor="#141414">

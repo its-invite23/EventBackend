@@ -130,9 +130,8 @@ module.exports = ({ name }) => {
 
 <tr>
     <td style="padding: 0 20px 45px 20px;">
-        <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#CCCCCC">
-            Thank you for choosing us, <br> [Company Name] Team
-        </p>
+           <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#CCCCCC"> Warm regards,
+, <br> The Invite Team 🌟</p>
     </td>
 </tr>
 
