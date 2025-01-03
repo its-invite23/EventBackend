@@ -3,6 +3,8 @@ const User = require("../model/User");
 const catchAsync = require("../utils/catchAsync");
 const sendEmail = require("../utils/EmailMailler");
 const emailTemplate = require("../emailTemplates/Booking");
+const BookingTemplate = require("../emailTemplates/BookingAdmin");
+
 const PaymentLink = require("../emailTemplates/PaymentLink");
 const nodemailer = require("nodemailer");
 const { default: axios } = require("axios");
@@ -106,7 +108,7 @@ exports.bookingpost = catchAsync(async (req, res) => {
       package: data, // Pass the saved record
       message: "Your booking request was successful!",
       subject: subject,
-      emailTemplate: emailTemplate,
+      emailTemplate: BookingTemplate,
     });
 
     // Saving data only if email is sent successfully 
