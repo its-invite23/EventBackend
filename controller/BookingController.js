@@ -104,7 +104,7 @@ exports.bookingpost = catchAsync(async (req, res) => {
         emailTemplate: emailTemplate,
       });
     }
-    else {
+    if(!userId){
       await sendEmail({
         email: process.env.Admin_Email,
         name: "Admin",
@@ -113,7 +113,6 @@ exports.bookingpost = catchAsync(async (req, res) => {
         subject: subject1,
         emailTemplate: BookingAdmin,
       });
-
     }
     // send to  user
 
