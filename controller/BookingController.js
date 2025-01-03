@@ -94,25 +94,31 @@ exports.bookingpost = catchAsync(async (req, res) => {
     const data = await record.save();
     const subject = "Your Booking Request Has Been Received! 🎉";
     const subject1 = "New Booking Request Received 🎉";
+    if (userId) {
+
+      await sendEmail({
+        email: userDetail.email,
+        name: userDetail.username?.split(' ')?.map(word => word?.charAt(0)?.toUpperCase() + word?.slice(1)?.toLowerCase())?.join(' '),
+        package: data, // Pass the saved record
+        message: "Your booking request was successful!",
+        subject: subject1,
+        emailTemplate: BookingAdmin,
+      });
+
+    }
+    else {
+      await sendEmail({
+        email: process.env.Admin_Email,
+        name: userDetail.username?.split(' ')?.map(word => word?.charAt(0)?.toUpperCase() + word?.slice(1)?.toLowerCase())?.join(' '),
+        package: data,
+        message: "Your booking request was successful!",
+        subject: subject,
+        emailTemplate: emailTemplate,
+      });
+    }
     // send to  user
-    await sendEmail({
-      email: process.env.Admin_Email,
-      name: userDetail.username?.split(' ')?.map(word => word?.charAt(0)?.toUpperCase() + word?.slice(1)?.toLowerCase())?.join(' '),
-      package: data,
-      message: "Your booking request was successful!",
-      subject: subject,
-      emailTemplate: emailTemplate,
-    });
 
     // Admin Mail
-    await sendEmail({
-      email: userDetail.email,
-      name: userDetail.username?.split(' ')?.map(word => word?.charAt(0)?.toUpperCase() + word?.slice(1)?.toLowerCase())?.join(' '),
-      package: data, // Pass the saved record
-      message: "Your booking request was successful!",
-      subject: subject1,
-      emailTemplate: BookingAdmin,
-    });
 
     // Saving data only if email is sent successfully 
 
