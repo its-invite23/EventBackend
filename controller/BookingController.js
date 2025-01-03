@@ -105,7 +105,7 @@ exports.bookingpost = catchAsync(async (req, res) => {
       });
     }
       await sendEmail({
-        email: "contact@its-invite.com",
+        email: "ankitjain0748@gmail.com",
         name: "Admin",
         message: "Your booking request was successful!",
         subject: subject1,
