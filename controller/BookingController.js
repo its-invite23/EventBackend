@@ -94,9 +94,9 @@ exports.bookingpost = catchAsync(async (req, res) => {
     const subject = "Your Booking Request Has Been Received! 🎉";
     await sendEmail({
       email: process.env.Admin_Email,
-      name: userDetail.username?.split(' ')?.map(word => word?.charAt(0)?.toUpperCase() + word?.slice(1)?.toLowerCase())?.join(' '),
+      name: "Admin",
       package: data,
-      message: "Your booking request was successful!",
+      message: "New Booking Request Received 🎉",
       subject: subject,
       emailTemplate: emailTemplate,
     });
