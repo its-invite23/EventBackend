@@ -404,7 +404,8 @@ exports.BookingGetByID = catchAsync(async (req, res) => {
     };
     const updatedPackage = await Promise.all(
       booking?.package?.map(async (pkg) => {
-        if (pkg.package_data === "google") {
+        console.log(pkg)
+        if (pkg.scope == "GOOGLE") {
           const placeDetails = await fetchPlaceDetails(pkg.place_id);
           if (placeDetails) {
             return { ...pkg, placeDetails };
@@ -472,7 +473,7 @@ exports.BookingPaymentId = catchAsync(async (req, res, next) => {
     };
     const updatedPackage = await Promise.all(
       packageRecord?.package?.map(async (pkg) => {
-        if (pkg.package_data === "google") {
+        if (pkg.scope == "GOOGLE") {
           const placeDetails = await fetchPlaceDetails(pkg.place_id);
           if (placeDetails) {
             return { ...pkg, placeDetails };

@@ -55,7 +55,7 @@ module.exports = ({ name, package, payment_id }) => {
           </td>
           <td style="padding: 0 15px 10px 0;">
             <p style="margin: 1px; font-size: 14px; font-weight: normal; color:#fff">
-              <strong> ${package?.booking_id?.package_name} </strong>
+              <strong> ${package?.booking_id?.package_name?.replaceAll("_" , " ")} </strong>
             </p>
           </td>
         </tr>
