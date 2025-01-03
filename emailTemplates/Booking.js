@@ -38,7 +38,7 @@ module.exports = ({ name, package }) => {
       <table width="100%" cellspacing="0" cellpadding="0">
         <tr>
           <td style="padding: 5px 20px; font-size: 14px; color: #CCCCCC;">Event Name:</td>
-          <td style="padding: 5px 10px; font-size: 14px; color: #FFFFFF;">${package.package_name?.replceAll("_" , " ")}</td>
+          <td style="padding: 5px 10px; font-size: 14px; color: #FFFFFF;">${package.package_name?.replaceAll("_" , " ")}</td>
         </tr>
         <tr>
           <td style="padding: 5px 20px; font-size: 14px; color: #CCCCCC;">Your Location:</td>

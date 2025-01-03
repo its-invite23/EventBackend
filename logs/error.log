@@ -5,3 +5,8 @@
 2025-01-03 12:01:57 [ERROR]: Error during booking creation: Booking validation failed: location: Path `location` is required.
 2025-01-03 13:06:05 [ERROR]: Error during booking creation: No recipients defined
 2025-01-03 13:08:18 [ERROR]: Error during booking creation: No recipients defined
+2025-01-03 13:24:07 [ERROR]: Error during booking creation: Booking validation failed: location: Path `location` is required.
+2025-01-03 13:25:23 [ERROR]: Error during booking creation: package.package_name?.replceAll is not a function
+2025-01-03 13:25:26 [ERROR]: Error during booking creation: package.package_name?.replceAll is not a function
+2025-01-03 13:25:34 [ERROR]: Error during booking creation: package.package_name?.replceAll is not a function
+2025-01-03 13:26:25 [ERROR]: Error during booking creation: package.package_name?.replceAll is not a function
