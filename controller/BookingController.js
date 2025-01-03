@@ -3,14 +3,13 @@ const User = require("../model/User");
 const catchAsync = require("../utils/catchAsync");
 const sendEmail = require("../utils/EmailMailler");
 const emailTemplate = require("../emailTemplates/Booking");
-const BookingTemplate = require("../emailTemplates/BookingAdmin");
-
 const PaymentLink = require("../emailTemplates/PaymentLink");
 const nodemailer = require("nodemailer");
 const { default: axios } = require("axios");
 const payment = require("../model/payment");
 const { successResponse } = require("../utils/ErrorHandling");
 const logger = require("../utils/Logger");
+const BookingAdmin = require("../emailTemplates/BookingAdmin");
 
 const BookingFilter = async (name) => {
   try {
@@ -94,11 +93,13 @@ exports.bookingpost = catchAsync(async (req, res) => {
     }
     const data = await record.save();
     const subject = "Your Booking Request Has Been Received! 🎉";
+    const subject1 = "New Booking Request Received 🎉";
+
     await sendEmail({
       email: process.env.Admin_Email,
-      name: "Admin",
+      name: userDetail.username?.split(' ')?.map(word => word?.charAt(0)?.toUpperCase() + word?.slice(1)?.toLowerCase())?.join(' '),
       package: data,
-      message: "New Booking Request Received 🎉",
+      message: "Your booking request was successful!",
       subject: subject,
       emailTemplate: emailTemplate,
     });
@@ -107,8 +108,8 @@ exports.bookingpost = catchAsync(async (req, res) => {
       name: userDetail.username?.split(' ')?.map(word => word?.charAt(0)?.toUpperCase() + word?.slice(1)?.toLowerCase())?.join(' '),
       package: data, // Pass the saved record
       message: "Your booking request was successful!",
-      subject: subject,
-      emailTemplate: BookingTemplate,
+      subject: subject1,
+      emailTemplate: BookingAdmin,
     });
 
     // Saving data only if email is sent successfully 
