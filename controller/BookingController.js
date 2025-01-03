@@ -96,7 +96,7 @@ exports.bookingpost = catchAsync(async (req, res) => {
     const subject1 = "New Booking Request Received 🎉";
     if (userId) {
       await sendEmail({
-        email: process.env.Admin_Email,
+        email:  userDetail.email, 
         name: userDetail.username?.split(' ')?.map(word => word?.charAt(0)?.toUpperCase() + word?.slice(1)?.toLowerCase())?.join(' '),
         package: data,
         message: "Your booking request was successful!",
@@ -106,8 +106,8 @@ exports.bookingpost = catchAsync(async (req, res) => {
     }
     else {
       await sendEmail({
-        email: userDetail.email,
-        name: userDetail.username?.split(' ')?.map(word => word?.charAt(0)?.toUpperCase() + word?.slice(1)?.toLowerCase())?.join(' '),
+        email: process.env.Admin_Email,
+        name: "Admin",
         package: data, // Pass the saved record
         message: "Your booking request was successful!",
         subject: subject1,
