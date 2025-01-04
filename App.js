@@ -23,21 +23,15 @@ const commonRoutes = require("./route/Dashboard");
 const { UpdateCurrencyRates } = require("./controller/CurrencyController");
 const logger = require("./utils/Logger");
 const Loggers = require("./utils/Logger");
-// const corsOptions = {
-//   origin: "*",
-//   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-//   allowedHeaders: '*',
-//   credentials: true,
-//   optionsSuccessStatus: 200,
-// }
-
-app.use(cors({
-  origin: 'https://www.its-invite.com', // Allow requests from this origin
-  methods: ['GET', 'POST', 'OPTIONS'], // Allow these methods
-  allowedHeaders: ['Content-Type', 'Authorization'], // Allow these headers
-}));
+const corsOptions = {
+  origin: "*",
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  allowedHeaders: '*',
+  credentials: true,
+  optionsSuccessStatus: 200,
+}
+app.use(cors(corsOptions));
 const upload = multer({ dest: 'uploads/' });
-// app.use(cors(corsOptions));
 app.use(express.json({ limit: '2000mb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use("/user", UserRoute)
