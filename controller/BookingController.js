@@ -96,7 +96,7 @@ exports.bookingpost = catchAsync(async (req, res) => {
     const subject1 = "New Booking Request Received 🎉";
     if (userId) {
       await sendEmail({
-        email: userDetail.email, 
+        email: userDetail.email,
         name: userDetail.username?.split(' ')?.map(word => word?.charAt(0)?.toUpperCase() + word?.slice(1)?.toLowerCase())?.join(' '),
         package: data,
         message: "Your booking request was successful!",
@@ -104,13 +104,13 @@ exports.bookingpost = catchAsync(async (req, res) => {
         emailTemplate: emailTemplate,
       });
     }
-      await sendEmail({
-        email: "contact@its-invite.com",
-        name: "Admin",
-        message: "Your booking request was successful!",
-        subject: subject1,
-        emailTemplate: BookingAdmin,
-      });
+    await sendEmail({
+      email: "contact@its-invite.com",
+      name: "Admin",
+      message: "Your booking request was successful!",
+      subject: subject1,
+      emailTemplate: BookingAdmin,
+    });
 
     return res.status(201).json({
       status: true,
