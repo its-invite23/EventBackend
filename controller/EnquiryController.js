@@ -141,7 +141,7 @@ exports.EnquiryReply = catchAsync(
                 },
                 { new: true }
             );
-    
+
             const subject = "Thank you for your Enquiry";
             // email: 'ankit.jain@futureprofilez.com',
             // message: 'hello  sir ',
@@ -159,14 +159,14 @@ exports.EnquiryReply = catchAsync(
                         subject: subject,
                         emailTemplate: emailTemplate
                     }
-    
+
                     );
                 } catch (emailError) {
                     console.error("Email sending failed:", emailError);
                     logger.error("Email sending failed:", emailError);
                     return errorResponse(res, 500, "Failed to send email notification.");
                 }
-    
+
                 return successResponse(res, "You have successfully replied to the enquiry!");
             } else {
                 return errorResponse(res, 400, "No changes were made to the enquiry.");

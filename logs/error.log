@@ -13,3 +13,9 @@
 2025-01-03 17:51:13 [ERROR]: Error during booking creation: Booking validation failed: location: Path `location` is required.
 2025-01-03 17:51:16 [ERROR]: Error during booking creation: Booking validation failed: location: Path `location` is required.
 2025-01-03 18:27:14 [ERROR]: Error during booking creation: Booking validation failed: location: Path `location` is required.
+2025-01-04 16:36:50 [ERROR]: Error updating package record: Cannot read properties of null (reading '_id')
+2025-01-04 16:36:50 [ERROR]: Error updating package record: Cannot read properties of null (reading '_id')
+2025-01-04 16:37:02 [ERROR]: Error updating package record: Cannot read properties of null (reading '_id')
+2025-01-04 16:37:02 [ERROR]: Error updating package record: Cannot read properties of null (reading '_id')
+2025-01-04 16:37:29 [ERROR]: Error updating package record: Cannot read properties of null (reading '_id')
+2025-01-04 16:37:29 [ERROR]: Error updating package record: Cannot read properties of null (reading '_id')
