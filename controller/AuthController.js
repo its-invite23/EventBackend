@@ -190,7 +190,7 @@ exports.signup = catchAsync(async (req, res) => {
       const token = jwt.sign({ id }, process.env.JWT_SECRET_KEY, {
         expiresIn: "24h",
       });
-      const resetLink = `https://user-event.vercel.app/verify/${token}`;
+      const resetLink = `https://www.its-invite.com/verify/${token}`;
       const customerUser = record.username;
 
       let transporter = nodemailer.createTransport({

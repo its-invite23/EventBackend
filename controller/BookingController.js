@@ -248,7 +248,7 @@ exports.BookingPayment = catchAsync(async (req, res) => {
       select: "username email",
     });
     const paymentdata = await payment.findOne({ booking_id: _id });
-    const paymentLink = `https://user-event.vercel.app/payment/${bookingstatus?._id}`;
+    const paymentLink = `https://www.its-invite.com/payment/${bookingstatus?._id}`;
     const currencyCode = bookingstatus?.AdminCurrencyCode || 'USD';
     const emailHtml = PaymentLink(paymentLink, bookingstatus?.userId?.username, bookingstatus?.totalPrice * adminCurrencyRate, currencyCode);
     let transporter = nodemailer.createTransport({

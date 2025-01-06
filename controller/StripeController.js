@@ -76,8 +76,8 @@ exports.createCheckout = catchAsync(async (req, res) => {
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       mode: 'payment', // Correct mode value
-      success_url: `https://user-event.vercel.app/success/${srNo}`,
-      cancel_url: `https://user-event.vercel.app/cancel/${srNo}`,
+      success_url: `https://www.its-invite.com/success/${srNo}`,
+      cancel_url: `https://www.its-invite.com/cancel/${srNo}`,
       submit_type: "pay",
       customer_email: email,
       billing_address_collection: "auto",
