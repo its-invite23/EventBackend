@@ -4,7 +4,7 @@ module.exports = (otp, userName) => {
 <tr bgcolor="#141414">
   <td style="padding: 20px 2px 0 2px; text-align: center;">
     <p style="margin: 1px;">
-      <a href="https://user-event.vercel.app/">
+      <a href="https://www.its-invite.com/">
         <img style="max-width:150px;" src="https://f003.backblazeb2.com/file/Event-management/logo.png" alt="">
       </a>
     </p>
