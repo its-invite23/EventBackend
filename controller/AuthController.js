@@ -134,7 +134,7 @@ exports.signup = catchAsync(async (req, res) => {
     } = req.body;
 
     // Check if required fields are provided
-    if (!password || !phone_number || !username || !email || !address || !country || !city) {
+    if (!password || !phone_number || !username || !email || !address || !country ) {
       return res.status(401).json({
         status: false,
         message: 'All fields are required',
