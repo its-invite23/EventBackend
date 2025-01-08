@@ -25,7 +25,6 @@ const sendEmail = async (data) => {
 
     try {
         let info = await transporter.sendMail(mailOptions);
-        console.log('Email sent:', info.messageId);
     } catch (error) {
         console.error('Error sending email:', error);
         throw error; // Rethrow the error to be caught in the controller
