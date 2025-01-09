@@ -115,7 +115,6 @@ exports.Emailcheck = async (req, res) => {
         };
         const subject = "Thank You for Contacting Us";
         await sendEmail(subject, result.email, result.name, EmailBooking);
-
         return res.json({
             status: true,
             message: "You have successfully replied to your query!",
