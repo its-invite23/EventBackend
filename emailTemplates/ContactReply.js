@@ -40,25 +40,7 @@ module.exports = ({ name, message }) => {
   </tr>
   <tr bgcolor="#141414">
     <td style="padding: 15px 0 15px 0; text-align: center;">
-      <table cellpadding="0" cellspacing="0" align="center">
-        <tr>
-          <td style="padding: 0 5px;">
-            <a href="#">
-              <img src="https://f003.backblazeb2.com/file/Event-management/linkedicon.png" alt="">
-            </a>
-          </td>
-          <td style="padding: 0 5px;">
-            <a href="#">
-              <img src="https://f003.backblazeb2.com/file/Event-management/instagram.png" alt="">
-            </a>
-          </td>
-          <td style="padding: 0 5px;">
-            <a href="#">
-              <img src="https://f003.backblazeb2.com/file/Event-management/facebook.png" alt="">
-            </a>
-          </td>
-        </tr>
-      </table>
+          <table cellpadding="0" cellspacing="0" align="center">         <tr>           <td style="padding: 0 5px;">             <a href="https://www.linkedin.com/company/itsinvite" target="_blank">               <img src="https://f003.backblazeb2.com/file/Event-management/linkedicon.png" alt="">             </a>           </td>           <td style="padding: 0 5px;">             <a href="https://www.instagram.com/itsinvite_/" target="_blank">               <img src="https://f003.backblazeb2.com/file/Event-management/instagram.png" alt="">             </a>           </td>           <td style="padding: 0 5px;">             <a href="https://www.tiktok.com/(at_the_rate)itsinvite_" target="_blank">               <img src="https://f003.backblazeb2.com/file/Event-management/ri_tiktok-line.png" alt="">             </a>           </td>         </tr>       </table>
     </td>
   </tr>
   <tr bgcolor="#141414">
