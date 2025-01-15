@@ -340,15 +340,15 @@ async function deleteFile(fileName, fileId, retries = 3) {
     try {
         await b2.authorize();
         const response = await b2.deleteFileVersion({ fileName, fileId });
-        return true; // Indicate successful deletion
+        return true; 
     } catch (error) {
         console.error('Error deleting file:', error.response?.data || error.message);
         if (retries > 0) {
-            await new Promise(resolve => setTimeout(resolve, 1000)); // Delay before retrying
+            await new Promise(resolve => setTimeout(resolve, 1000)); 
             return await deleteFile(fileName, fileId, retries - 1);
         }
         console.error('Final failure deleting file after retries.');
-        return false; // Indicate failure after retries
+        return false; 
     }
 }
 
