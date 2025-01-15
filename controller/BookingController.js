@@ -405,7 +405,6 @@ exports.BookingGetByID = catchAsync(async (req, res) => {
     };
     const updatedPackage = await Promise.all(
       booking?.package?.map(async (pkg) => {
-        console.log(pkg)
         if (pkg.scope == "GOOGLE") {
           const placeDetails = await fetchPlaceDetails(pkg.place_id);
           if (placeDetails) {

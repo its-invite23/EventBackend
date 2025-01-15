@@ -162,7 +162,6 @@ exports.EnquiryReply = catchAsync(
 
                     );
                 } catch (emailError) {
-                    console.error("Email sending failed:", emailError);
                     logger.error("Email sending failed:", emailError);
                     return errorResponse(res, 500, "Failed to send email notification.");
                 }

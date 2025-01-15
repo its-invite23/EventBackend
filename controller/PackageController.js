@@ -9,20 +9,6 @@ const b2 = new B2({
     applicationKey: process.env.CLOUD_APPLICATION_KEY
 });
 
-async function deleteFile(fileName, fileId) {
-    try {
-        await b2.authorize();
-        const response = await b2.deleteFileVersion({
-            fileName: fileName,
-            fileId: fileId, // Ensure `fileId` is properly defined or passed
-        });
-        return true; // Indicate successful deletion
-    } catch (error) {
-        console.error('Error deleting file:', error);
-        logger.error('Error deleting file:', error);
-        return false; // Indicate failure
-    }
-}
 
 
 exports.packageadd = catchAsync(async (req, res) => {
@@ -300,6 +286,7 @@ exports.PackageIdDelete = catchAsync(async (req, res, next) => {
                 message: 'Package ID is required.',
             });
         }
+
         // Find the package record first
         const record = await packages.findById(Id);
         if (!record) {
@@ -314,7 +301,7 @@ exports.PackageIdDelete = catchAsync(async (req, res, next) => {
 
         // Delete associated images
         if (record.package_image) {
-            const fileDeleted = await deleteFile(record.package_image.split('/').pop(), record?.fileId);
+            const fileDeleted = await deleteFile(record.package_image.split('/').pop(), record.fileId);
             if (!fileDeleted) allFilesDeleted = false; // Mark as failed
         }
 
@@ -327,12 +314,9 @@ exports.PackageIdDelete = catchAsync(async (req, res, next) => {
             }
         }
 
-        // Abort deletion if any file failed to delete
+        // Log a warning if any file failed to delete
         if (!allFilesDeleted) {
-            return res.status(500).json({
-                status: false,
-                message: 'Failed to delete associated images. Package data remains intact.',
-            });
+            console.warn('Some associated images could not be deleted, but the package will still be deleted.');
         }
 
         // Delete the package record
@@ -341,17 +325,34 @@ exports.PackageIdDelete = catchAsync(async (req, res, next) => {
         res.status(200).json({
             status: true,
             data: record,
-            message: 'Package and associated images deleted successfully.',
+            message: allFilesDeleted ? 'Package and associated images deleted successfully.' : 'Package deleted, but some associated images could not be deleted.',
         });
     } catch (error) {
         console.error('Error deleting package record:', error);
-        logger.error('Error deleting package record:', error);
         res.status(500).json({
             status: false,
             message: 'Internal Server Error. Please try again later.',
         });
     }
 });
+
+async function deleteFile(fileName, fileId, retries = 3) {
+    try {
+        await b2.authorize();
+        const response = await b2.deleteFileVersion({ fileName, fileId });
+        return true; // Indicate successful deletion
+    } catch (error) {
+        console.error('Error deleting file:', error.response?.data || error.message);
+        if (retries > 0) {
+            await new Promise(resolve => setTimeout(resolve, 1000)); // Delay before retrying
+            return await deleteFile(fileName, fileId, retries - 1);
+        }
+        console.error('Final failure deleting file after retries.');
+        return false; // Indicate failure after retries
+    }
+}
+
+
 
 
 exports.deleteFileHandler = async (req, res) => { const { fileName, fileId } = req.body; try { if (!fileName || !fileId) { return res.status(400).json({ error: 'fileName and fileId are required' }); } await deleteFile(fileName, fileId); res.status(200).json({ message: 'File deleted successfully' }); } catch (error) { res.status(500).json({ error: 'Failed to delete file' }); } };

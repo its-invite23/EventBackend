@@ -20,3 +20,7 @@
 2025-01-04 16:37:29 [ERROR]: Error updating package record: Cannot read properties of null (reading '_id')
 2025-01-04 16:37:29 [ERROR]: Error updating package record: Cannot read properties of null (reading '_id')
 2025-01-08 14:52:03 [ERROR]: Error during booking creation: Booking validation failed: location: Path `location` is required.
+2025-01-15 09:51:46 [ERROR]: Error deleting file: Request failed with status code 400
+2025-01-15 09:51:46 [ERROR]: Error deleting file: Request failed with status code 400
+2025-01-15 10:13:04 [ERROR]: Error deleting file: Request failed with status code 400
+2025-01-15 10:13:05 [ERROR]: Error deleting file: Request failed with status code 400
