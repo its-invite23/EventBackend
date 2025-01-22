@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getPlaceDetails, searchPlaces } = require('../controller/placeController');
+const { getPlaceDetails, searchPlaces, nearbySearch } = require('../controller/placeController');
 
 // Initialize the router
 
@@ -9,5 +9,6 @@ router.get('/get-place-details/:placeId', getPlaceDetails);
 
 router.get('/get-place', searchPlaces);
 
+router.post('/nearbysearch', nearbySearch);
 
 module.exports = router;

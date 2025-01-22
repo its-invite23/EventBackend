@@ -58,4 +58,51 @@ exports.searchPlaces = catchAsync(
     }
 );
 
+exports.nearbySearch = catchAsync(async (req, res) => {
+    const API_KEY = process.env.GOOGLE_MAPS_API_KEY;
+  
+    console.log('Received request body:', req.body);
+  
+    let requestData;
+    try {
+      requestData = JSON.parse(req.body.body);  // Parse the stringified body
+      console.log("requestData", requestData);
+    } catch (error) {
+      return res.status(400).json({ error: 'Failed to parse the request body.' });
+    }
+  
+    const { latitude, longitude, radius, type, keyword } = requestData;
+  
+    // Validate the parsed data
+    if (!latitude || !longitude || !radius || !type || !keyword) {
+      return res.status(400).json({ error: 'Missing required parameters.' });
+    }
+  
+    try {
+      const response = await axios.get('https://maps.googleapis.com/maps/api/place/nearbysearch/json', {
+        params: {
+          location: `${latitude},${longitude}`,
+          radius,
+          type,
+          keyword,
+          key: API_KEY,
+        },
+      });
+      
+      // Return the data in a structured JSON response
+      res.json({
+        status: true,
+        data: response.data.results,
+        totalResults: response.data.results.length,
+      });
+    } catch (error) {
+      console.error('Error performing nearby search:', error.response?.data || error.message);
+      res.status(500).send('Error performing nearby search');
+    }
+});
+
+  
+  
+
+
 
