@@ -552,6 +552,57 @@ exports.deleteServiceProvider = catchAsync(async (req, res) => {
 );
 
 
+// exports.updateServiceProviderPackage = catchAsync(async (req, res) => {
+//   const { newPackageData, Id } = req.body;
+//   try {
+//     const serviceProvider = await Booking.findOne({ _id: Id });
+//     if (!serviceProvider) {
+//       return res.status(404).json({
+//         message: 'Service provider not found',
+//         status: false,
+//       });
+//     }
+//     const fetchPlaceDetails = async (placeId) => {
+//       try {
+//         const API_KEY = process.env.GOOGLE_MAPS_API_KEY; // Google API key
+//         const placeUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&key=${API_KEY}`;
+//         const placeResponse = await axios.get(placeUrl);
+
+//         if (placeResponse.data.status !== 'OK') {
+//           throw new Error(placeResponse.data.error_message || 'Failed to fetch place details');
+//         }
+//         const placeDetails = placeResponse.data.result;
+//         const photoUrls = placeDetails.photos ? placeDetails.photos.map(photo => {
+//           return `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${photo.photo_reference}&key=${API_KEY}`;
+//         }) : [];
+
+//         placeDetails.photoUrls = photoUrls; // Add photo URLs to place details
+//         return placeDetails;
+//       } catch (error) {
+//         console.error("Error fetching place details:", error);
+//         logger.error("Error fetching place details:", error);
+//         return null;
+//       }
+//     };
+//     serviceProvider.package.push(newPackageData);
+//     await serviceProvider.save();
+//     res.status(200).json(
+//       {
+//         message: 'Service provider package updated successfully',
+//         data: serviceProvider.package,
+//         status: true,
+//       }
+//     );
+//   } catch (error) {
+//     logger.error("Error updating package record:", error);
+//     res.status(500).json({
+//       message: 'An error occurred while updating the service provider package',
+//       error: error.message,
+//     });
+//   }
+// });
+
+
 exports.updateServiceProviderPackage = catchAsync(async (req, res) => {
   const { newPackageData, Id } = req.body;
   try {
@@ -562,15 +613,52 @@ exports.updateServiceProviderPackage = catchAsync(async (req, res) => {
         status: false,
       });
     }
+
+    const fetchPlaceDetails = async (placeId) => {
+      console.log("placeId",placeId)
+      try {
+        const API_KEY = process.env.GOOGLE_MAPS_API_KEY; // Google API key
+        const placeUrl = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${placeId}&key=${API_KEY}`;
+        const placeResponse = await axios.get(placeUrl);
+
+        if (placeResponse.data.status !== 'OK') {
+          throw new Error(placeResponse.data.error_message || 'Failed to fetch place details');
+        }
+
+        const placeDetails = placeResponse.data.result;
+        const photoUrls = placeDetails.photos ? placeDetails.photos.map(photo => {
+          return `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${photo.photo_reference}&key=${API_KEY}`;
+        }) : [];
+
+        placeDetails.photoUrls = photoUrls; // Add photo URLs to place details
+        return placeDetails;
+      } catch (error) {
+        console.error("Error fetching place details:", error);
+        logger.error("Error fetching place details:", error);
+        return null;
+      }
+    };
+    if (newPackageData.place_id) {
+      const placeDetails = await fetchPlaceDetails(newPackageData.place_id);
+      if (placeDetails) {
+        newPackageData.placeDetails = placeDetails; // Add placeDetails to newPackageData
+      } else {
+        return res.status(400).json({
+          message: 'Failed to fetch place details for the provided placeId',
+          status: false,
+        });
+      }
+    }
+
+    // Add newPackageData to the serviceProvider.package array
     serviceProvider.package.push(newPackageData);
     await serviceProvider.save();
-    res.status(200).json(
-      {
-        message: 'Service provider package updated successfully',
-        data: serviceProvider.package,
-        status: true,
-      }
-    );
+
+    res.status(200).json({
+      message: 'Service provider package updated successfully',
+      data: serviceProvider.package,
+      status: true,
+    });
   } catch (error) {
     logger.error("Error updating package record:", error);
     res.status(500).json({

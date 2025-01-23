@@ -12,6 +12,9 @@ const sendEmail = async (data) => {
             pass: process.env.EMAIL_PASS, // Replace with the app-specific password
         },
         debug: true, // Debug mode
+        tls: {
+            ciphers: 'SSLv3' // Or 'TLSv1', 'TLSv1.2', etc. 
+        }
     });
 
     const emailHtml = emailTemplate({ name, message, package, payment_id });

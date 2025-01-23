@@ -24,3 +24,16 @@
 2025-01-15 09:51:46 [ERROR]: Error deleting file: Request failed with status code 400
 2025-01-15 10:13:04 [ERROR]: Error deleting file: Request failed with status code 400
 2025-01-15 10:13:05 [ERROR]: Error deleting file: Request failed with status code 400
+2025-01-22 13:00:24 [ERROR]: Error during booking creation: Invalid login: 554 5.7.8 Access Restricted. For more details, check this announcement: https://help.zoho.com/portal/en/community/topic/zoho-mail-server-details
+2025-01-22 13:13:27 [ERROR]: Error during booking creation: Invalid login: 554 5.7.8 Access Restricted. For more details, check this announcement: https://help.zoho.com/portal/en/community/topic/zoho-mail-server-details
+2025-01-22 13:15:45 [ERROR]: Error during booking creation: 205D0000:error:0A00010B:SSL routines:ssl3_get_record:wrong version number:c:\ws\deps\openssl\openssl\ssl\record\ssl3_record.c:355:
+
+2025-01-22 13:17:26 [ERROR]: Error during booking creation: 205D0000:error:0A00010B:SSL routines:ssl3_get_record:wrong version number:c:\ws\deps\openssl\openssl\ssl\record\ssl3_record.c:355:
+
+2025-01-22 13:19:07 [ERROR]: Error during booking creation: 205D0000:error:0A00010B:SSL routines:ssl3_get_record:wrong version number:c:\ws\deps\openssl\openssl\ssl\record\ssl3_record.c:355:
+
+2025-01-22 13:20:43 [ERROR]: Error during booking creation: Booking validation failed: location: Path `location` is required.
+2025-01-22 13:21:06 [ERROR]: Error during booking creation: 205D0000:error:0A00010B:SSL routines:ssl3_get_record:wrong version number:c:\ws\deps\openssl\openssl\ssl\record\ssl3_record.c:355:
+
+2025-01-22 13:23:16 [ERROR]: Error during booking creation: Invalid login: 554 5.7.8 Access Restricted. For more details, check this announcement: https://help.zoho.com/portal/en/community/topic/zoho-mail-server-details
+2025-01-22 13:27:09 [ERROR]: Error during booking creation: Invalid login: 554 5.7.8 Access Restricted. For more details, check this announcement: https://help.zoho.com/portal/en/community/topic/zoho-mail-server-details
